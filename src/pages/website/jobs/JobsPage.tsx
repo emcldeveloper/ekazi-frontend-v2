@@ -36,7 +36,7 @@ const JobsPage = () => {
   const debouncedSearch = useDebounce(search, 500);
 
   //   fetch industries
-  const { data: industries } = useIndustries();
+  const { data: industries } = useIndustries({});
 
   //    fetch jobs
   const { data: jobsData, isLoading } = useJobs({
@@ -69,11 +69,8 @@ const JobsPage = () => {
                 <SelectContent>
                   <SelectItem value="all">All Industries</SelectItem>
                   {industries?.map((industry: any) => (
-                    <SelectItem
-                      key={industry.id}
-                      value={industry?.industry_name}
-                    >
-                      {industry?.industry_name}
+                    <SelectItem key={industry.id} value={industry?.name}>
+                      {industry?.name}
                     </SelectItem>
                   ))}
                 </SelectContent>

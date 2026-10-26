@@ -24,6 +24,11 @@ export const fetchJobs = async ({
   return res.data;
 };
 
+export const getJobDetails = async (id: number) => {
+  const res = await api.get(`/jobs/${id}`);
+  return res.data?.data;
+};
+
 export const fetchEmployerJobs = async ({
   page,
   limit,
@@ -57,9 +62,22 @@ export const saveJob = async (payload: any) => {
   return res.data;
 };
 
-export const getJobsMatch = async (applicant_id: number) => {
-  const res = await api.get(`/applicant/job_match`, {
-    params: { id: applicant_id },
-  });
+export const getSavedJobs = async () => {
+  const res = await api.get("/applicant/saved-jobs");
+  return res.data;
+};
+
+export const getMatchedJobs = async () => {
+  const res = await api.get(`/applicant/job_match`);
+  return res.data;
+};
+
+export const getJobMatchData = async (applicantId: number, jobId: number) => {
+  const res = await api.get(`/applicant/jobmatchData/${applicantId}/${jobId}`);
+  return res.data?.data;
+};
+
+export const applyJobInternal = async (payload: any) => {
+  const res = await api.post("/applicant/jobInternalApplication", payload);
   return res.data;
 };

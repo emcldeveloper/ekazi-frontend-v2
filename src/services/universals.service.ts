@@ -54,7 +54,7 @@ export const fetchIndustries = async ({
   limit: number;
   search: string;
 }) => {
-  const res = await api.get("/universal/industry", {
+  const res = await api.get("/industries", {
     params: {
       search,
       page,

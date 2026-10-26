@@ -6,11 +6,12 @@ import { Card, CardContent } from "@/components/ui/card";
 import RecommendedJobs from "./components/RecommendedJobs";
 import TemplateSlider from "@/components/template-slider";
 import { useDashboardStatistics } from "@/hooks/dashboard";
+import Pipeline from "./components/Pipeline,";
 
 const DashboardPage = () => {
-  const applicant_id = Number(localStorage.getItem("applicantId"));
+  const { data } = useDashboardStatistics();
 
-  const { data } = useDashboardStatistics(applicant_id);
+  console.log(data);
 
   const dashboard = data?.statisticsdashboard || {
     application: 0,
@@ -89,7 +90,7 @@ const DashboardPage = () => {
                   <div>
                     <p className="text-xs">Job Match</p>
                     <h5 className="text-xl  font-bold mb-0">
-                      {/* {matchedJobs?.matches_count} */}
+                      {/* {matchedJobs?.matches_count} */} 0
                     </h5>
                   </div>
                   <div className="flex items-center gap-2">
@@ -102,10 +103,10 @@ const DashboardPage = () => {
             </Link>
           </div>
 
-          <Card>
+          <Card size="sm">
             <CardContent className="space-y-4">
               {/* Applicant pipeline */}
-              {/* <Pipeline /> */}
+              <Pipeline />
 
               {/* Recommended Jobs */}
               <RecommendedJobs />

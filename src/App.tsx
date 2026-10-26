@@ -5,7 +5,6 @@ import { Toaster } from "./components/ui/sonner";
 
 import AppLayout from "./layouts/AppLayout";
 
-import Dashboard from "./pages/Dashboard";
 import HomePage from "./pages/website/HomePage";
 import JobsPage from "./pages/website/jobs/JobsPage";
 import EmployersPage from "./pages/website/employers/EmployersPage";
@@ -22,7 +21,13 @@ import VerifyAccountPage from "./pages/auth/VerifyAccountPage";
 import NotVerifiedPage from "./pages/auth/NotVerifiedPage";
 import DashboardPage from "./pages/app/dashboard/DashboardPage";
 import ProfilePage from "./pages/app/profile/ProfilePage";
+import AppJobsPage from "./pages/app/jobs/JobsPage";
 import ProtectedRoutes from "./layouts/ProtectedRoutes";
+import ApplicationsPage from "./pages/app/applications/ApplicationsPage";
+import SavedJobsPage from "./pages/app/jobs/saved_jobs/SavedJobsPage";
+import MatchedJobsPage from "./pages/app/jobs/matched_jobs/MatchedJobsPage";
+import CoverLetterPage from "./pages/app/cover_letter/CoverLetterPage";
+import ApplyJobPage from "./pages/app/jobs/apply_jobs/ApplyJobPage";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -64,7 +69,15 @@ const App = () => {
               <Route element={<AppLayout />}>
                 <Route path="/app/dashboard" element={<DashboardPage />} />
                 <Route path="/app/profile" element={<ProfilePage />} />
-                <Route path="/app/jobs" element={<Dashboard />} />
+                <Route path="/app/jobs" element={<AppJobsPage />} />
+                <Route path="/app/apply-job" element={<ApplyJobPage />} />
+                <Route path="/app/saved-jobs" element={<SavedJobsPage />} />
+                <Route path="/app/matched-jobs" element={<MatchedJobsPage />} />
+                <Route
+                  path="/app/applications"
+                  element={<ApplicationsPage />}
+                />
+                <Route path="/app/cover-letter" element={<CoverLetterPage />} />
               </Route>
             </Route>
           </Routes>

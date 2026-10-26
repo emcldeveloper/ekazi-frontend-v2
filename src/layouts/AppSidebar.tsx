@@ -17,7 +17,6 @@ import {
   SidebarRail,
 } from "@/components/ui/sidebar";
 import {
-  TerminalSquareIcon,
   ChevronDown,
   type LucideIcon,
   LayoutDashboardIcon,
@@ -66,15 +65,15 @@ const navItems: NavItem[] = [
     items: [
       {
         title: "Applied Jobs",
-        url: "#",
+        url: "/app/applications",
       },
       {
         title: "Saved Jobs",
-        url: "#",
+        url: "/app/saved-jobs",
       },
       {
         title: "Matched Jobs",
-        url: "#",
+        url: "/app/matched-jobs",
       },
     ],
   },
@@ -90,6 +89,10 @@ const navItems: NavItem[] = [
       {
         title: "Bookmarked",
         url: "#",
+      },
+      {
+        title: "Cover Letter",
+        url: "/app/cover-letter",
       },
       {
         title: "My CVs",

@@ -4,7 +4,6 @@ import {
   BarChart,
   Bar,
   XAxis,
-  YAxis,
   CartesianGrid,
   Tooltip,
   ResponsiveContainer,
@@ -22,10 +21,50 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { useApplicantPipeline } from "@/hooks/useCandidates";
+import { useApplicantPipeline } from "@/hooks/dashboard";
 
 /* ----------------------------------------------------- */
-const buildDefaultRange = () => {
+interface PipelineStage {
+  stage_name?: string;
+}
+
+interface PipelineItem {
+  created_at: string;
+  stage?: PipelineStage;
+  [key: string]: unknown;
+}
+
+interface DateRange {
+  start: string;
+  end: string;
+  display: string;
+}
+
+interface TempDateRange {
+  start: string;
+  end: string;
+}
+
+type PresetRangeValue =
+  | "today"
+  | "yesterday"
+  | "last7"
+  | "lastMonth"
+  | "last90"
+  | "lastYear"
+  | "custom";
+
+interface PresetRange {
+  label: string;
+  value: PresetRangeValue;
+}
+
+interface ChartDataItem {
+  name: string;
+  value: number;
+}
+
+const buildDefaultRange = (): DateRange => {
   const today = new Date();
   const start = new Date();
   start.setDate(start.getDate() - 30);
@@ -37,7 +76,7 @@ const buildDefaultRange = () => {
   };
 };
 
-const presetRanges = [
+const presetRanges: PresetRange[] = [
   { label: "Today", value: "today" },
   { label: "Yesterday", value: "yesterday" },
   { label: "Last 7 days", value: "last7" },
@@ -58,18 +97,21 @@ const COLORS = [
 ];
 
 const Pipeline = () => {
-  const { data: jobseekerpipeline = [] } = useApplicantPipeline();
+  const { data: jobseekerpipeline = [] }: { data?: PipelineItem[] } =
+    useApplicantPipeline();
 
-  const [filterType, setFilterType] = useState("lastMonth");
-  const [showDatePicker, setShowDatePicker] = useState(false);
+  console.log(jobseekerpipeline);
 
-  const [dateRange, setDateRange] = useState(buildDefaultRange());
-  const [tempDateRange, setTempDateRange] = useState({
+  const [filterType, setFilterType] = useState<PresetRangeValue>("lastMonth");
+  const [showDatePicker, setShowDatePicker] = useState<boolean>(false);
+
+  const [dateRange, setDateRange] = useState<DateRange>(buildDefaultRange());
+  const [tempDateRange, setTempDateRange] = useState<TempDateRange>({
     start: "",
     end: "",
   });
 
-  const handlePresetRange = (range) => {
+  const handlePresetRange = (range: PresetRangeValue): void => {
     const today = new Date();
     let start = new Date();
     let displayText = "";
@@ -115,7 +157,7 @@ const Pipeline = () => {
     });
   };
 
-  const handleCustomRangeApply = () => {
+  const handleCustomRangeApply = (): void => {
     if (!tempDateRange.start || !tempDateRange.end) return;
 
     const sDate = new Date(tempDateRange.start);
@@ -130,21 +172,21 @@ const Pipeline = () => {
     setShowDatePicker(false);
   };
 
-  const filteredData = useMemo(() => {
+  const filteredData = useMemo<PipelineItem[]>(() => {
     if (!dateRange.start || !dateRange.end) return [];
 
     const startDate = new Date(dateRange.start);
     const endDate = new Date(dateRange.end);
     endDate.setHours(23, 59, 59, 999);
 
-    return jobseekerpipeline.filter((item) => {
+    return jobseekerpipeline.filter((item: PipelineItem) => {
       const created = new Date(item.created_at);
       return created >= startDate && created <= endDate;
     });
   }, [jobseekerpipeline, dateRange]);
 
-  const chartData = useMemo(() => {
-    const totals = {
+  const chartData = useMemo<ChartDataItem[]>(() => {
+    const totals: Record<string, number> = {
       Applied: 0,
       Shortlisted: 0,
       Screening: 0,
@@ -154,18 +196,25 @@ const Pipeline = () => {
       Employed: 0,
     };
 
-    filteredData.forEach((item) => {
-      const name = item.stage?.stage_name;
-      if (totals[name] !== undefined) totals[name]++;
+    filteredData.forEach((item: PipelineItem) => {
+      const stageName = item.stage?.stage_name;
+      if (stageName && totals[stageName] !== undefined) {
+        totals[stageName] += 1;
+      }
     });
 
-    return Object.keys(totals).map((stage) => ({
-      name: stage,
-      value: totals[stage],
-    }));
+    return Object.keys(totals).map(
+      (stage: string): ChartDataItem => ({
+        name: stage,
+        value: totals[stage],
+      }),
+    );
   }, [filteredData]);
 
-  const totalCount = chartData.reduce((a, b) => a + b.value, 0);
+  const totalCount: number = chartData.reduce(
+    (total: number, item: ChartDataItem) => total + item.value,
+    0,
+  );
 
   return (
     <div className="p-2">
@@ -186,7 +235,7 @@ const Pipeline = () => {
 
       {/* Dialog */}
       <Dialog open={showDatePicker} onOpenChange={setShowDatePicker}>
-        <DialogContent className="max-w-3xl">
+        <DialogContent className="max-w-2xl!">
           <DialogHeader>
             <DialogTitle>Select Date Range</DialogTitle>
           </DialogHeader>
