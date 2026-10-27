@@ -50,7 +50,7 @@ interface ExperienceFormProps {
 const ExperienceForm = ({ experience }: ExperienceFormProps) => {
   const [employerSearch, setEmployerSearch] = useState("");
   const [positionSearch, setPositionSearch] = useState("");
-  const [industrySearch, setIndustrySearch] = useState("");
+  const [industrySearch] = useState("");
   const [currentRole, setCurrentRole] = useState(() => !experience?.end_date);
 
   const {
@@ -91,7 +91,7 @@ const ExperienceForm = ({ experience }: ExperienceFormProps) => {
       label: region.name,
     })) ?? [];
 
-  const { data: positions } = usePositions({});
+  const { data: positions } = usePositions({ search: positionSearch });
   const positionOptions =
     positions?.map((position: Position) => ({
       value: position.id,

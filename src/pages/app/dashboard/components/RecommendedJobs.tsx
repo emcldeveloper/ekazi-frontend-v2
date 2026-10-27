@@ -9,9 +9,7 @@ import { useJobMatch } from "@/hooks/jobs/useJobMatch";
 import { ViewJob } from "../../jobs";
 
 const RecommendedJobs = () => {
-  const applicant_id = Number(localStorage.getItem("applicantId"));
-
-  const { data: matchedJobs } = useJobMatch(31941);
+  const { data: matchedJobs } = useJobMatch();
   const jobs = matchedJobs?.matches ?? [];
 
   return (

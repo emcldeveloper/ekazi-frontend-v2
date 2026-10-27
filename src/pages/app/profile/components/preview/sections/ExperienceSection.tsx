@@ -3,19 +3,19 @@ import moment from "moment";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import type { Experience, ExperienceGroup } from "@/@types/applicants";
+
 import { Building2 } from "lucide-react";
 import { capitalizeText } from "@/utils/helpers";
 import { Separator } from "@/components/ui/separator";
 
 interface ExperienceSectionProps {
-  experiences: Experience[];
+  experiences: any;
 }
 
-const calculateDuration = (positions: Experience[] = []) => {
+const calculateDuration = (positions: any = []) => {
   let totalMonths = 0;
 
-  positions.forEach((position) => {
+  positions.forEach((position: any) => {
     const start = moment(position.start_date);
     const end = position.end_date ? moment(position.end_date) : moment();
 
@@ -43,7 +43,7 @@ const ExperienceSection = ({ experiences }: ExperienceSectionProps) => {
     if (!experiences?.length) return [];
 
     const groups = experiences.reduce(
-      (acc: Record<string, ExperienceGroup>, experience) => {
+      (acc: Record<string, any>, experience: any) => {
         // Group by the unique employer ID
         const employerId = String(experience.employer?.id);
 
@@ -63,7 +63,7 @@ const ExperienceSection = ({ experiences }: ExperienceSectionProps) => {
       {},
     );
 
-    return Object.values(groups).map((group) => ({
+    return Object.values(groups).map((group: any) => ({
       ...group,
       positions: [...group.positions].sort(
         (a, b) =>
@@ -121,7 +121,7 @@ const ExperienceSection = ({ experiences }: ExperienceSectionProps) => {
                         : "space-y-2"
                     }
                   >
-                    {group.positions.map((position) => (
+                    {group.positions.map((position: any) => (
                       <div key={position.id} className="relative space-y-1">
                         {hasMultiplePositions && (
                           <span className="absolute -left-5.5 top-1.5 h-3 w-3 rounded-full bg-blue-600" />

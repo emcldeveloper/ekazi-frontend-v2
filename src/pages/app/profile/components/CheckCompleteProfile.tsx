@@ -28,7 +28,7 @@ const CheckCompleteProfile = ({
 
   const [missingFields, setMissingFields] = useState<string[]>([]);
   const [showModal, setShowModal] = useState(false);
-  const [currentField, setCurrentField] = useState(null);
+  const [currentField] = useState(null);
 
   useEffect(() => {
     if (!completeCheck) return;

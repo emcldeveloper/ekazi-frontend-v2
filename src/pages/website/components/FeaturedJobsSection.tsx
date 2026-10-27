@@ -4,8 +4,8 @@ import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
 
-import JobCard from "./jobs/JobCard";
 import { useJobs } from "@/hooks/jobs";
+import JobCard from "../jobs/JobCard";
 
 const FeaturedJobsSection = () => {
   const navigate = useNavigate();

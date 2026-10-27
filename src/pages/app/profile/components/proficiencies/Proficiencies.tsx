@@ -1,6 +1,5 @@
-import { Download, Medal } from "lucide-react";
+import { Download } from "lucide-react";
 
-import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 
 import {
@@ -10,7 +9,6 @@ import {
 } from "@/utils/helpers";
 import CreateProficiency from "./CreateProficiency";
 import SectionTitle from "../SectionTitle";
-import { Badge } from "@/components/ui/badge";
 import UpdateProficiency from "./UpdateProficiency";
 import DeleteProficiency from "./DeleteProficiency";
 

@@ -1,4 +1,3 @@
-import type { EducationPayload } from "@/@types/profile/profile";
 import {
   createEducation,
   deleteEducation,

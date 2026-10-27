@@ -1,10 +1,9 @@
-import type { Proficiency } from "@/@types/applicants";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { capitalizeText, formatDate } from "@/utils/helpers";
 import { BookMarked } from "lucide-react";
 
 interface ProficiencySectionProps {
-  proficiencies: Proficiency[];
+  proficiencies: any;
 }
 
 const ProficiencySection = ({ proficiencies }: ProficiencySectionProps) => {
@@ -20,7 +19,7 @@ const ProficiencySection = ({ proficiencies }: ProficiencySectionProps) => {
       </CardHeader>
       <CardContent>
         <div className="space-y-3">
-          {proficiencies.map((item: Proficiency) => (
+          {proficiencies.map((item: any) => (
             <div key={item.id} className="flex-1 space-y-1">
               <h3 className="text-base font-semibold">
                 {capitalizeText(item.proficiency?.name)}

@@ -1,13 +1,7 @@
-import moment from "moment";
 import { Mail, MapPin, Phone } from "lucide-react";
 
-import { Separator } from "@/components/ui/separator";
-
-import BasicInfoModal from "./BasicInfoModal";
 import ProfileImageModal from "./ProfileImageModal";
-import BackgroundImageModal from "./BackgroundImageModal";
 import { BASE_URL } from "@/config";
-import SectionTitle from "../SectionTitle";
 import { Button } from "@/components/ui/button";
 import ProfilePreview from "../preview/ProfilePreview";
 
@@ -20,9 +14,9 @@ const PersonalInfo = ({ applicant }: PersonalInfoProps) => {
   const address = applicant?.profile?.address?.[0];
   const phone = applicant?.profile?.phone?.[0];
 
-  const bgImage = profile?.background_picture
-    ? `${BASE_URL}/${profile.background_picture.replace(/^\//, "")}`
-    : `${BASE_URL}/svg/dotted.svg`;
+  // const bgImage = profile?.background_picture
+  //   ? `${BASE_URL}/${profile.background_picture.replace(/^\//, "")}`
+  //   : `${BASE_URL}/svg/dotted.svg`;
 
   const profileImage = profile?.picture
     ? `${BASE_URL}/${profile.picture.replace(/^\//, "")}`

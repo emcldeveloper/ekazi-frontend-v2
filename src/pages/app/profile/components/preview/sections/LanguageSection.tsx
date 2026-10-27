@@ -7,12 +7,12 @@ import {
   TableCell,
 } from "@/components/ui/table";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import type { Language } from "@/@types/applicants";
+
 import { Languages } from "lucide-react";
 import { capitalizeText } from "@/utils/helpers";
 
 interface LanguageSectionProps {
-  languages: Language[];
+  languages: any;
 }
 
 const LanguageSection = ({ languages }: LanguageSectionProps) => {
@@ -39,7 +39,7 @@ const LanguageSection = ({ languages }: LanguageSectionProps) => {
           </TableHeader>
 
           <TableBody>
-            {languages.map((item: Language) => (
+            {languages.map((item: any) => (
               <TableRow key={item.id}>
                 <TableCell>{capitalizeText(item.language?.name)}</TableCell>
                 <TableCell>{capitalizeText(item.read?.name)}</TableCell>

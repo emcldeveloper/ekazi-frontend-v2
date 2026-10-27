@@ -1,11 +1,10 @@
-import type { Knowledge } from "@/@types/applicants";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { capitalizeText } from "@/utils/helpers";
 import { Library } from "lucide-react";
 
 interface SkillsSectionProps {
-  knowledges: Knowledge[];
+  knowledges: any;
 }
 
 const SkillsSection = ({ knowledges }: SkillsSectionProps) => {
@@ -21,7 +20,7 @@ const SkillsSection = ({ knowledges }: SkillsSectionProps) => {
       </CardHeader>
 
       <CardContent className="flex flex-wrap gap-2">
-        {knowledges.map((item: Knowledge) => (
+        {knowledges.map((item: any) => (
           <Badge
             key={item.id}
             variant="secondary"

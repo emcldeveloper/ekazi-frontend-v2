@@ -1,6 +1,5 @@
-import { User, Download } from "lucide-react";
+import { Download } from "lucide-react";
 
-import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { formatName, getFileNameFromUrl } from "@/utils/helpers";
 import CreateReferee from "./CreateReferee";

@@ -11,7 +11,6 @@ import {
 import { TEMPLATES } from "@/pages/app/cv_builder/data";
 import { Button } from "./ui/button";
 import { ArrowRight } from "lucide-react";
-import { DialogFooter } from "./ui/dialog";
 
 export default function TemplateSlider2() {
   const navigate = useNavigate();

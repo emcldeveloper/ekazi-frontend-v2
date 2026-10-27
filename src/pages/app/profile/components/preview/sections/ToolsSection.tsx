@@ -1,11 +1,10 @@
-import type { Tool } from "@/@types/applicants";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { capitalizeText } from "@/utils/helpers";
 import { SlidersVertical } from "lucide-react";
 
 interface ToolsSectionProps {
-  tools: Tool[];
+  tools: any;
 }
 
 export const ToolsSection = ({ tools }: ToolsSectionProps) => {
@@ -21,7 +20,7 @@ export const ToolsSection = ({ tools }: ToolsSectionProps) => {
       </CardHeader>
       <CardContent>
         <div className="flex flex-wrap gap-2">
-          {tools.map((item: Tool) => (
+          {tools.map((item: any) => (
             <Badge key={item.id} variant="secondary">
               {capitalizeText(item.tool?.name)}
             </Badge>

@@ -1,11 +1,10 @@
-import type { Culture } from "@/@types/applicants";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { capitalizeText } from "@/utils/helpers";
 import { UserPen } from "lucide-react";
 
 interface CultureSectionProps {
-  cultures: Culture[];
+  cultures: any;
 }
 
 const CultureSection = ({ cultures }: CultureSectionProps) => {
@@ -21,7 +20,7 @@ const CultureSection = ({ cultures }: CultureSectionProps) => {
       </CardHeader>
       <CardContent>
         <div className="flex flex-wrap gap-2">
-          {cultures.map((item: Culture) => {
+          {cultures.map((item: any) => {
             return (
               <Badge key={item.id} variant="secondary">
                 {capitalizeText(item.culture?.name)}

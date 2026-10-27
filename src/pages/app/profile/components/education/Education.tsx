@@ -1,10 +1,7 @@
-import { GraduationCap } from "lucide-react";
-
-import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 
 import AddEducationModal from "./AddEducation";
-import { capitalizeText, formatDate } from "@/utils/helpers";
+import { formatDate } from "@/utils/helpers";
 import EditEducation from "./EditEducation";
 import DeleteEducation from "./DeleteEducation";
 import SectionTitle from "../SectionTitle";

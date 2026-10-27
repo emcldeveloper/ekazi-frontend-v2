@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { FaCalculator, FaUser, FaWhatsapp } from "react-icons/fa";
+import { FaUser, FaWhatsapp } from "react-icons/fa";
 import html2pdf from "html2pdf.js";
 
 import { Button } from "@/components/ui/button";
@@ -7,7 +7,7 @@ import { ChevronDown, ChevronUp } from "lucide-react";
 import TaxRatesModal from "./TaxRatesModal";
 import SalaryForm from "./SalaryForm";
 import { useSalaryData } from "@/hooks/calculator";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 
 const SalaryCalculator = () => {
@@ -27,7 +27,7 @@ const SalaryCalculator = () => {
   const [totalAllowance, setTotalAllowance] = useState(0);
   const [sscEmployee, setSscEmployee] = useState(0);
   const [pay, setPay] = useState<number | null>(null);
-  const [taxableAmount, setTaxableAmount] = useState(0);
+
   const [showCompanyCost, setShowCompanyCost] = useState(false);
 
   // Calculate total allowance whenever allowances change
@@ -196,7 +196,6 @@ const SalaryCalculator = () => {
       iteration < maxIterations
     );
 
-    setTaxableAmount(taxableIncome);
     setSscEmployee(sscDeduction);
     setTotalGross(grossSalary);
     setPay(paye);

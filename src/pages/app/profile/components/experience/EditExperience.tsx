@@ -1,4 +1,4 @@
-import { PencilLine, PlusIcon } from "lucide-react";
+import { PencilLine } from "lucide-react";
 
 import {
   Dialog,

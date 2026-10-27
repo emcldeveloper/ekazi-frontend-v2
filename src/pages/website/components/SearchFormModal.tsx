@@ -101,9 +101,7 @@ const SearchFormModal = ({
         </div>
 
         <DialogFooter>
-          <DialogClose asChild>
-            <Button variant="outline">Close</Button>
-          </DialogClose>
+          <DialogClose render={<Button variant="outline">Close</Button>} />
         </DialogFooter>
       </DialogContent>
     </Dialog>

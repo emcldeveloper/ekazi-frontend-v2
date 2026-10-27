@@ -23,7 +23,7 @@ import JobCard from "./JobCard";
 import { useDebounce } from "@/hooks/useDebounce";
 
 const JobsPage = () => {
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
 
   // Get search from URL
   const searchFromUrl = searchParams.get("search") ?? "";

@@ -2,14 +2,12 @@ import { Drawer, DrawerContent, DrawerTrigger } from "@/components/ui/drawer";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 
 import { useIsMobile } from "@/hooks/use-mobile";
-import JobDetails from "./JobDetails";
-import { useIncrementJobView } from "@/hooks/jobs";
 import { Button } from "@/components/ui/button";
 
 const ViewJob = () => {
   const isMobile = useIsMobile();
 
-  const { mutate: incrementJobView } = useIncrementJobView();
+  // const { mutate: incrementJobView } = useIncrementJobView();
 
   // const handleJobClick = (jobId: number) => {
   //   incrementJobView(jobId);
@@ -28,7 +26,7 @@ const ViewJob = () => {
           </DrawerTrigger>
           <DrawerContent className="border-none">
             <div className="flex-1 scroll-fade overflow-y-auto p-4">
-              <JobDetails />
+              {/* <JobDetails /> */}
             </div>
           </DrawerContent>
         </Drawer>
@@ -47,7 +45,7 @@ const ViewJob = () => {
           </SheetTrigger>
           <SheetContent className="sm:max-w-3xl!">
             <div className="scrollbar overflow-y-auto p-4">
-              <JobDetails />
+              {/* <JobDetails /> */}
             </div>
           </SheetContent>
         </Sheet>

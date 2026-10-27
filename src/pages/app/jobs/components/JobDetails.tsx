@@ -26,7 +26,7 @@ interface JobDetailsProps {
 
 const JobDetails = ({ job, appliedJobIds = [] }: JobDetailsProps) => {
   const navigate = useNavigate();
-  const { mutate: saveJobMutate, isPending } = useSaveJob();
+  const { mutate: saveJobMutate } = useSaveJob();
 
   const [profileComplete, setProfileComplete] = useState(null);
   const [showProfileModal, setShowProfileModal] = useState(false);

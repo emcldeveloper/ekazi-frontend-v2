@@ -94,23 +94,23 @@ const BasicInfoModal = ({ applicant }: BasicInfoModalProps) => {
     if (!applicant) return;
 
     const profile = applicant?.profile?.applicant_profile;
-    const address = applicant?.profile?.address;
-    const phone = applicant?.profile?.phone;
+    // const address = applicant?.profile?.address?.[0];
+    // const phone = applicant?.profile?.phone;
 
     reset({
       first_name: profile.first_name,
       middle_name: profile?.middle_name,
       last_name: profile?.last_name,
       date_of_birth: profile?.dob,
-      phone: phone,
-      phone2: profile?.phone2,
-      sub_location: address?.sub_location,
-      postal_address: address?.postal,
+      // phone: phone,
+      // phone2: profile?.phone2,
+      // sub_location: address?.sub_location,
+      // postal_address: address?.postal,
 
-      gender_id: profile?.gender?.id,
-      marital_status_id: profile?.marital_status_id,
-      country_id: profile?.country?.id,
-      region_id: profile?.region?.id,
+      // gender_id: profile?.gender?.id,
+      // marital_status_id: profile?.marital_status_id,
+      // country_id: profile?.address?.country_id,
+      // region_id: profile?.region?.id,
     });
   }, [applicant, reset]);
 

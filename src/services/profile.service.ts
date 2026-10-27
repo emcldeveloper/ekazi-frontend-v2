@@ -8,7 +8,6 @@ import type {
   SkillsPayload,
   SoftwarePayload,
   ToolsPayload,
-  TrainingPayload,
 } from "@/@types/profile/profile";
 import api from "@/lib/axios";
 

@@ -1,11 +1,10 @@
-import type { Skill } from "@/@types/applicants";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { capitalizeText } from "@/utils/helpers";
 import { UserCheck } from "lucide-react";
 
 interface PersonalitySectionProps {
-  personalities: Skill[];
+  personalities: any;
 }
 
 const PersonalitySection = ({ personalities }: PersonalitySectionProps) => {
@@ -21,7 +20,7 @@ const PersonalitySection = ({ personalities }: PersonalitySectionProps) => {
       </CardHeader>
       <CardContent>
         <div className="flex flex-wrap gap-2">
-          {personalities.map((item: Skill) => (
+          {personalities.map((item: any) => (
             <Badge
               key={item.id}
               variant="secondary"

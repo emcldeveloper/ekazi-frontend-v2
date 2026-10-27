@@ -1,4 +1,4 @@
-import { Loader, Pencil, PencilLine } from "lucide-react";
+import { Loader, PencilLine } from "lucide-react";
 
 import {
   Dialog,

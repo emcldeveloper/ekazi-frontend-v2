@@ -1,10 +1,9 @@
-import type { Training } from "@/@types/applicants";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { capitalizeText, formatDate } from "@/utils/helpers";
 import { BookText } from "lucide-react";
 
 interface TrainingSectionProps {
-  trainings: Training[];
+  trainings: any;
 }
 
 const TraniningSection = ({ trainings }: TrainingSectionProps) => {
@@ -20,7 +19,7 @@ const TraniningSection = ({ trainings }: TrainingSectionProps) => {
       </CardHeader>
       <CardContent>
         <div className="space-y-3">
-          {trainings.map((item: Training) => (
+          {trainings.map((item: any) => (
             <div key={item.id} className="flex-1 space-y-1">
               <h3 className="text-base font-semibold">
                 {capitalizeText(item.name)}

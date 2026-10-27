@@ -15,7 +15,7 @@ import { useDebounce } from "@/hooks/useDebounce";
 
 const ArticlesPage = () => {
   const [page, setPage] = useState(1);
-  const [perPage, setPerPage] = useState(25);
+  const [perPage] = useState(25);
   const [search, setSearch] = useState("");
 
   const debouncedSearch = useDebounce(search, 500);
