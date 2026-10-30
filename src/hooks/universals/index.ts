@@ -1,4 +1,4 @@
-export * from "./useStatistics";
+export * from "../statistics/useSiteStatistics";
 export * from "./useIndustries";
 
 export * from "./useCountries";

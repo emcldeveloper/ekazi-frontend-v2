@@ -1,15 +1,17 @@
 import { useEffect, useState } from "react";
 
 import { useJobs } from "@/hooks/jobs";
-import { useIndustries, useStatistics } from "@/hooks/universals";
+import { useIndustries, useSiteStatistics } from "@/hooks/universals";
 import { BriefcaseBusiness, CheckCircle, GraduationCap } from "lucide-react";
 import Counter from "@/components/counter-up";
 import SearchFormModal from "./SearchFormModal";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { capitalizeText } from "@/utils/helpers";
 
 const HeroSection = () => {
-  const { data: stats } = useStatistics();
+  const { data: statistics } = useSiteStatistics();
+
   const { data: industries } = useIndustries({});
 
   const [filters, setFilters] = useState({
@@ -79,9 +81,9 @@ const HeroSection = () => {
             >
               <option value="">Select Category</option>
 
-              {industries?.map((ind: any) => (
-                <option key={ind.id} value={ind.industry_name}>
-                  {ind.industry_name}
+              {industries?.map((industry: any) => (
+                <option key={industry.id} value={industry.industry_name}>
+                  {capitalizeText(industry.name)}
                 </option>
               ))}
             </select>
@@ -102,7 +104,7 @@ const HeroSection = () => {
                 size={28}
               />
               <div className="text-2xl lg:text-3xl font-bold text-Blue m-0">
-                <Counter end={stats?.employers ?? 0} />
+                <Counter end={statistics?.employers ?? 0} />
               </div>
               <p className="text-base text-gray-500">Employers</p>
             </div>
@@ -110,7 +112,7 @@ const HeroSection = () => {
             <div className="text-center">
               <GraduationCap className="mx-auto text-Orange mb-2" size={30} />
               <div className="text-2xl lg:text-3xl font-bold text-Blue m-0">
-                <Counter end={stats?.job_seekers ?? 0} />
+                <Counter end={statistics?.job_seekers ?? 0} />
               </div>
               <p className="text-base text-gray-500">Job Seekers</p>
             </div>
@@ -118,7 +120,7 @@ const HeroSection = () => {
             <div className="text-center">
               <CheckCircle className="mx-auto text-Orange mb-2" size={28} />
               <div className="text-2xl lg:text-3xl font-bold text-Blue m-0">
-                <Counter end={stats?.job_posts ?? 0} />
+                <Counter end={statistics?.job_posts ?? 0} />
               </div>
               <p className="text-base text-gray-500">Job Posts</p>
             </div>

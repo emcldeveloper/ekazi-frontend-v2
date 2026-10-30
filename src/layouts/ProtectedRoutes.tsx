@@ -1,4 +1,4 @@
-import LoadingPage from "@/components/loading-page";
+import LoadingPage from "@/components/loading-state";
 import { FRONTEND_URL } from "@/config";
 import { useUser } from "@/hooks/auth";
 import { Outlet } from "react-router-dom";

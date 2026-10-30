@@ -61,7 +61,7 @@ export const fetchIndustries = async ({
       limit,
     },
   });
-  return res?.data?.data;
+  return res.data?.data;
 };
 
 export const getPositions = async (page = 1, limit = 25, search = "") => {
@@ -88,11 +88,6 @@ export const getJobTypes = async () => {
 export const getSalaryRanges = async () => {
   const res = await api.get("/salary-ranges");
   return res.data?.data;
-};
-
-export const fetchStatistics = async () => {
-  const res = await api.get("/site-statistics");
-  return res.data;
 };
 
 export const getOrganizations = async ({

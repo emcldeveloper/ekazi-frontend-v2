@@ -7,14 +7,17 @@ import api from "@/lib/axios";
 export const fetchEmployers = async ({
   page,
   limit,
+  search,
 }: {
   page: number;
   limit: number;
+  search: string;
 }) => {
-  const res = await api.get("/list-of-employer", {
+  const res = await api.get("/featured-employers", {
     params: {
       page,
       limit,
+      search,
     },
   });
   return res.data;

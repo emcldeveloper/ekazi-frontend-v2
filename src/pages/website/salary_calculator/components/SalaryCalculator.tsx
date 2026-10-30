@@ -3,12 +3,12 @@ import { FaUser, FaWhatsapp } from "react-icons/fa";
 import html2pdf from "html2pdf.js";
 
 import { Button } from "@/components/ui/button";
-import { ChevronDown, ChevronUp } from "lucide-react";
-import TaxRatesModal from "./TaxRatesModal";
-import SalaryForm from "./SalaryForm";
-import { useSalaryData } from "@/hooks/calculator";
 import { Card, CardContent } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
+
+import TaxRatesModal from "./TaxRatesModal";
+import SalaryForm, { type Allowance } from "./SalaryForm";
+import { useSalaryData } from "@/hooks/calculator";
+import SalaryResult from "./SalaryResult";
 
 const SalaryCalculator = () => {
   // fetching salary data
@@ -17,23 +17,22 @@ const SalaryCalculator = () => {
   const usageCount = data?.insight;
 
   // State variables
-  const [currencyType, setCurrencyType] = useState("");
+  const [currencyType, setCurrencyType] = useState("tz");
   const [exchangeRate, setExchangeRate] = useState("");
-  const [salaryType, setSalaryType] = useState("");
+  const [salaryType, setSalaryType] = useState("gross");
   const [netPay, setNetPay] = useState("");
   const [basicPay, setBasicPay] = useState("");
-  const [allowances, setAllowances] = useState<any[]>([]);
   const [totalGross, setTotalGross] = useState<number | null>(null);
-  const [totalAllowance, setTotalAllowance] = useState(0);
   const [sscEmployee, setSscEmployee] = useState(0);
   const [pay, setPay] = useState<number | null>(null);
 
-  const [showCompanyCost, setShowCompanyCost] = useState(false);
+  const [allowances, setAllowances] = useState<Allowance[]>([]);
+  const [totalAllowance, setTotalAllowance] = useState(0);
 
   // Calculate total allowance whenever allowances change
   useEffect(() => {
     const sum = allowances.reduce(
-      (total, amount) => total + parseFloat(amount || 0),
+      (total, a) => total + (parseFloat(a.amount) || 0),
       0,
     );
     setTotalAllowance(sum);
@@ -41,6 +40,7 @@ const SalaryCalculator = () => {
 
   // Main calculation effect
   useEffect(() => {
+    if (!taxData) return;
     calculateTaxableAmount();
   }, [
     basicPay,
@@ -51,23 +51,26 @@ const SalaryCalculator = () => {
     currencyType,
   ]);
 
-  // Add new allowance field
+  // Add new allowance row
   const addAllowance = () => {
-    setAllowances([...allowances, 0]);
+    setAllowances((prev) => [...prev, { name: "", amount: "" }]);
   };
 
-  // Remove allowance field
-  const removeAllowance = (index: any) => {
-    const newAllowances = [...allowances];
-    newAllowances.splice(index, 1);
-    setAllowances(newAllowances);
+  // Remove allowance row
+  const removeAllowance = (index: number) => {
+    setAllowances((prev) => prev.filter((_, i) => i !== index));
   };
 
-  // Handle allowance amount change
-  const handleAllowanceChange = (index: any, value: any) => {
-    const newAllowances = [...allowances];
-    newAllowances[index] = value > 100000000000 ? 0 : value;
-    setAllowances(newAllowances);
+  // Update an allowance's name or amount
+  const handleAllowanceChange = (
+    index: number,
+    field: keyof Allowance,
+    value: string,
+  ) => {
+    if (field === "amount" && Number(value) > 100000000000) value = "";
+    setAllowances((prev) =>
+      prev.map((a, i) => (i === index ? { ...a, [field]: value } : a)),
+    );
   };
 
   // Calculate total gross salary
@@ -93,6 +96,8 @@ const SalaryCalculator = () => {
 
   // Calculate PAYE amount
   const calculatePayAmount = (taxableAmount: number) => {
+    if (!taxData) return 0;
+
     let payAmount = 0;
 
     if (currencyType === "usd" && Number(exchangeRate) > 0) {
@@ -212,24 +217,6 @@ const SalaryCalculator = () => {
       : "0.00";
   };
 
-  // Add this function to calculate company costs
-  const calculateCompanyCost = () => {
-    if (!totalGross) return null;
-
-    const employerSSC = totalGross * 0.1; // 10% of gross salary
-    const sdl = totalGross * 0.035; // 3.5% of gross salary
-    const wcf = totalGross * 0.005; // 0.5% of gross salary
-    const grandTotal = totalGross + employerSSC + sdl + wcf;
-
-    return {
-      grossSalary: totalGross,
-      employerSSC,
-      sdl,
-      wcf,
-      grandTotal,
-    };
-  };
-
   // Download PDF
   const downloadPDF = () => {
     const element = document.getElementById("result");
@@ -283,216 +270,49 @@ const SalaryCalculator = () => {
 
   return (
     <div>
+      <div className="flex items-center justify-between mb-4">
+        <h4 className="text-Blue font-semibold m-0">SALARY CALCULATOR</h4>
+      </div>
+
       <Card>
         <CardContent className="space-y-4">
           {/* Header */}
-          <div className="flex items-center justify-between">
-            <h4 className="text-Blue font-semibold m-0">SALARY CALCULATOR</h4>
-          </div>
 
-          <Separator />
-
-          {/* Form */}
-          <SalaryForm
-            addAllowance={addAllowance}
-            allowances={allowances}
-            basicPay={basicPay}
-            currencyType={currencyType}
-            exchangeRate={exchangeRate}
-            handleAllowanceChange={handleAllowanceChange}
-            netPay={netPay}
-            removeAllowance={removeAllowance}
-            salaryType={salaryType}
-            setBasicPay={setBasicPay}
-            setCurrencyType={setCurrencyType}
-            setExchangeRate={setExchangeRate}
-            setNetPay={setNetPay}
-            setSalaryType={setSalaryType}
-          />
-
-          <Separator />
-
-          {/* Results */}
-          <div id="result" className="relative w-full p-2 text-center bg-white">
-            {/* Salary Type Result */}
-            <div className="mb-2">
-              <div className="flex justify-end items-center">
-                <div className="text-right">
-                  <h4 className="text-sm md:text-base text-Blue m-0">
-                    {salaryType === "net" ? "Gross Salary" : "Net Salary"} ={" "}
-                    {formatNumber(
-                      salaryType === "net"
-                        ? Number(totalGross || 0)
-                        : Number(netPay || 0),
-                    )}{" "}
-                    {currencyType === "usd" ? "USD" : "TZS"}
-                  </h4>
-                </div>
-              </div>
+          <div className="flex flex-col gap-4 md:flex-row">
+            <div className="flex-1">
+              {/* Form */}
+              <SalaryForm
+                addAllowance={addAllowance}
+                allowances={allowances}
+                basicPay={basicPay}
+                currencyType={currencyType}
+                exchangeRate={exchangeRate}
+                handleAllowanceChange={handleAllowanceChange}
+                netPay={netPay}
+                removeAllowance={removeAllowance}
+                salaryType={salaryType}
+                setBasicPay={setBasicPay}
+                setCurrencyType={setCurrencyType}
+                setExchangeRate={setExchangeRate}
+                setNetPay={setNetPay}
+                setSalaryType={setSalaryType}
+              />
             </div>
 
-            {/* Earnings Section */}
-            <div className="mb-1.5">
-              <div className="flex justify-between w-full border-t border-b border-black py-1 font-bold text-[12px] md:text-sm">
-                <h4 className="m-0 text-[15px] md:text-base">EARNING</h4>
-                <span>AMOUNT</span>
-              </div>
-              <div className="flex justify-between text-[12px] md:text-[14px]">
-                <span>Basic</span>
-                <span>
-                  {formatNumber(parseFloat(basicPay || "0"))}{" "}
-                  {currencyType === "usd" ? "USD" : "TZS"}
-                </span>
-              </div>
-              <div className="flex justify-between text-[12px] md:text-[14px]">
-                <span>Total Allowances</span>
-                <span>
-                  {formatNumber(Number(totalAllowance || 0))}{" "}
-                  {currencyType === "usd" ? "USD" : "TZS"}
-                </span>
-              </div>
+            {/* Results */}
+            <div className="flex-1">
+              <SalaryResult
+                salaryType={salaryType}
+                currencyType={currencyType}
+                basicPay={basicPay}
+                allowances={allowances}
+                totalAllowance={totalAllowance}
+                totalGross={totalGross}
+                sscEmployee={sscEmployee}
+                pay={pay}
+                netPay={netPay}
+              />
             </div>
-
-            {/* Gross Earnings */}
-            <div className="mb-1.5">
-              <div className="flex justify-between text-[12px] md:text-[14px]">
-                <h4 className="font-bold text-[12px] md:text-[14px] m-0">
-                  Gross Earning
-                </h4>
-                <span>
-                  {formatNumber(Number(totalGross || 0))}{" "}
-                  {currencyType === "usd" ? "USD" : "TZS"}
-                </span>
-              </div>
-            </div>
-
-            {/* Deductions */}
-            <div className="mb-1.5">
-              <div className="full-line flex justify-between w-full border-t border-b border-black py-1 font-bold text-[12px] md:text-[14px]">
-                <h4 className="m-0 text-[15px] md:text-[16px]">DEDUCTIONS</h4>
-                <span>AMOUNT</span>
-              </div>
-              <div className="flex justify-between text-[12px] md:text-[14px]">
-                <span>SSC (Employee)</span>
-                <span>
-                  {formatNumber(Number(sscEmployee || 0))}{" "}
-                  {currencyType === "usd" ? "USD" : "TZS"}
-                </span>
-              </div>
-              <div className="flex justify-between text-[12px] md:text-[14px]">
-                <span>PAYE</span>
-                <span>
-                  {formatNumber(Number(pay || 0))}{" "}
-                  {currencyType === "usd" ? "USD" : "TZS"}
-                </span>
-              </div>
-            </div>
-
-            {/* Total Deductions */}
-            <div className="mb-1.5">
-              <div className="flex justify-between w-full border-t border-b-2 border-black border-dotted py-1 font-bold text-[12px] md:text-[14px]">
-                <h4 className="m-0 text-[15px] md:text-[16px]">
-                  TOTAL DEDUCTIONS
-                </h4>
-                <span>
-                  {formatNumber(Number(sscEmployee || 0) + Number(pay || 0))}{" "}
-                  {currencyType === "usd" ? "USD" : "TZS"}
-                </span>
-              </div>
-            </div>
-
-            {/* Net Salary */}
-            <div className="mb-1.5">
-              <div className="flex justify-between w-full border-t-2 border-b-[3px] border-black border-double py-1 font-bold text-[12px] md:text-[14px]">
-                <h4 className="m-0 text-[15px] md:text-[16px]">
-                  NET PAY{" "}
-                  <span className="font-normal text-[14px] md:text-[16px]">
-                    (Gross Earnings - Total Deductions)
-                  </span>
-                </h4>
-                <span>
-                  {formatNumber(Number(netPay || 0))}{" "}
-                  {currencyType === "usd" ? "USD" : "TZS"}
-                </span>
-              </div>
-            </div>
-
-            {/* Company Cost Section */}
-            {showCompanyCost && (
-              <>
-                <div className="mb-1.5 mt-4">
-                  <div className="full-line flex justify-between w-full border-t border-b border-black py-1 font-bold text-[12px] md:text-[14px]">
-                    <h4 className="m-0 text-[15px] md:text-[16px]">
-                      {" "}
-                      TOTOAL COST TO COMPANY{" "}
-                    </h4>
-                    <span>AMOUNT</span>
-                  </div>
-                  <div className="flex justify-between text-[12px] md:text-[14px]">
-                    <span>Gross Salary</span>
-                    <span>
-                      {formatNumber(calculateCompanyCost()?.grossSalary ?? 0)}{" "}
-                      {currencyType === "usd" ? "USD" : "TZS"}
-                    </span>
-                  </div>
-                  <div className="flex justify-between text-[12px] md:text-[14px]">
-                    <span>SSC (Employer)</span>
-                    <span>
-                      {formatNumber(calculateCompanyCost()?.employerSSC ?? 0)}{" "}
-                      {currencyType === "usd" ? "USD" : "TZS"}
-                    </span>
-                  </div>
-                  <div className="flex justify-between text-[12px] md:text-[14px]">
-                    <span>SDL (3.5%)</span>
-                    <span>
-                      {formatNumber(calculateCompanyCost()?.sdl ?? 0)}{" "}
-                      {currencyType === "usd" ? "USD" : "TZS"}
-                    </span>
-                  </div>
-                  <div className="flex justify-between text-[12px] md:text-[14px]">
-                    <span>WCF (0.5%)</span>
-                    <span>
-                      {formatNumber(calculateCompanyCost()?.wcf ?? 0)}{" "}
-                      {currencyType === "usd" ? "USD" : "TZS"}
-                    </span>
-                  </div>
-                </div>
-
-                {/* Grand Total */}
-                <div className="mb-1.5">
-                  <div className="flex justify-between w-full border-t-2 border-b-[3px] border-black border-double py-1 font-bold text-[12px] md:text-[14px]">
-                    <h4 className="m-0 text-[15px] md:text-[16px]">
-                      GRAND TOTAL
-                    </h4>
-                    <span>
-                      {formatNumber(calculateCompanyCost()?.grandTotal ?? 0)}{" "}
-                      {currencyType === "usd" ? "USD" : "TZS"}
-                    </span>
-                  </div>
-                </div>
-              </>
-            )}
-          </div>
-
-          {/* Company Cost Button */}
-          <div className="mb-1.5 no-print">
-            <Button
-              variant="outline"
-              onClick={() => setShowCompanyCost(!showCompanyCost)}
-              className="w-full"
-            >
-              {showCompanyCost ? (
-                <>
-                  <span>Hide Total Cost To Company</span>
-                  <ChevronUp />
-                </>
-              ) : (
-                <>
-                  <span>Show Total Cost To Company</span>
-                  <ChevronDown />
-                </>
-              )}
-            </Button>
           </div>
 
           {/* Action Buttons */}

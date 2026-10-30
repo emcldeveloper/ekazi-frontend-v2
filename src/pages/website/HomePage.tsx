@@ -1,16 +1,21 @@
+import HomeLayout from "@/layouts/HomeLayout";
 import BannerSection from "./components/BannerSection";
+import FeaturedCandidateSection from "./components/FeatureCandidateSection";
 import FeaturedEmployersSection from "./components/FeaturedEmployersSection";
+import FeaturedJobsSection from "./components/FeaturedJobsSection";
 import HeroSection from "./components/HeroSection";
-import Navbar from "./components/Navbar";
+import CTASection from "./components/CTASection";
 
 const HomePage = () => {
   return (
-    <div>
-      <Navbar />
+    <HomeLayout>
       <HeroSection />
       <BannerSection />
       <FeaturedEmployersSection />
-    </div>
+      <FeaturedJobsSection />
+      <FeaturedCandidateSection />
+      <CTASection />
+    </HomeLayout>
   );
 };
 
