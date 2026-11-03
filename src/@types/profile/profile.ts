@@ -2,11 +2,6 @@ import type { PersonalInfo } from "./personal-info";
 
 export type Applicant = {
   applicant_id: number;
-  profile: Profile;
-  profile_completion: ProfileCompletion;
-};
-
-export type Profile = {
   applicant_profile: PersonalInfo;
   phone: Phone[];
   address: Address[];
@@ -22,6 +17,7 @@ export type Profile = {
   applicant_personality: Personality[];
   proficiency: Proficiency[];
   referees: Referee[];
+  profile_completion: ProfileCompletion;
 };
 
 export type Phone = {

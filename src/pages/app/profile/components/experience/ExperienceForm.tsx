@@ -9,7 +9,6 @@ import {
   FieldGroup,
   FieldLabel,
 } from "@/components/ui/field";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -39,15 +38,18 @@ import type {
   Region,
   SalaryRange,
 } from "@/@types/universals";
-import { DialogClose, DialogFooter } from "@/components/ui/dialog";
 import RichTextEditor from "@/components/rich-text-editor";
 import { useCreateExperience, useUpdateExperience } from "@/hooks/profile";
 
 interface ExperienceFormProps {
   experience?: any;
+  onLoadingChange?: (loading: boolean) => void;
 }
 
-const ExperienceForm = ({ experience }: ExperienceFormProps) => {
+const ExperienceForm = ({
+  experience,
+  onLoadingChange,
+}: ExperienceFormProps) => {
   const [employerSearch, setEmployerSearch] = useState("");
   const [positionSearch, setPositionSearch] = useState("");
   const [industrySearch] = useState("");
@@ -67,7 +69,11 @@ const ExperienceForm = ({ experience }: ExperienceFormProps) => {
   const { mutate: updateExperience, isPending: isUpdating } =
     useUpdateExperience();
 
-  const isLoading = isCreating || isUpdating;
+  const isPending = isCreating || isUpdating;
+
+  useEffect(() => {
+    onLoadingChange?.(isPending);
+  }, [isPending, onLoadingChange]);
 
   /* ---------------- Master data ---------------- */
   const { data: employers } = useCompanies({ search: employerSearch });
@@ -116,7 +122,7 @@ const ExperienceForm = ({ experience }: ExperienceFormProps) => {
   const rangesOptions =
     salaryRanges?.map((range: SalaryRange) => ({
       value: range.id,
-      label: range.low,
+      label: range.low.toLocaleString(),
     })) ?? [];
 
   const { data: experienceTypes } = useExperienceType();
@@ -135,18 +141,18 @@ const ExperienceForm = ({ experience }: ExperienceFormProps) => {
     if (!experience) return;
 
     reset({
-      experience_type_id: experience?.experience_type_id,
-      applicant_employer_id: experience?.applicant_employer_id,
-      country_id: experience?.country_id,
-      region_id: experience?.region_id,
+      experience_type_id: experience?.experience_type.id,
+      applicant_employer_id: experience.employer.id,
+      country_id: experience?.region.country.id,
+      region_id: experience?.region.id,
       sub_location: experience?.sub_location,
-      position_id: experience?.position_id,
-      position_level_id: experience?.position_level_id,
-      industry_id: experience?.industry_id,
+      position_id: experience?.position.id,
+      position_level_id: experience?.position_level.id,
+      industry_id: experience?.industry.id,
       start_date: experience?.start_date,
       end_date: experience?.end_date,
-      start_salary_id: experience?.start_salary_id,
-      end_salary_id: experience?.end_salary_id,
+      start_salary_id: experience?.start_salary.id,
+      end_salary_id: experience?.end_salary.id,
       responsibility: experience?.responsibility,
       remark: experience?.remark,
     });
@@ -186,325 +192,312 @@ const ExperienceForm = ({ experience }: ExperienceFormProps) => {
   };
 
   return (
-    <div>
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-        {/* Experience type + Employer */}
-        <FieldGroup className="grid grid-cols-1 sm:grid-cols-2">
-          <Field>
-            <FieldLabel>Experience Type *</FieldLabel>
-            <Controller
-              name="experience_type_id"
-              control={control}
-              rules={{
-                required: "Experience is required",
-              }}
-              render={({ field }) => (
-                <SearchSelect
-                  {...field}
-                  isClearable
-                  options={typesOptions}
-                  value={typesOptions.find(
-                    (option: OptionType) => option.value === field.value,
-                  )}
-                  onChange={(option) => field.onChange(option?.value ?? null)}
-                />
-              )}
-            />
-            {errors.experience_type_id && (
-              <FieldError>{errors.experience_type_id.message}</FieldError>
+    <form
+      id="experience-form"
+      onSubmit={handleSubmit(onSubmit)}
+      className="space-y-6"
+    >
+      {/* Experience type + Employer */}
+      <FieldGroup className="grid grid-cols-1 sm:grid-cols-2">
+        <Field>
+          <FieldLabel>Experience Type *</FieldLabel>
+          <Controller
+            name="experience_type_id"
+            control={control}
+            rules={{
+              required: "Experience is required",
+            }}
+            render={({ field }) => (
+              <SearchSelect
+                {...field}
+                isClearable
+                options={typesOptions}
+                value={typesOptions.find(
+                  (option: OptionType) => option.value === field.value,
+                )}
+                onChange={(option) => field.onChange(option?.value ?? null)}
+              />
             )}
-          </Field>
+          />
+          {errors.experience_type_id && (
+            <FieldError>{errors.experience_type_id.message}</FieldError>
+          )}
+        </Field>
 
-          <Field>
-            <FieldLabel>Employer *</FieldLabel>
-            <Controller
-              name="applicant_employer_id"
-              control={control}
-              rules={{ required: "Employer is required" }}
-              render={({ field }) => (
-                <CreatableSelect
-                  {...field}
-                  options={employerOptions}
-                  onInputChange={(inputValue) => {
-                    setEmployerSearch(inputValue);
-                  }}
-                  isClearable
-                />
-              )}
-            />
-            {errors.applicant_employer_id && (
-              <FieldError>{errors.applicant_employer_id.message}</FieldError>
+        <Field>
+          <FieldLabel>Employer *</FieldLabel>
+          <Controller
+            name="applicant_employer_id"
+            control={control}
+            rules={{ required: "Employer is required" }}
+            render={({ field }) => (
+              <CreatableSelect
+                {...field}
+                options={employerOptions}
+                onInputChange={(inputValue) => {
+                  setEmployerSearch(inputValue);
+                }}
+                isClearable
+              />
             )}
-          </Field>
-        </FieldGroup>
+          />
+          {errors.applicant_employer_id && (
+            <FieldError>{errors.applicant_employer_id.message}</FieldError>
+          )}
+        </Field>
+      </FieldGroup>
 
-        {/* Location */}
-        <FieldGroup className="grid grid-cols-1 sm:grid-cols-2">
-          <Field>
-            <FieldLabel>Country</FieldLabel>
-            <Controller
-              name="country_id"
-              control={control}
-              rules={{
-                required: "Country is required",
-              }}
-              render={({ field }) => (
-                <SearchSelect
-                  {...field}
-                  isClearable
-                  options={countryOptions}
-                  value={countryOptions.find(
-                    (option: OptionType) => option.value === field.value,
-                  )}
-                  onChange={(option) => field.onChange(option?.value ?? null)}
-                />
-              )}
-            />
-            {errors.country_id && (
-              <FieldError>{errors.country_id.message}</FieldError>
+      {/* Location */}
+      <FieldGroup className="grid grid-cols-1 sm:grid-cols-2">
+        <Field>
+          <FieldLabel>Country</FieldLabel>
+          <Controller
+            name="country_id"
+            control={control}
+            rules={{
+              required: "Country is required",
+            }}
+            render={({ field }) => (
+              <SearchSelect
+                {...field}
+                isClearable
+                options={countryOptions}
+                value={countryOptions.find(
+                  (option: OptionType) => option.value === field.value,
+                )}
+                onChange={(option) => field.onChange(option?.value ?? null)}
+              />
             )}
-          </Field>
+          />
+          {errors.country_id && (
+            <FieldError>{errors.country_id.message}</FieldError>
+          )}
+        </Field>
 
-          <Field>
-            <FieldLabel>Region *</FieldLabel>
-            <Controller
-              name="region_id"
-              control={control}
-              rules={{
-                required: "Region is required",
-              }}
-              render={({ field }) => (
-                <SearchSelect
-                  {...field}
-                  isClearable
-                  options={regionOptions}
-                  value={regionOptions.find(
-                    (option: OptionType) => option.value === field.value,
-                  )}
-                  onChange={(option) => field.onChange(option?.value ?? null)}
-                />
-              )}
-            />
-            {errors.region_id && (
-              <FieldError>{errors.region_id.message}</FieldError>
+        <Field>
+          <FieldLabel>Region *</FieldLabel>
+          <Controller
+            name="region_id"
+            control={control}
+            rules={{
+              required: "Region is required",
+            }}
+            render={({ field }) => (
+              <SearchSelect
+                {...field}
+                isClearable
+                options={regionOptions}
+                value={regionOptions.find(
+                  (option: OptionType) => option.value === field.value,
+                )}
+                onChange={(option) => field.onChange(option?.value ?? null)}
+              />
             )}
-          </Field>
+          />
+          {errors.region_id && (
+            <FieldError>{errors.region_id.message}</FieldError>
+          )}
+        </Field>
 
-          <Field>
-            <FieldLabel>Sub Location *</FieldLabel>
-            <Input
-              placeholder="Sub location"
-              {...register("sub_location", {
-                required: "Sub location is required",
-              })}
-            />
-            {errors.sub_location && (
-              <FieldError>{errors.sub_location.message}</FieldError>
+        <Field>
+          <FieldLabel>Sub Location *</FieldLabel>
+          <Input
+            placeholder="Sub location"
+            {...register("sub_location", {
+              required: "Sub location is required",
+            })}
+          />
+          {errors.sub_location && (
+            <FieldError>{errors.sub_location.message}</FieldError>
+          )}
+        </Field>
+      </FieldGroup>
+
+      {/* Position */}
+      <FieldGroup className="grid grid-cols-1 sm:grid-cols-2">
+        <Field>
+          <FieldLabel>Position *</FieldLabel>
+          <Controller
+            name="position_id"
+            control={control}
+            rules={{ required: "Position is required" }}
+            render={({ field }) => (
+              <CreatableSelect
+                {...field}
+                options={positionOptions}
+                onInputChange={(inputValue) => {
+                  setPositionSearch(inputValue);
+                }}
+                isClearable
+              />
             )}
-          </Field>
-        </FieldGroup>
+          />
+          {errors.position_id && (
+            <FieldError>{errors.position_id.message}</FieldError>
+          )}
+        </Field>
 
-        {/* Position */}
-        <FieldGroup className="grid grid-cols-1 sm:grid-cols-2">
-          <Field>
-            <FieldLabel>Position *</FieldLabel>
-            <Controller
-              name="position_id"
-              control={control}
-              rules={{ required: "Position is required" }}
-              render={({ field }) => (
-                <CreatableSelect
-                  {...field}
-                  options={positionOptions}
-                  onInputChange={(inputValue) => {
-                    setPositionSearch(inputValue);
-                  }}
-                  isClearable
-                />
-              )}
-            />
-            {errors.position_id && (
-              <FieldError>{errors.position_id.message}</FieldError>
+        <Field>
+          <FieldLabel>Position Level *</FieldLabel>
+          <Controller
+            name="position_level_id"
+            control={control}
+            rules={{
+              required: "Level is required",
+            }}
+            render={({ field }) => (
+              <SearchSelect
+                {...field}
+                isClearable
+                options={levelsOptions}
+                value={levelsOptions.find(
+                  (option: OptionType) => option.value === field.value,
+                )}
+                onChange={(option) => field.onChange(option?.value ?? null)}
+              />
             )}
-          </Field>
+          />
+          {errors.position_level_id && (
+            <FieldError>{errors.position_level_id.message}</FieldError>
+          )}
+        </Field>
 
-          <Field>
-            <FieldLabel>Position Level *</FieldLabel>
-            <Controller
-              name="position_level_id"
-              control={control}
-              rules={{
-                required: "Level is required",
-              }}
-              render={({ field }) => (
-                <SearchSelect
-                  {...field}
-                  isClearable
-                  options={levelsOptions}
-                  value={levelsOptions.find(
-                    (option: OptionType) => option.value === field.value,
-                  )}
-                  onChange={(option) => field.onChange(option?.value ?? null)}
-                />
-              )}
-            />
-            {errors.position_level_id && (
-              <FieldError>{errors.position_level_id.message}</FieldError>
+        <Field>
+          <FieldLabel>Industry *</FieldLabel>
+          <Controller
+            name="industry_id"
+            control={control}
+            rules={{
+              required: "Industry is required",
+            }}
+            render={({ field }) => (
+              <SearchSelect
+                {...field}
+                isClearable
+                options={industryOptions}
+                value={industryOptions.find(
+                  (option: OptionType) => option.value === field.value,
+                )}
+                onChange={(option) => field.onChange(option?.value ?? null)}
+              />
             )}
-          </Field>
+          />
+          {errors.industry_id && (
+            <FieldError>{errors.industry_id.message}</FieldError>
+          )}
+        </Field>
+      </FieldGroup>
 
-          <Field>
-            <FieldLabel>Industry *</FieldLabel>
-            <Controller
-              name="industry_id"
-              control={control}
-              rules={{
-                required: "Industry is required",
-              }}
-              render={({ field }) => (
-                <SearchSelect
-                  {...field}
-                  isClearable
-                  options={industryOptions}
-                  value={industryOptions.find(
-                    (option: OptionType) => option.value === field.value,
-                  )}
-                  onChange={(option) => field.onChange(option?.value ?? null)}
-                />
-              )}
-            />
-            {errors.industry_id && (
-              <FieldError>{errors.industry_id.message}</FieldError>
+      {/* Dates */}
+      <FieldGroup className="grid grid-cols-1 sm:grid-cols-2">
+        <Field>
+          <FieldLabel>Start Date *</FieldLabel>
+          <Input
+            type="date"
+            {...register("start_date", { required: "Date is required" })}
+          />
+          {errors.start_date && (
+            <FieldError>{errors.start_date.message}</FieldError>
+          )}
+        </Field>
+
+        <Field>
+          <FieldLabel>End Date *</FieldLabel>
+          <Input type="date" disabled={currentRole} {...register("end_date")} />
+        </Field>
+
+        <Field orientation="horizontal">
+          <Checkbox
+            checked={currentRole}
+            onCheckedChange={() => setCurrentRole((v) => !v)}
+          />
+          <FieldLabel className="text-sm">
+            I am currently working in this role
+          </FieldLabel>
+        </Field>
+      </FieldGroup>
+
+      <FieldGroup className="grid grid-cols-1 sm:grid-cols-2">
+        <Field>
+          <FieldLabel>Start Salary Range *</FieldLabel>
+          <Controller
+            name="start_salary_id"
+            control={control}
+            rules={{
+              required: "Salary is required",
+            }}
+            render={({ field }) => (
+              <SearchSelect
+                {...field}
+                isClearable
+                options={rangesOptions}
+                value={rangesOptions.find(
+                  (option: OptionType) => option.value === field.value,
+                )}
+                onChange={(option) => field.onChange(option?.value ?? null)}
+              />
             )}
-          </Field>
-        </FieldGroup>
+          />
+          {errors.start_salary_id && (
+            <FieldError>{errors.start_salary_id.message}</FieldError>
+          )}
+        </Field>
 
-        {/* Dates */}
-        <FieldGroup className="grid grid-cols-1 sm:grid-cols-2">
-          <Field>
-            <FieldLabel>Start Date *</FieldLabel>
-            <Input
-              type="date"
-              {...register("start_date", { required: "Date is required" })}
-            />
-            {errors.start_date && (
-              <FieldError>{errors.start_date.message}</FieldError>
+        <Field>
+          <FieldLabel>End Salary Range *</FieldLabel>
+          <Controller
+            name="end_salary_id"
+            control={control}
+            rules={{
+              required: "Salary is required",
+            }}
+            render={({ field }) => (
+              <SearchSelect
+                {...field}
+                isClearable
+                options={rangesOptions}
+                value={rangesOptions.find(
+                  (option: OptionType) => option.value === field.value,
+                )}
+                onChange={(option) => field.onChange(option?.value ?? null)}
+              />
             )}
-          </Field>
+          />
+          {errors.end_salary_id && (
+            <FieldError>{errors.end_salary_id.message}</FieldError>
+          )}
+        </Field>
+      </FieldGroup>
 
-          <Field>
-            <FieldLabel>End Date *</FieldLabel>
-            <Input
-              type="date"
-              disabled={currentRole}
-              {...register("end_date")}
-            />
-          </Field>
+      <FieldGroup>
+        <Field>
+          <FieldLabel>Responsibilities</FieldLabel>
 
-          <Field orientation="horizontal">
-            <Checkbox
-              checked={currentRole}
-              onCheckedChange={() => setCurrentRole((v) => !v)}
-            />
-            <FieldLabel className="text-sm">
-              I am currently working in this role
-            </FieldLabel>
-          </Field>
-        </FieldGroup>
-
-        <FieldGroup className="grid grid-cols-1 sm:grid-cols-2">
-          <Field>
-            <FieldLabel>Start Salary Range *</FieldLabel>
-            <Controller
-              name="start_salary_id"
-              control={control}
-              rules={{
-                required: "Salary is required",
-              }}
-              render={({ field }) => (
-                <SearchSelect
-                  {...field}
-                  isClearable
-                  options={rangesOptions}
-                  value={rangesOptions.find(
-                    (option: OptionType) => option.value === field.value,
-                  )}
-                  onChange={(option) => field.onChange(option?.value ?? null)}
-                />
-              )}
-            />
-            {errors.start_salary_id && (
-              <FieldError>{errors.start_salary_id.message}</FieldError>
+          <Controller
+            name="responsibility"
+            control={control}
+            rules={{ required: "Responsibilities are required" }}
+            render={({ field }) => (
+              <RichTextEditor value={field.value} onChange={field.onChange} />
             )}
-          </Field>
+          />
 
-          <Field>
-            <FieldLabel>End Salary Range *</FieldLabel>
-            <Controller
-              name="end_salary_id"
-              control={control}
-              rules={{
-                required: "Salary is required",
-              }}
-              render={({ field }) => (
-                <SearchSelect
-                  {...field}
-                  isClearable
-                  options={rangesOptions}
-                  value={rangesOptions.find(
-                    (option: OptionType) => option.value === field.value,
-                  )}
-                  onChange={(option) => field.onChange(option?.value ?? null)}
-                />
-              )}
-            />
-            {errors.end_salary_id && (
-              <FieldError>{errors.end_salary_id.message}</FieldError>
-            )}
-          </Field>
-        </FieldGroup>
+          {errors.responsibility && (
+            <FieldError>{errors.responsibility.message}</FieldError>
+          )}
+        </Field>
 
-        <FieldGroup>
-          <Field>
-            <FieldLabel>Responsibilities</FieldLabel>
-
-            <Controller
-              name="responsibility"
-              control={control}
-              rules={{ required: "Responsibilities are required" }}
-              render={({ field }) => (
-                <RichTextEditor value={field.value} onChange={field.onChange} />
-              )}
-            />
-
-            {errors.responsibility && (
-              <FieldError>{errors.responsibility.message}</FieldError>
-            )}
-          </Field>
-
-          <Field>
-            <FieldLabel>Reasons for leaving *</FieldLabel>
-            <Textarea
-              rows={3}
-              placeholder="Reason for Leaving"
-              {...register("remark", { required: "Remarks are required" })}
-            />
-            {errors.remark && <FieldError>{errors.remark.message}</FieldError>}
-          </Field>
-        </FieldGroup>
-
-        <DialogFooter>
-          <DialogClose render={<Button variant="outline">Cancel</Button>} />
-          <Button
-            type="submit"
-            disabled={isLoading}
-            className="bg-Blue text-white hover:bg-blue-900"
-          >
-            {isLoading ? "Saving..." : "Save Changes"}
-          </Button>
-        </DialogFooter>
-      </form>
-    </div>
+        <Field>
+          <FieldLabel>Reasons for leaving *</FieldLabel>
+          <Textarea
+            rows={3}
+            placeholder="Reason for Leaving"
+            {...register("remark", { required: "Remarks are required" })}
+          />
+          {errors.remark && <FieldError>{errors.remark.message}</FieldError>}
+        </Field>
+      </FieldGroup>
+    </form>
   );
 };
 

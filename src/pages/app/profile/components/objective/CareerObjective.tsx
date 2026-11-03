@@ -8,7 +8,7 @@ interface CareerObjectiveProps {
 }
 
 const CareerObjective = ({ applicant }: CareerObjectiveProps) => {
-  const careerObjective = applicant?.profile?.objective;
+  const careerObjective = applicant?.objective;
 
   return (
     <div className="space-y-2">

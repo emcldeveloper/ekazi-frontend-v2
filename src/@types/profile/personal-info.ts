@@ -13,17 +13,20 @@ export type PersonalInfo = {
 };
 
 export type PersonalInfoPayload = {
-  applicant_id: number;
   first_name: string;
   middle_name?: string;
   last_name: string;
-  date_of_birth: string;
+  dob: string;
   phone: string;
-  phone2?: string;
-  sub_location?: string;
-  postal_address?: string;
-  gender_id: number;
-  marital_status_id: number;
   country_id: number;
   region_id: number;
+  sub_location?: string;
+  postal?: string;
+  gender_id: number;
+  marital_status_id: number;
+
+  // date_of_birth: string;
+  // phone2?: string;
+  // postal_address?: string;
+  // country_id: number;
 };

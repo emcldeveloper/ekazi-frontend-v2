@@ -1,7 +1,7 @@
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
 import { capitalizeText } from "@/utils/helpers";
-import { UserPen } from "lucide-react";
 
 interface CultureSectionProps {
   cultures: any;
@@ -11,12 +11,8 @@ const CultureSection = ({ cultures }: CultureSectionProps) => {
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="uppercase">
-          <div className="bg-blue-100 text-primary p-2 rounded-md">
-            <UserPen size={16} />
-          </div>
-          Culture
-        </CardTitle>
+        <CardTitle className="capitalize">Culture</CardTitle>
+        <Separator />
       </CardHeader>
       <CardContent>
         <div className="flex flex-wrap gap-2">

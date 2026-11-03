@@ -62,13 +62,30 @@ export const saveJob = async (payload: any) => {
   return res.data;
 };
 
-export const getSavedJobs = async () => {
-  const res = await api.get("/applicant/saved-jobs");
+export const getSavedJobs = async ({
+  page,
+  limit,
+  search,
+  industry,
+}: {
+  page: number;
+  limit: number;
+  search: string;
+  industry: string;
+}) => {
+  const res = await api.get("/applicant/saved-jobs", {
+    params: {
+      page,
+      limit,
+      search,
+      industry,
+    },
+  });
   return res.data;
 };
 
 export const getMatchedJobs = async () => {
-  const res = await api.get(`/applicant/job_match`);
+  const res = await api.get(`/applicant/matched-jobs`);
   return res.data;
 };
 

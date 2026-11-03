@@ -50,7 +50,7 @@ const ViewMatchedJob = ({
                 <Loader className="animate-spin" />
               </div>
             ) : jobDetails ? (
-              <JobDetails job={jobDetails} />
+              <JobDetails jobId={jobDetails.id} />
             ) : (
               <p className="text-sm text-muted-foreground">No job selected.</p>
             )}
@@ -75,7 +75,7 @@ const ViewMatchedJob = ({
               <Loader className="animate-spin" />
             </div>
           ) : jobDetails ? (
-            <JobDetails job={jobDetails} />
+            <JobDetails jobId={jobDetails.id} />
           ) : (
             <p className="text-sm text-muted-foreground">No job selected.</p>
           )}

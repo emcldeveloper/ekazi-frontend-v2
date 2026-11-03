@@ -8,10 +8,13 @@ import {
   DialogTrigger,
   DialogClose,
 } from "@/components/ui/dialog";
-import { PlusIcon } from "lucide-react";
+import { Loader, PlusIcon } from "lucide-react";
 import ExperienceForm from "./ExperienceForm";
+import { useState } from "react";
 
 const AddExperience = () => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   return (
     <Dialog>
       <DialogTrigger
@@ -28,12 +31,21 @@ const AddExperience = () => {
         </DialogHeader>
 
         <div className="-mx-4 max-h-[70vh] overflow-y-auto px-4">
-          <ExperienceForm />
+          <ExperienceForm onLoadingChange={setIsSubmitting} />
         </div>
 
         <DialogFooter>
           <DialogClose render={<Button variant="outline">Cancel</Button>} />
-          <Button type="submit">Save changes</Button>
+          <Button type="submit" form="experience-form">
+            {isSubmitting ? (
+              <>
+                <Loader className="animate-spin" />
+                Saving...
+              </>
+            ) : (
+              "Save Changes"
+            )}
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

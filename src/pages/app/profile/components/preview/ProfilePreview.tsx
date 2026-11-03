@@ -17,10 +17,16 @@ const ProfilePreview = ({ applicant }: PreviewProfileProps) => {
       {isMobile ? (
         // For mobile devices
         <Drawer>
-          <DrawerTrigger render={<Button variant="outline">Preview</Button>} />
+          <DrawerTrigger
+            render={
+              <Button className="w-full bg-white font-semibold text-Blue hover:bg-white/90">
+                Preview profile
+              </Button>
+            }
+          />
 
           <DrawerContent>
-            <div className="flex-1 scroll-fade overflow-y-auto p-4">
+            <div className="flex-1 scroll-fade overflow-y-auto">
               <ProfileDetails applicant={applicant} />
             </div>
           </DrawerContent>
@@ -28,7 +34,13 @@ const ProfilePreview = ({ applicant }: PreviewProfileProps) => {
       ) : (
         // For large screen devices
         <Sheet>
-          <SheetTrigger render={<Button variant="outline">Preview</Button>} />
+          <SheetTrigger
+            render={
+              <Button className="w-full bg-white font-semibold text-Blue hover:bg-white/90">
+                Preview profile
+              </Button>
+            }
+          />
 
           <SheetContent className="sm:max-w-3xl!">
             <div className="scrollbar overflow-y-auto px-4">

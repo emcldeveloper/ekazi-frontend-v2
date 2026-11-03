@@ -8,7 +8,7 @@ interface ToolsProps {
 }
 
 const Tools = ({ applicant }: ToolsProps) => {
-  const toolsList = applicant?.profile?.tools ?? [];
+  const toolsList = applicant?.tools ?? [];
 
   return (
     <div className="space-y-2">

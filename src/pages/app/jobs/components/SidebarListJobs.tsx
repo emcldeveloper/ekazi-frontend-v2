@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { MapPin, Building2, Briefcase, Calendar } from "lucide-react";
+import { MapPin, Calendar } from "lucide-react";
 
 import { Drawer, DrawerContent } from "@/components/ui/drawer";
 import { Card, CardContent } from "@/components/ui/card";
@@ -83,7 +83,7 @@ const SidebarListJobs = ({
 
   return (
     <>
-      <div className="max-h-auto overflow-y-auto pr-2 space-y-3">
+      <div className="max-h-auto overflow-y-auto px-2 space-y-3">
         {jobs.map((job: any) => {
           const isActive = activeJob?.id === job.id;
 
@@ -115,20 +115,18 @@ const SidebarListJobs = ({
                   {/* Info */}
                   <div className="flex flex-col gap-1 flex-1 text-sm">
                     {/* Position */}
-                    <p className="font-semibold leading-snug flex items-center gap-1">
-                      <Briefcase size={16} />
-                      {capitalizeText(job.position?.position_name)}
+                    <p className="text-Orange font-semibold leading-snug flex items-center gap-1">
+                      {capitalizeText(job.position?.name)}
                     </p>
 
                     {/* Company */}
-                    <p className="text-xs text-muted-foreground flex items-center gap-1">
-                      <Building2 size={16} />
-                      {capitalizeText(job.client?.client_name)}
+                    <p className="text-sm text-Blue flex items-center gap-1">
+                      {capitalizeText(job.client?.name)}
                     </p>
 
                     {/* Location */}
                     <p className="text-xs text-muted-foreground flex items-center gap-1">
-                      <MapPin size={16} />
+                      <MapPin size={12} />
                       {[
                         job.addresses?.[0]?.sub_location,
                         job.addresses?.[0]?.region?.region_name,
@@ -141,7 +139,7 @@ const SidebarListJobs = ({
 
                     {/* Date */}
                     <p className="text-xs text-muted-foreground flex items-center gap-1">
-                      <Calendar size={16} />{" "}
+                      <Calendar size={12} />{" "}
                       {new Date(job.publish_date).toLocaleDateString()}
                     </p>
                   </div>
@@ -152,11 +150,11 @@ const SidebarListJobs = ({
         })}
 
         {/* Pagination */}
-        {!isLoading && (
+        {jobs.length > 0 && (
           <DataPagination
-            page={jobsData?.current_page}
-            perPage={jobsData?.per_page}
-            totalPages={jobsData?.total_pages}
+            page={jobsData?.page}
+            perPage={jobsData?.limit}
+            totalPages={jobsData?.totalPages}
             onPageChange={setPage}
             onPerPageChange={setPerPage}
           />
@@ -169,7 +167,7 @@ const SidebarListJobs = ({
           <div className="flex-1 scroll-fade overflow-y-auto p-4">
             {selectedJob && (
               <JobDetails
-                job={selectedJob}
+                jobId={selectedJob.id}
                 // closeModal={() => setOpenDrawer(false)}
               />
             )}

@@ -1,7 +1,8 @@
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
+
 import { capitalizeText } from "@/utils/helpers";
-import { UserCheck } from "lucide-react";
 
 interface PersonalitySectionProps {
   personalities: any;
@@ -11,12 +12,8 @@ const PersonalitySection = ({ personalities }: PersonalitySectionProps) => {
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="uppercase">
-          <div className="bg-blue-100 text-primary p-2 rounded-md">
-            <UserCheck size={16} />
-          </div>
-          Personality
-        </CardTitle>
+        <CardTitle className="capitalize">Personality</CardTitle>
+        <Separator />
       </CardHeader>
       <CardContent>
         <div className="flex flex-wrap gap-2">

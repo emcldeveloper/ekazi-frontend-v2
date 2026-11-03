@@ -7,7 +7,7 @@ interface CareerProfileProps {
 }
 
 const CareerProfile = ({ applicant }: CareerProfileProps) => {
-  const careerSummary = applicant?.profile?.career_summary;
+  const careerSummary = applicant?.career_summary;
 
   return (
     <div className="space-y-2">

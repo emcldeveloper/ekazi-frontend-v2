@@ -1,7 +1,7 @@
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
 import { capitalizeText } from "@/utils/helpers";
-import { Library } from "lucide-react";
 
 interface SkillsSectionProps {
   knowledges: any;
@@ -11,12 +11,8 @@ const SkillsSection = ({ knowledges }: SkillsSectionProps) => {
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="uppercase">
-          <div className="bg-blue-100 text-primary p-2 rounded-md">
-            <Library size={16} />
-          </div>
-          Skills
-        </CardTitle>
+        <CardTitle className="capitalize">Skills</CardTitle>
+        <Separator />
       </CardHeader>
 
       <CardContent className="flex flex-wrap gap-2">

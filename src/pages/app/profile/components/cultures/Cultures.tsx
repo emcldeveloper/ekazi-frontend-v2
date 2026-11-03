@@ -8,7 +8,7 @@ interface CulturesProps {
 }
 
 const Cultures = ({ applicant }: CulturesProps) => {
-  const cultures = applicant?.profile?.culture ?? [];
+  const cultures = applicant?.culture ?? [];
 
   return (
     <div className="space-y-2">

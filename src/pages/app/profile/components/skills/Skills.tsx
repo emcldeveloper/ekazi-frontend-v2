@@ -8,7 +8,7 @@ interface SkillsProps {
 }
 
 const Skills = ({ applicant }: SkillsProps) => {
-  const skills = applicant?.profile?.knowledge ?? [];
+  const skills = applicant?.knowledge ?? [];
 
   return (
     <div className="space-y-4">

@@ -12,7 +12,7 @@ interface RefereesProps {
 }
 
 const Referees = ({ applicant }: RefereesProps) => {
-  const referees = applicant.profile?.referees ?? [];
+  const referees = applicant?.referees ?? [];
 
   return (
     <div className="space-y-2">

@@ -16,7 +16,7 @@ interface TrainingsProps {
 }
 
 const Trainings = ({ applicant }: TrainingsProps) => {
-  const trainings = applicant.profile?.training ?? [];
+  const trainings = applicant?.training ?? [];
 
   return (
     <div className="space-y-2">

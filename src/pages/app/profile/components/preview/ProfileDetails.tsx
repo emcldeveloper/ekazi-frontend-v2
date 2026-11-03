@@ -1,4 +1,4 @@
-import { ChartBar, List, MailIcon, MapPinIcon, PhoneIcon } from "lucide-react";
+import { MailIcon, MapPinIcon, PhoneIcon } from "lucide-react";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -17,26 +17,27 @@ import PersonalitySection from "./sections/PersonalitySection";
 import SoftwareSection from "./sections/SoftwareSection";
 import { ToolsSection } from "./sections/ToolsSection";
 import RefereeSection from "./sections/RefereeSection";
+import { Separator } from "@/components/ui/separator";
 
 interface JobseekerDetailsProps {
   applicant: any;
 }
 
 const ProfileDetails = ({ applicant }: JobseekerDetailsProps) => {
-  const profile = applicant.profile?.applicant_profile;
-  const objectives = applicant.profile?.objective;
-  const educations = applicant.profile?.education ?? [];
-  const referees = applicant.profile?.referees ?? [];
-  const experiences = applicant.profile?.experience ?? [];
-  const trainings = applicant.profile?.training ?? [];
-  const languages = applicant.profile?.language ?? [];
-  const cultures = applicant.profile?.culture ?? [];
-  const personalities = applicant.profile?.applicant_personality ?? [];
-  const proficiencies = applicant.profile?.proficiency ?? [];
-  const knowledges = applicant.profile?.knowledge ?? [];
-  const softwares = applicant.profile?.software ?? [];
-  const tools = applicant.profile?.tools ?? [];
-  const location = applicant.profile?.address?.[0];
+  const profile = applicant?.applicant_profile;
+  const objectives = applicant?.objective;
+  const educations = applicant?.education ?? [];
+  const referees = applicant?.referees ?? [];
+  const experiences = applicant?.experience ?? [];
+  const trainings = applicant?.training ?? [];
+  const languages = applicant?.language ?? [];
+  const cultures = applicant?.culture ?? [];
+  const personalities = applicant?.applicant_personality ?? [];
+  const proficiencies = applicant?.proficiency ?? [];
+  const knowledges = applicant?.knowledge ?? [];
+  const softwares = applicant?.software ?? [];
+  const tools = applicant?.tools ?? [];
+  const location = applicant?.address?.[0];
 
   const isLoading = false;
 
@@ -103,12 +104,8 @@ const ProfileDetails = ({ applicant }: JobseekerDetailsProps) => {
             {applicant?.career_summary && (
               <Card>
                 <CardHeader>
-                  <CardTitle className="uppercase ">
-                    <div className="bg-blue-100 text-primary p-2 rounded-md">
-                      <ChartBar size={16} />
-                    </div>
-                    Summary
-                  </CardTitle>
+                  <CardTitle className="capitalize ">Summary</CardTitle>
+                  <Separator />
                 </CardHeader>
                 <CardContent>
                   <p className="text-sm leading-7 text-muted-foreground">
@@ -121,12 +118,8 @@ const ProfileDetails = ({ applicant }: JobseekerDetailsProps) => {
             {objectives && (
               <Card>
                 <CardHeader>
-                  <CardTitle className="uppercase">
-                    <div className="bg-blue-100 text-primary p-2 rounded-md">
-                      <List size={16} />
-                    </div>
-                    Objectives
-                  </CardTitle>
+                  <CardTitle className="capitalize">Objectives</CardTitle>
+                  <Separator />
                 </CardHeader>
 
                 <CardContent>

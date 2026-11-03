@@ -15,12 +15,17 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 
-import { formatDate } from "@/utils/helpers";
 import { useSavedJobs } from "@/hooks/jobs";
 import ViewSavedJob from "./ViewSavedJob";
+import { formatDate } from "@/utils/helpers";
+import { DataPagination } from "@/components/data-pagination";
+import { useState } from "react";
 
 const SavedJobsPage = () => {
-  const { data: jobsData } = useSavedJobs();
+  const [page, setPage] = useState(1);
+  const [perPage, setPerPage] = useState(10);
+
+  const { data: jobsData } = useSavedJobs({ page, limit: perPage });
   const savedJobs = jobsData?.data ?? [];
 
   return (
@@ -35,11 +40,11 @@ const SavedJobsPage = () => {
 
           <Separator />
 
-          <div className="w-full overflow-x-auto">
+          <div className="w-full overflow-x-auto space-y-4">
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead className="pl-6">Position & Company</TableHead>
+                  <TableHead>Position & Company</TableHead>
                   <TableHead>Posted On</TableHead>
                   <TableHead>Deadline</TableHead>
                   <TableHead className="text-center">Status</TableHead>
@@ -60,35 +65,21 @@ const SavedJobsPage = () => {
                 )}
 
                 {savedJobs.map((app: any) => {
-                  const job = app.job || {};
-                  const jobTitle =
-                    job.job_position?.position_name || "Untitled Job";
-                  const company = job.client?.client_name || "Unknown Company";
-
-                  const postedOn = formatDate(job.publish_date);
-                  const deadline = formatDate(job.dead_line);
-
-                  const isExpired = job?.dead_line
-                    ? new Date(job.dead_line) < new Date()
-                    : false;
-
                   return (
                     <TableRow key={app.id}>
-                      <TableCell className="pl-6">
-                        <div className="font-semibold cursor-pointer hover:underline">
-                          {jobTitle}
+                      <TableCell>
+                        <div className="text-Orange font-semibold">
+                          {app.position}
                         </div>
-                        <div className="text-sm text-muted-foreground">
-                          {company}
-                        </div>
+                        <div className="text-sm text-Blue">{app.company}</div>
                       </TableCell>
 
-                      <TableCell>{postedOn}</TableCell>
+                      <TableCell>{formatDate(app.posted_on)}</TableCell>
 
-                      <TableCell>{deadline}</TableCell>
+                      <TableCell>{formatDate(app.deadline)}</TableCell>
 
                       <TableCell className="text-center">
-                        {isExpired ? (
+                        {app.status ? (
                           <Badge variant="secondary">Closed</Badge>
                         ) : (
                           <Badge variant="default">Open</Badge>
@@ -96,43 +87,24 @@ const SavedJobsPage = () => {
                       </TableCell>
 
                       <TableCell className="text-right">
-                        {/* <DropdownMenu>
-                          <DropdownMenuTrigger
-                            render={
-                              <Button
-                                variant="ghost"
-                                size="icon"
-                                className="h-8 w-8"
-                              >
-                                <MoreVertical className="h-4 w-4" />
-                              </Button>
-                            }
-                          />
-
-                          <DropdownMenuContent align="end">
-                            <DropdownMenuItem
-                              onClick={() => handleJobClick(job)}
-                              className="flex items-center gap-2"
-                            >
-                              <Eye className="h-4 w-4" />
-                              View Details
-                            </DropdownMenuItem>
-
-                            <DropdownMenuSeparator />
-
-                            <DropdownMenuItem className="flex items-center gap-2 text-red-600">
-                              <Trash2 className="h-4 w-4" />
-                              Delete
-                            </DropdownMenuItem>
-                          </DropdownMenuContent>
-                        </DropdownMenu> */}
-                        <ViewSavedJob selectedJob={job} />
+                        <ViewSavedJob selectedJob={app} />
                       </TableCell>
                     </TableRow>
                   );
                 })}
               </TableBody>
             </Table>
+
+            {/* Pagination */}
+            {savedJobs.length > 0 && (
+              <DataPagination
+                page={jobsData?.page}
+                perPage={jobsData?.limit}
+                totalPages={jobsData?.totalPages}
+                onPageChange={setPage}
+                onPerPageChange={setPerPage}
+              />
+            )}
           </div>
         </CardContent>
 

@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { Loader, PencilLine } from "lucide-react";
 import { toast } from "sonner";
@@ -39,10 +39,9 @@ import type {
 
 import { getErrorMessage } from "@/utils/axios-helpers";
 import type { PersonalInfoPayload } from "@/@types/profile/personal-info";
-import type { Applicant } from "@/@types/profile/profile";
 
 interface BasicInfoModalProps {
-  applicant: Applicant;
+  applicant: any;
 }
 
 const BasicInfoModal = ({ applicant }: BasicInfoModalProps) => {
@@ -56,6 +55,9 @@ const BasicInfoModal = ({ applicant }: BasicInfoModalProps) => {
   } = useForm<PersonalInfoPayload>();
 
   const { mutate: savePersonalInfo, isPending } = useSavePersonalInfo();
+
+  const [searchRegion, setSearchRegion] = useState("");
+  const [searchCountry, setSearchCountry] = useState("");
 
   const { data: genders } = useGenders();
   const genderOptions =
@@ -71,14 +73,14 @@ const BasicInfoModal = ({ applicant }: BasicInfoModalProps) => {
       label: status.name,
     })) ?? [];
 
-  const { data: countries } = useCountries({});
+  const { data: countries } = useCountries({ search: searchCountry });
   const countryOptions =
     countries?.map((country: Country) => ({
       value: country.id,
       label: country.name,
     })) ?? [];
 
-  const { data: regions = [] } = useRegions({});
+  const { data: regions = [] } = useRegions({ search: searchRegion });
 
   const selectedCountry = watch("country_id");
 
@@ -93,24 +95,24 @@ const BasicInfoModal = ({ applicant }: BasicInfoModalProps) => {
   useEffect(() => {
     if (!applicant) return;
 
-    const profile = applicant?.profile?.applicant_profile;
-    // const address = applicant?.profile?.address?.[0];
-    // const phone = applicant?.profile?.phone;
+    const profile = applicant?.applicant_profile;
+    const address = applicant?.address?.[0];
+    const phone = applicant?.phone?.[0];
 
     reset({
       first_name: profile.first_name,
-      middle_name: profile?.middle_name,
-      last_name: profile?.last_name,
-      date_of_birth: profile?.dob,
-      // phone: phone,
-      // phone2: profile?.phone2,
-      // sub_location: address?.sub_location,
-      // postal_address: address?.postal,
+      middle_name: profile.middle_name,
+      last_name: profile.last_name,
+      dob: profile.dob,
+      gender_id: profile?.gender?.id,
+      marital_status_id: profile?.marital_status.id,
 
-      // gender_id: profile?.gender?.id,
-      // marital_status_id: profile?.marital_status_id,
-      // country_id: profile?.address?.country_id,
-      // region_id: profile?.region?.id,
+      phone: phone.phone_number,
+
+      sub_location: address.sub_location,
+      postal: address.postal,
+      country_id: address.region.country.id,
+      region_id: address.region?.id,
     });
   }, [applicant, reset]);
 
@@ -140,9 +142,13 @@ const BasicInfoModal = ({ applicant }: BasicInfoModalProps) => {
           <DialogTitle>Personal Information</DialogTitle>
         </DialogHeader>
 
-        <div className="-mx-4 max-h-[70vh] overflow-y-auto px-4">
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-            <FieldGroup className=" sm:flex-row">
+        <div className="-mx-4 max-h-[65vh] overflow-y-auto px-4">
+          <form
+            id="personal-form"
+            onSubmit={handleSubmit(onSubmit)}
+            className="space-y-4"
+          >
+            <FieldGroup className="sm:flex-row">
               <Field>
                 <FieldLabel>First Name *</FieldLabel>
                 <Input
@@ -174,7 +180,7 @@ const BasicInfoModal = ({ applicant }: BasicInfoModalProps) => {
             </FieldGroup>
 
             {/* Gender / Marital / DOB */}
-            <FieldGroup className="sm:flex-row">
+            <FieldGroup className="grid grid-cols-1 md:grid-cols-2">
               <Field>
                 <FieldLabel htmlFor="gender">Gender</FieldLabel>
                 <Controller
@@ -235,18 +241,13 @@ const BasicInfoModal = ({ applicant }: BasicInfoModalProps) => {
                 <FieldLabel>Date of Birth *</FieldLabel>
                 <Input
                   type="date"
-                  {...register("date_of_birth", {
+                  {...register("dob", {
                     required: "Date is required",
                   })}
                 />
-                {errors.date_of_birth && (
-                  <FieldError>{errors.date_of_birth.message}</FieldError>
-                )}
+                {errors.dob && <FieldError>{errors.dob.message}</FieldError>}
               </Field>
-            </FieldGroup>
 
-            {/* Phone */}
-            <FieldGroup className="sm:flex-row">
               <Field>
                 <FieldLabel>Phone *</FieldLabel>
                 <Input
@@ -258,15 +259,10 @@ const BasicInfoModal = ({ applicant }: BasicInfoModalProps) => {
                   <FieldError>{errors.phone.message}</FieldError>
                 )}
               </Field>
-
-              <Field>
-                <FieldLabel>Extra Phone</FieldLabel>
-                <Input {...register("phone2")} />
-              </Field>
             </FieldGroup>
 
-            {/* Country / Nationality */}
-            <FieldGroup className="sm:flex-row">
+            {/* Region */}
+            <FieldGroup className="grid grid-cols-1 md:grid-cols-2">
               <Field>
                 <FieldLabel>Country</FieldLabel>
                 <Controller
@@ -286,6 +282,9 @@ const BasicInfoModal = ({ applicant }: BasicInfoModalProps) => {
                       onChange={(option) =>
                         field.onChange(option?.value ?? null)
                       }
+                      onInputChange={(inputValue) => {
+                        setSearchCountry(inputValue);
+                      }}
                     />
                   )}
                 />
@@ -293,10 +292,7 @@ const BasicInfoModal = ({ applicant }: BasicInfoModalProps) => {
                   <FieldError>{errors.country_id.message}</FieldError>
                 )}
               </Field>
-            </FieldGroup>
 
-            {/* Region */}
-            <FieldGroup className="sm:flex-row">
               <Field>
                 <FieldLabel>Region</FieldLabel>
                 <Controller
@@ -317,6 +313,9 @@ const BasicInfoModal = ({ applicant }: BasicInfoModalProps) => {
                       onChange={(option) =>
                         field.onChange(option?.value ?? null)
                       }
+                      onInputChange={(inputValue) => {
+                        setSearchRegion(inputValue);
+                      }}
                     />
                   )}
                 />
@@ -338,30 +337,26 @@ const BasicInfoModal = ({ applicant }: BasicInfoModalProps) => {
               </Field>
 
               <Field>
-                <FieldLabel>Postal</FieldLabel>
-                <Input {...register("postal_address")} />
+                <FieldLabel>Postal Address</FieldLabel>
+                <Input {...register("postal")} />
               </Field>
             </FieldGroup>
-
-            <DialogFooter className="pt-4">
-              <DialogClose render={<Button variant="outline">Cancel</Button>} />
-              <Button
-                type="submit"
-                disabled={isPending}
-                className="bg-Blue text-white hover:bg-blue-900"
-              >
-                {isPending ? (
-                  <>
-                    <Loader className="animate-spin" />
-                    Saving...
-                  </>
-                ) : (
-                  "Save changes"
-                )}
-              </Button>
-            </DialogFooter>
           </form>
         </div>
+
+        <DialogFooter className="pt-4">
+          <DialogClose render={<Button variant="outline">Cancel</Button>} />
+          <Button type="submit" form="personal-form" disabled={isPending}>
+            {isPending ? (
+              <>
+                <Loader className="animate-spin" />
+                Saving...
+              </>
+            ) : (
+              "Save changes"
+            )}
+          </Button>
+        </DialogFooter>
       </DialogContent>
     </Dialog>
   );

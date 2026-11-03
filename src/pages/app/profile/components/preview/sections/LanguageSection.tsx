@@ -8,8 +8,8 @@ import {
 } from "@/components/ui/table";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
-import { Languages } from "lucide-react";
 import { capitalizeText } from "@/utils/helpers";
+import { Separator } from "@/components/ui/separator";
 
 interface LanguageSectionProps {
   languages: any;
@@ -19,12 +19,8 @@ const LanguageSection = ({ languages }: LanguageSectionProps) => {
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="uppercase">
-          <div className="bg-blue-100 text-primary p-2 rounded-md">
-            <Languages size={16} />
-          </div>
-          Language
-        </CardTitle>
+        <CardTitle className="capitalize">Language</CardTitle>
+        <Separator />
       </CardHeader>
       <CardContent>
         <Table>

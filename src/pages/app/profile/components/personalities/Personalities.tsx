@@ -8,7 +8,7 @@ interface PersonalitiesProps {
 }
 
 const Personalities = ({ applicant }: PersonalitiesProps) => {
-  const personalities = applicant?.profile?.personality ?? [];
+  const personalities = applicant?.personality ?? [];
 
   return (
     <div className="space-y-2">

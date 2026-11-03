@@ -21,22 +21,28 @@ const ViewApplication = ({
       {isMobile ? (
         // For mobile devices
         <Drawer>
-          <DrawerTrigger render={<Button variant="link">View</Button>} />
+          <DrawerTrigger render={<Button variant="secondary">View</Button>} />
 
           <DrawerContent>
             <div className="flex-1 scroll-fade overflow-y-auto p-4">
-              <JobDetails job={selectedJob} appliedJobIds={appliedJobIds} />
+              <JobDetails
+                jobId={selectedJob.id}
+                appliedJobIds={appliedJobIds}
+              />
             </div>
           </DrawerContent>
         </Drawer>
       ) : (
         // For large screen devices
         <Sheet>
-          <SheetTrigger render={<Button variant="link">View</Button>} />
+          <SheetTrigger render={<Button variant="secondary">View</Button>} />
 
           <SheetContent className="sm:max-w-3xl!">
             <div className="scrollbar overflow-y-auto px-4">
-              <JobDetails job={selectedJob} appliedJobIds={appliedJobIds} />
+              <JobDetails
+                jobId={selectedJob.id}
+                appliedJobIds={appliedJobIds}
+              />
             </div>
           </SheetContent>
         </Sheet>

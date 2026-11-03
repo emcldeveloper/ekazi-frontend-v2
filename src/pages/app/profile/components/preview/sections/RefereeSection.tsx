@@ -1,6 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
 import { capitalizeText } from "@/utils/helpers";
-import { Users } from "lucide-react";
 
 interface RefereeSectionProps {
   referees: any;
@@ -10,15 +10,11 @@ const RefereeSection = ({ referees }: RefereeSectionProps) => {
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="uppercase">
-          <div className="bg-blue-100 text-primary p-2 rounded-md">
-            <Users size={16} />
-          </div>
-          Referees
-        </CardTitle>
+        <CardTitle className="capitalize">Referees</CardTitle>
+        <Separator />
       </CardHeader>
       <CardContent>
-        <div className="flex justify-between space-y-3">
+        <div className="flex flex-col md:flex-row justify-between space-y-3">
           {referees.map((referee: any) => (
             <div key={referee.id} className="flex-1 space-y-1">
               <h3 className="text-sm font-semibold">

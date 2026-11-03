@@ -43,8 +43,7 @@ interface ExperienceProps {
 
 const Experience = ({ applicant }: ExperienceProps) => {
   const experiences = useMemo(
-    () =>
-      sortByMostRecent<ExperienceItem>(applicant?.profile?.experience ?? []),
+    () => sortByMostRecent<ExperienceItem>(applicant?.experience ?? []),
     [applicant],
   );
 

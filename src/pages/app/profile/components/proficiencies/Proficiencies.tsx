@@ -17,7 +17,7 @@ interface ProficienciesProps {
 }
 
 const Proficiencies = ({ applicant }: ProficienciesProps) => {
-  const proficiencies = applicant.profile?.proficiency ?? [];
+  const proficiencies = applicant?.proficiency ?? [];
 
   return (
     <div className="space-y-2">

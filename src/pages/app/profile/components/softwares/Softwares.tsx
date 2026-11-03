@@ -9,7 +9,7 @@ interface SoftwaresProps {
 }
 
 const Softwares = ({ applicant }: SoftwaresProps) => {
-  const softwares = applicant.profile?.software ?? [];
+  const softwares = applicant?.software ?? [];
 
   return (
     <div className="space-y-2">

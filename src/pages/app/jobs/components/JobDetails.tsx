@@ -1,6 +1,14 @@
 import { useState, type ReactNode } from "react";
 import { useNavigate } from "react-router-dom";
-import { Eye, Users, Briefcase, Banknote, Calendar, Share } from "lucide-react";
+import {
+  Eye,
+  Users,
+  Briefcase,
+  Banknote,
+  Calendar,
+  Share,
+  CopyIcon,
+} from "lucide-react";
 import { FaFacebook, FaLinkedin, FaWhatsapp } from "react-icons/fa";
 import { toast } from "sonner";
 
@@ -16,16 +24,21 @@ import { Separator } from "@/components/ui/separator";
 
 import { DEFAULT_IMG, IMG_BASE } from "@/config";
 import { getErrorMessage } from "@/utils/axios-helpers";
-import { useSaveJob } from "@/hooks/jobs";
+import { useJobDetails, useSaveJob } from "@/hooks/jobs";
+
+import LoadingState from "@/components/loading-state";
 import CheckCompleteProfile from "../../profile/components/CheckCompleteProfile";
 
 interface JobDetailsProps {
-  job: any;
+  jobId: number;
   appliedJobIds?: number[];
 }
 
-const JobDetails = ({ job, appliedJobIds = [] }: JobDetailsProps) => {
+const JobDetails = ({ jobId, appliedJobIds = [] }: JobDetailsProps) => {
   const navigate = useNavigate();
+
+  const { data: job, isLoading } = useJobDetails(jobId);
+
   const { mutate: saveJobMutate } = useSaveJob();
 
   const [profileComplete, setProfileComplete] = useState(null);
@@ -40,10 +53,10 @@ const JobDetails = ({ job, appliedJobIds = [] }: JobDetailsProps) => {
     : false;
 
   const shareTitle = `Job Opening: ${
-    job?.job_position?.position_name
-  } at ${job?.client?.client_name ?? ""}`;
+    job?.position?.name
+  } at ${job?.client?.name ?? ""}`;
 
-  const shareLink = `${job?.job_position?.position_name}`;
+  const shareLink = `${job?.position?.name}`;
 
   const encodedTitle = encodeURIComponent(shareTitle);
   const encodedLink = encodeURIComponent(shareLink);
@@ -51,17 +64,15 @@ const JobDetails = ({ job, appliedJobIds = [] }: JobDetailsProps) => {
   const encodedUrl = encodeURIComponent(shareUrl);
 
   const handleApply = () => {
-    localStorage.setItem("jobId", job?.id);
-
     if (job.job_email) {
       navigate(isLoggedIn ? "/app/apply-job-email" : "/apply-job-email", {
-        state: { jobId: job?.id },
+        state: { jobId: job.id },
       });
       return;
     }
 
     if (job.job_external_url) {
-      window.open(job?.job_external_url?.external_url, "_blank");
+      window.open(job.job_external_url?.external_url, "_blank");
       return;
     }
 
@@ -81,7 +92,7 @@ const JobDetails = ({ job, appliedJobIds = [] }: JobDetailsProps) => {
     }
 
     navigate("/app/apply-job", {
-      state: { jobId: job?.id },
+      state: { jobId: job.id },
     });
   };
 
@@ -93,7 +104,7 @@ const JobDetails = ({ job, appliedJobIds = [] }: JobDetailsProps) => {
     saveJobMutate(
       {
         applicant_id: applicantId,
-        job_id: job?.id,
+        job_id: job.id,
       },
       {
         onSuccess: (res) => {
@@ -106,24 +117,35 @@ const JobDetails = ({ job, appliedJobIds = [] }: JobDetailsProps) => {
     );
   };
 
+  const handleCopyLink = async () => {
+    try {
+      await navigator.clipboard.writeText(shareUrl);
+
+      toast.success("Link copied");
+    } catch (error) {
+      console.error(error);
+      toast.error("Unable to copy the job link");
+    }
+  };
+
+  if (isLoading) {
+    return <LoadingState />;
+  }
+
   return (
     <div className="space-y-4 my-5">
       {/* Header */}
       <div className="flex gap-4 items-center">
         <img
-          src={`${IMG_BASE}${job?.client?.logo || ""}`}
-          alt={job?.client?.client_name || "Company Logo"}
+          src={`${IMG_BASE}${job.client?.logo || ""}`}
+          alt={job.client?.name || "Company Logo"}
           className="object-contain max-w-[120px] max-h-[75px]"
           onError={(e) => (e.currentTarget.src = DEFAULT_IMG)}
         />
 
         <div className="text-start">
-          <h2 className="font-semibold text-lg">
-            {job?.position?.position_name}
-          </h2>
-          <p className="text-sm text-muted-foreground">
-            {job?.client?.client_name}
-          </p>
+          <h2 className="font-semibold text-lg">{job.position?.name}</h2>
+          <p className="text-sm text-muted-foreground">{job.client?.name}</p>
         </div>
       </div>
 
@@ -133,35 +155,35 @@ const JobDetails = ({ job, appliedJobIds = [] }: JobDetailsProps) => {
       <div className="grid grid-cols-3 text-start gap-4">
         <div className="flex gap-1 items-center text-sm">
           <Eye size={16} className="text-orange-500" />
-          <span>{job?.jobStatistics?.job_views ?? 0}</span>
+          <span>{job.statistics?.[0]?.job_views ?? 0}</span>
           <span>Views</span>
         </div>
 
         <div className="flex gap-1 items-center text-sm">
           <Users size={16} className="text-orange-500" />
           <span>
-            {job?.applied_count ?? job?.indirect_applicant?.length ?? 0}
+            {job.total_applicants ?? job.indirect_applicant?.length ?? 0}
           </span>
           <span>Applicants</span>
         </div>
 
         <div className="flex gap-1 items-center text-sm">
           <Briefcase size={16} className="text-orange-500" />
-          <span>{job?.job_type?.type_name}</span>
+          <span>{job.job_type?.name}</span>
         </div>
 
         <div className="flex gap-1 items-center text-sm">
           <Banknote size={16} className="text-orange-500" />
           <span>
-            {job?.entry_salary || job?.exit_salary
-              ? `${job?.entry_salary ?? 0} - ${job.exit_salary}`
+            {job.entry_salary || job.exit_salary
+              ? `${job.entry_salary ?? 0} - ${job.exit_salary}`
               : "Negotiable"}
           </span>
         </div>
 
         <div className="flex gap-1 items-center text-sm">
           <Calendar size={16} className="text-orange-500" />
-          <span>{new Date(job?.dead_line).toDateString() ?? "Deadline"}</span>
+          <span>{new Date(job.dead_line).toDateString() ?? "Deadline"}</span>
         </div>
       </div>
 
@@ -170,29 +192,27 @@ const JobDetails = ({ job, appliedJobIds = [] }: JobDetailsProps) => {
       {/* Details */}
       <div className="space-y-4 text-sm">
         <Section title="Reporting Structure">
-          {job?.job_report_to?.report_to && (
-            <Item label="Report To" value={job?.job_report_to.report_to} />
+          {job.report_to?.[0]?.report_to && (
+            <Item label="Report To" value={job.report_to?.[0].report_to} />
           )}
-          {job?.job_report_to?.supervises && (
-            <Item label="Supervision" value={job?.job_report_to.supervises} />
+          {job.report_to?.[0]?.supervises && (
+            <Item label="Supervision" value={job.report_to?.[0].supervises} />
           )}
-          {job?.job_report_to?.interacts_with && (
+          {job.report_to?.[0]?.interacts_with && (
             <Item
               label="Interacts With"
-              value={job?.job_report_to.interacts_with}
+              value={job.report_to?.[0].interacts_with}
             />
           )}
         </Section>
 
         <Section title="Job Requirements">
-          {job?.position_level?.position_name && (
-            <Item label="Job Level" value={job?.position_level.position_name} />
+          {job.position_level?.name && (
+            <Item label="Job Level" value={job.position_level?.name} />
           )}
-          {job?.job_gender?.gender_name && (
-            <Item label="Gender" value={job?.job_gender.gender_name} />
-          )}
-          {job?.years_experience && (
-            <Item label="Experience" value={`${job?.years_experience} Years`} />
+          {job.gender?.name && <Item label="Gender" value={job.gender?.name} />}
+          {job.years_experience && (
+            <Item label="Experience" value={`${job.years_experience} Years`} />
           )}
         </Section>
       </div>
@@ -208,7 +228,7 @@ const JobDetails = ({ job, appliedJobIds = [] }: JobDetailsProps) => {
                  prose-ul:list-disc
                  prose-ul:pl-6 dark:text-white"
           dangerouslySetInnerHTML={{
-            __html: job?.job_duties?.main_duties,
+            __html: job.requirements?.[0]?.main_duties,
           }}
         />
       </div>
@@ -221,7 +241,7 @@ const JobDetails = ({ job, appliedJobIds = [] }: JobDetailsProps) => {
                  prose-ul:list-disc
                  prose-ul:pl-6 dark:text-white"
           dangerouslySetInnerHTML={{
-            __html: job?.job_other_requirement?.other_requirement,
+            __html: job.other_requirements?.[0]?.other_requirement,
           }}
         />
       </div>
@@ -259,6 +279,13 @@ const JobDetails = ({ job, appliedJobIds = [] }: JobDetailsProps) => {
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuGroup>
+              <DropdownMenuItem
+                onClick={handleCopyLink}
+                className="cursor-pointer"
+              >
+                <CopyIcon size={16} />
+                <span>Copy Link</span>
+              </DropdownMenuItem>
               <DropdownMenuItem>
                 <FaWhatsapp color="#25D366" />
                 <a

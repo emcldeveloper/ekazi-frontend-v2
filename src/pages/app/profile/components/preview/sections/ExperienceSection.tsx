@@ -76,12 +76,10 @@ const ExperienceSection = ({ experiences }: ExperienceSectionProps) => {
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="uppercase">
-          <div className="bg-blue-100 text-primary p-2 rounded-md">
-            <Building2 size={16} />
-          </div>
+        <CardTitle className="capitalize">
           Experience ({totalExperience.text})
         </CardTitle>
+        <Separator />
       </CardHeader>
 
       <CardContent>
@@ -128,17 +126,24 @@ const ExperienceSection = ({ experiences }: ExperienceSectionProps) => {
                         )}
 
                         {!hasMultiplePositions && (
-                          <>
-                            <h5 className="text-base mb-0 font-semibold">
-                              {employer}
-                            </h5>
+                          <div className="flex gap-2.5">
+                            <div>
+                              <div className="bg-blue-100 text-primary p-2 rounded-md">
+                                <Building2 />
+                              </div>
+                            </div>
+                            <div>
+                              <h5 className="text-base mb-0 font-semibold">
+                                {employer}
+                              </h5>
 
-                            <p className="text-sm text-muted-foreground">
-                              {[position.sub_location, position.region?.name]
-                                .filter(Boolean)
-                                .join(", ")}
-                            </p>
-                          </>
+                              <p className="text-sm text-muted-foreground">
+                                {[position.sub_location, position.region?.name]
+                                  .filter(Boolean)
+                                  .join(", ")}
+                              </p>
+                            </div>
+                          </div>
                         )}
 
                         <p className="text-base font-medium">

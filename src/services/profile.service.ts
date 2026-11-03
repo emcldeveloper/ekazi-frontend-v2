@@ -26,7 +26,7 @@ export const getProfile = async () => {
 
 // Personal Information
 export const updatePersonalInfo = async (payload: PersonalInfoPayload) => {
-  const res = await api.put("/applicant/personinformation", payload);
+  const res = await api.patch("/applicant/basic-information", payload);
   return res.data;
 };
 

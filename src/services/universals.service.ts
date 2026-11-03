@@ -72,7 +72,7 @@ export const getPositions = async (page = 1, limit = 25, search = "") => {
       limit,
     },
   });
-  return res.data;
+  return res.data?.data;
 };
 
 export const getPositionLevels = async () => {
@@ -179,8 +179,8 @@ export const getTrainings = async () => {
 
 // universal experience apis
 export const getExperienceTypes = async () => {
-  const res = await api.get("/applicant/experiencetype");
-  return res.data.data;
+  const res = await api.get("/experience-types");
+  return res.data?.data;
 };
 
 export const getCompanies = async ({
@@ -192,7 +192,7 @@ export const getCompanies = async ({
   limit: number;
   search: string;
 }) => {
-  const res = await api.get("/applicant/employer", {
+  const res = await api.get("/applicant/employers", {
     params: {
       page,
       limit,

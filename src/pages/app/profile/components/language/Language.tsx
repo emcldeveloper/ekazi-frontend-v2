@@ -18,7 +18,7 @@ interface LanguageProps {
 }
 
 const Language = ({ applicant }: LanguageProps) => {
-  const languages = applicant?.profile?.language ?? [];
+  const languages = applicant?.language ?? [];
 
   return (
     <div className="space-y-2">

@@ -12,10 +12,12 @@ import JobFilters from "./components/JobFilters";
 const FindJobs = () => {
   const location = useLocation();
 
-  const [selectedJob, setSelectedJob] = useState(null);
+  const [selectedJob, setSelectedJob] = useState<{
+    id: number;
+  } | null>(null);
   const [activeJob, setActiveJob] = useState(null);
   const [page, setPage] = useState(1);
-  const [perPage, setPerPage] = useState(25);
+  const [perPage, setPerPage] = useState(10);
 
   const [filters, setFilters] = useState({
     search: "",
@@ -50,55 +52,53 @@ const FindJobs = () => {
 
   return (
     <div>
-      <Card>
-        <CardContent className="space-y-4">
-          <h5 className="text-xl text-Blue font-semibold mb-3">Find Jobs</h5>
+      <div className="space-y-4">
+        <h5 className="text-xl text-Blue font-semibold mb-3">Find Jobs</h5>
 
-          <Separator />
+        <Separator />
 
-          {/* Filters */}
-          <JobFilters
-            onFilterChange={handleFilterChange}
-            initialFilters={filters}
-          />
+        {/* Filters */}
+        <JobFilters
+          onFilterChange={handleFilterChange}
+          initialFilters={filters}
+        />
 
-          {/* Layout */}
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-            {/* Sidebar */}
-            <div className="lg:col-span-5">
-              <SidebarListJobs
-                filters={filters}
-                selectedJob={selectedJob}
-                setSelectedJob={setSelectedJob}
-                setActiveJob={setActiveJob}
-                activeJob={activeJob}
-                page={page}
-                setPage={setPage}
-                perPage={perPage}
-                setPerPage={setPerPage}
-              />
-            </div>
-
-            {/* Job Details */}
-            <div className="hidden sm:block lg:col-span-7">
-              {selectedJob ? (
-                <Card>
-                  <CardContent>
-                    <JobDetails job={selectedJob} />
-                  </CardContent>
-                </Card>
-              ) : (
-                <div className="flex flex-col items-center justify-center text-center py-16 text-muted-foreground">
-                  <Briefcase className="w-10 h-10 mb-3 opacity-70" />
-                  <p className="text-sm md:text-base">
-                    Select a job to view its details
-                  </p>
-                </div>
-              )}
-            </div>
+        {/* Layout */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+          {/* Sidebar */}
+          <div className="lg:col-span-5">
+            <SidebarListJobs
+              filters={filters}
+              selectedJob={selectedJob}
+              setSelectedJob={setSelectedJob}
+              setActiveJob={setActiveJob}
+              activeJob={activeJob}
+              page={page}
+              setPage={setPage}
+              perPage={perPage}
+              setPerPage={setPerPage}
+            />
           </div>
-        </CardContent>
-      </Card>
+
+          {/* Job Details */}
+          <div className="hidden sm:block lg:col-span-7">
+            {selectedJob ? (
+              <Card>
+                <CardContent>
+                  <JobDetails jobId={selectedJob.id} />
+                </CardContent>
+              </Card>
+            ) : (
+              <div className="flex flex-col items-center justify-center text-center py-16 text-muted-foreground">
+                <Briefcase className="w-10 h-10 mb-3 opacity-70" />
+                <p className="text-sm md:text-base">
+                  Select a job to view its details
+                </p>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
     </div>
   );
 };

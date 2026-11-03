@@ -1,6 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
 import { capitalizeText, formatDate } from "@/utils/helpers";
-import { BookText } from "lucide-react";
 
 interface TrainingSectionProps {
   trainings: any;
@@ -10,12 +10,8 @@ const TraniningSection = ({ trainings }: TrainingSectionProps) => {
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="uppercase">
-          <div className="bg-blue-100 text-primary p-2 rounded-md">
-            <BookText size={16} />
-          </div>
-          Trainings
-        </CardTitle>
+        <CardTitle className="capitalize">Trainings</CardTitle>
+        <Separator />
       </CardHeader>
       <CardContent>
         <div className="space-y-3">

@@ -11,7 +11,7 @@ interface EducationProps {
 }
 
 const Education = ({ applicant }: EducationProps) => {
-  const educationList = applicant?.profile?.education ?? [];
+  const educationList = applicant?.education ?? [];
 
   return (
     <div className="space-y-2">

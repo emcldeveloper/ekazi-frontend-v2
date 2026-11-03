@@ -22,7 +22,10 @@ const ViewSavedJob = ({ selectedJob, appliedJobIds }: ViewApplicationProps) => {
 
           <DrawerContent>
             <div className="flex-1 scroll-fade overflow-y-auto p-4">
-              <JobDetails job={selectedJob} appliedJobIds={appliedJobIds} />
+              <JobDetails
+                jobId={selectedJob.job_id}
+                appliedJobIds={appliedJobIds}
+              />
             </div>
           </DrawerContent>
         </Drawer>
@@ -33,7 +36,10 @@ const ViewSavedJob = ({ selectedJob, appliedJobIds }: ViewApplicationProps) => {
 
           <SheetContent className="sm:max-w-3xl!">
             <div className="scrollbar overflow-y-auto px-4">
-              <JobDetails job={selectedJob} appliedJobIds={appliedJobIds} />
+              <JobDetails
+                jobId={selectedJob.job_id}
+                appliedJobIds={appliedJobIds}
+              />
             </div>
           </SheetContent>
         </Sheet>

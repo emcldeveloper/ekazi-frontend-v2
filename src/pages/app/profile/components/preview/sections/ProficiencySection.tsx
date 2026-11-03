@@ -1,6 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
 import { capitalizeText, formatDate } from "@/utils/helpers";
-import { BookMarked } from "lucide-react";
 
 interface ProficiencySectionProps {
   proficiencies: any;
@@ -10,12 +10,8 @@ const ProficiencySection = ({ proficiencies }: ProficiencySectionProps) => {
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="uppercase">
-          <div className="bg-blue-100 text-primary p-2 rounded-md">
-            <BookMarked size={16} />
-          </div>
-          Proficiency
-        </CardTitle>
+        <CardTitle className="capitalize">Proficiency</CardTitle>
+        <Separator />
       </CardHeader>
       <CardContent>
         <div className="space-y-3">
