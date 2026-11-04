@@ -25,11 +25,19 @@ import ProtectedRoutes from "./layouts/ProtectedRoutes";
 import ApplicationsPage from "./pages/app/applications/ApplicationsPage";
 import SavedJobsPage from "./pages/app/jobs/saved_jobs/SavedJobsPage";
 import MatchedJobsPage from "./pages/app/jobs/matched_jobs/MatchedJobsPage";
-import CoverLetterPage from "./pages/app/cover_letter/CoverLetterPage";
 import ApplyJobPage from "./pages/app/jobs/apply_jobs/ApplyJobPage";
 import RequestDemo from "./pages/website/components/RequestDemo";
 import ArticleDetails from "./pages/website/articles/components/ArticleDetails";
 import CandidatesPage from "./pages/website/components/candidates/CandidatesPage";
+import CVTemplatesPage from "./pages/app/cv_builder/CVTemplatesPage";
+import { TemplatesProvider } from "./context/TemplatesProvider";
+import PreviewTemplate from "./pages/app/cv_builder/PreviewTemplate";
+import CoverLettersPage from "./pages/app/cover_letter/CoverLettersPage";
+import CreateCoverLetter from "./pages/app/cover_letter/CreateCoverLetter";
+import ApplyByEmailPage from "./pages/app/applications/ApplyByEmailPage";
+import OtherFilesPage from "./pages/app/documents/OtherFilesPage";
+import MessagesPage from "./pages/app/messages/MessagesPage";
+import ExternalApplicationsPage from "./pages/app/applications/ExternalApplicationsPage";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -45,47 +53,75 @@ const App = () => {
       <TooltipProvider>
         <Toaster position="top-center" richColors />
 
-        {/* Routes */}
-        <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/jobs" element={<JobsPage />} />
-            <Route path="/employers" element={<EmployersPage />} />
-            <Route path="/employers/request-demo" element={<RequestDemo />} />
-            <Route path="/candidates" element={<CandidatesPage />} />
-            <Route path="/pricing" element={<PricingPage />} />
-            <Route path="/articles" element={<ArticlesPage />} />
-            <Route path="/articles/:id" element={<ArticleDetails />} />
-            <Route path="/cv-builder" element={<CVBuilderPage />} />
-            <Route
-              path="/salary-calculator"
-              element={<SalaryCalculatorPage />}
-            />
+        <TemplatesProvider>
+          {/* Routes */}
+          <BrowserRouter>
+            <Routes>
+              <Route path="/" element={<HomePage />} />
+              <Route path="/jobs" element={<JobsPage />} />
+              <Route path="/employers" element={<EmployersPage />} />
+              <Route path="/employers/request-demo" element={<RequestDemo />} />
+              <Route path="/candidates" element={<CandidatesPage />} />
+              <Route path="/pricing" element={<PricingPage />} />
+              <Route path="/articles" element={<ArticlesPage />} />
+              <Route path="/articles/:id" element={<ArticleDetails />} />
+              <Route path="/cv-builder" element={<CVBuilderPage />} />
+              <Route
+                path="/salary-calculator"
+                element={<SalaryCalculatorPage />}
+              />
 
-            <Route path="/register" element={<RegisterPage />} />
-            <Route path="/verify" element={<VerifyAccountPage />} />
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/forgot-password" element={<ForgotPasswordPage />} />
-            <Route path="/reset-password" element={<ResetPasswordPage />} />
-            <Route path="/not-verified" element={<NotVerifiedPage />} />
+              <Route path="/register" element={<RegisterPage />} />
+              <Route path="/verify" element={<VerifyAccountPage />} />
+              <Route path="/login" element={<LoginPage />} />
+              <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+              <Route path="/reset-password" element={<ResetPasswordPage />} />
+              <Route path="/not-verified" element={<NotVerifiedPage />} />
 
-            <Route element={<ProtectedRoutes />}>
-              <Route element={<AppLayout />}>
-                <Route path="/app/dashboard" element={<DashboardPage />} />
-                <Route path="/app/profile" element={<ProfilePage />} />
-                <Route path="/app/jobs" element={<AppJobsPage />} />
-                <Route path="/app/apply-job" element={<ApplyJobPage />} />
-                <Route path="/app/saved-jobs" element={<SavedJobsPage />} />
-                <Route path="/app/matched-jobs" element={<MatchedJobsPage />} />
-                <Route
-                  path="/app/applications"
-                  element={<ApplicationsPage />}
-                />
-                <Route path="/app/cover-letter" element={<CoverLetterPage />} />
+              <Route element={<ProtectedRoutes />}>
+                <Route element={<AppLayout />}>
+                  <Route path="/app/dashboard" element={<DashboardPage />} />
+                  <Route path="/app/profile" element={<ProfilePage />} />
+                  <Route path="/app/jobs" element={<AppJobsPage />} />
+                  <Route
+                    path="/app/external-jobs"
+                    element={<ApplyByEmailPage />}
+                  />
+                  <Route path="/app/apply-job" element={<ApplyJobPage />} />
+                  <Route path="/app/saved-jobs" element={<SavedJobsPage />} />
+                  <Route
+                    path="/app/matched-jobs"
+                    element={<MatchedJobsPage />}
+                  />
+                  <Route
+                    path="/app/applications"
+                    element={<ApplicationsPage />}
+                  />
+                  <Route
+                    path="/app/external-applications"
+                    element={<ExternalApplicationsPage />}
+                  />
+
+                  <Route path="/app/templates" element={<CVTemplatesPage />} />
+                  <Route
+                    path="/app/templates/:id"
+                    element={<PreviewTemplate />}
+                  />
+                  <Route
+                    path="/app/cover-letters"
+                    element={<CoverLettersPage />}
+                  />
+                  <Route
+                    path="/app/cover-letters/new"
+                    element={<CreateCoverLetter />}
+                  />
+                  <Route path="/app/other-files" element={<OtherFilesPage />} />
+                  <Route path="/app/messages" element={<MessagesPage />} />
+                </Route>
               </Route>
-            </Route>
-          </Routes>
-        </BrowserRouter>
+            </Routes>
+          </BrowserRouter>
+        </TemplatesProvider>
       </TooltipProvider>
     </QueryClientProvider>
   );
