@@ -3,15 +3,21 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 
 import { useIsMobile } from "@/hooks/use-mobile";
 import { Button } from "@/components/ui/button";
+import { useIncrementJobView } from "@/hooks/jobs";
+import JobDetails from "./JobDetails";
 
-const ViewJob = () => {
+interface ViewJobProps {
+  jobId: number;
+}
+
+const ViewJob = ({ jobId }: ViewJobProps) => {
   const isMobile = useIsMobile();
 
-  // const { mutate: incrementJobView } = useIncrementJobView();
+  const { mutate: incrementJobView } = useIncrementJobView();
 
-  // const handleJobClick = (jobId: number) => {
-  //   incrementJobView(jobId);
-  // };
+  const handleJobClick = () => {
+    incrementJobView(jobId);
+  };
 
   return (
     <div>
@@ -19,14 +25,14 @@ const ViewJob = () => {
         <Drawer>
           <DrawerTrigger
             render={<Button variant="outline" />}
-            // onClick={() => incrementJobView(job.id)}
+            onClick={handleJobClick}
             className="text-sm"
           >
             View
           </DrawerTrigger>
           <DrawerContent className="border-none">
             <div className="flex-1 scroll-fade overflow-y-auto p-4">
-              {/* <JobDetails /> */}
+              <JobDetails jobId={jobId} />
             </div>
           </DrawerContent>
         </Drawer>
@@ -34,18 +40,14 @@ const ViewJob = () => {
         <Sheet>
           <SheetTrigger
             render={
-              <Button
-                size="sm"
-                variant="link"
-                // onClick={() => incrementJobView(job.id)}
-              />
+              <Button size="sm" variant="link" onClick={handleJobClick} />
             }
           >
             View
           </SheetTrigger>
           <SheetContent className="sm:max-w-3xl!">
             <div className="scrollbar overflow-y-auto p-4">
-              {/* <JobDetails /> */}
+              <JobDetails jobId={jobId} />
             </div>
           </SheetContent>
         </Sheet>

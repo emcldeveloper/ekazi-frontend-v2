@@ -91,3 +91,14 @@ export const formatName = (...parts: string[]): string =>
     .filter(Boolean)
     .map((p) => p.charAt(0).toUpperCase() + p.slice(1).toLowerCase())
     .join(" ");
+
+// DASHBOARD GREETINGS HELPERS
+
+export const getGreeting = (
+  firstName: string,
+  hour = new Date().getHours(),
+): string => {
+  const timeOfDay =
+    hour < 12 ? "Good morning" : hour < 17 ? "Good afternoon" : "Good evening";
+  return firstName ? `${timeOfDay}, ${firstName}` : timeOfDay;
+};

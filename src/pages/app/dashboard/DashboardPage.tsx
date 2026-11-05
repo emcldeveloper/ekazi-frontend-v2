@@ -1,16 +1,20 @@
 import { Link } from "react-router-dom";
-import { Bookmark, Briefcase, FileDown, Layers } from "lucide-react";
+import { Bookmark, Briefcase, FileDown, Layers, Search } from "lucide-react";
 
 import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 
 import RecommendedJobs from "./components/RecommendedJobs";
 import { useDashboardStatistics } from "@/hooks/dashboard";
 import Pipeline from "./components/Pipeline,";
+import { useApplicantProfile } from "@/hooks/profile";
+import { getGreeting } from "@/utils/helpers";
 
 const DashboardPage = () => {
-  const { data } = useDashboardStatistics();
+  const { data: applicant } = useApplicantProfile();
+  const applicantName = applicant?.applicant_profile?.first_name;
 
-  console.log(data);
+  const { data } = useDashboardStatistics();
 
   const dashboard = data?.statisticsdashboard || {
     application: 0,
@@ -19,86 +23,81 @@ const DashboardPage = () => {
     searchjob: 0,
   };
 
+  const stats = [
+    {
+      label: "My CVs",
+      value: dashboard.download_cv,
+      to: "/app/downloaded-templates",
+      icon: FileDown,
+      iconClassName: "bg-blue-50 text-[#1D4FA3]",
+    },
+    {
+      label: "Applications",
+      value: dashboard.application,
+      to: "/app/applied-jobs",
+      icon: Briefcase,
+      iconClassName: "bg-emerald-50 text-emerald-600",
+    },
+    {
+      label: "Saved jobs",
+      value: dashboard.savedjob,
+      to: "/app/saved-jobs",
+      icon: Bookmark,
+      iconClassName: "bg-orange-50 text-orange-600",
+    },
+    {
+      label: "Matched jobs",
+      // value: matchedJobs?.matches_count,
+      value: 0,
+      to: "/app/matched-jobs",
+      icon: Layers,
+      iconClassName: "bg-amber-50 text-amber-600",
+    },
+  ];
+
   return (
     <div className="space-y-4">
+      {/* welcome note */}
+      <section className="flex flex-col gap-4 rounded-3xl text-Blue md:flex-row md:items-center lg:justify-between dark:text-white">
+        <div className="min-w-0">
+          <h1 className="break-word text-2xl font-bold tracking-tight">
+            {getGreeting(applicantName)}
+          </h1>
+          <p className="mt-1 text-sm text-muted-foreground">
+            Welcome back to ekazi.
+          </p>
+        </div>
+
+        <div className="flex shrink-0 flex-col gap-2 sm:flex-row">
+          <Button render={<Link to="/app/jobs" />}>
+            <Search className="size-4" aria-hidden="true" />
+            Find jobs
+          </Button>
+        </div>
+      </section>
+
       {/* Stats Grid */}
-      <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-3">
-        {/* Resume Downloads */}
-        <Link to={"/app/downloaded-templates"}>
-          <Card className="cursor-pointer">
-            <CardContent className="flex justify-between items-center">
-              <div>
-                <p className="text-xs">My CVs</p>
-                <h5 className="text-xl font-bold mb-0">
-                  {dashboard.download_cv}
-                </h5>
-              </div>
-              <div className="flex items-center gap-2">
-                <div className="bg-blue-100 text-blue-500 rounded-lg p-3">
-                  <FileDown size={18} />
+      <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-4">
+        {stats.map(({ label, value, icon: Icon, iconClassName }) => (
+          <Card key={label}>
+            <CardContent>
+              <div className="flex justify-between items-center">
+                <div>
+                  <p className="text-xs">{label}</p>
+                  <h5 className="text-xl font-bold mb-0">{value}</h5>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className={`rounded-lg p-3 ${iconClassName}`}>
+                    <Icon size={18} />
+                  </div>
                 </div>
               </div>
             </CardContent>
           </Card>
-        </Link>
-
-        {/* Applications */}
-        <Link to={"/app/applied-jobs"}>
-          <Card className="cursor-pointer">
-            <CardContent className="flex justify-between items-center">
-              <div>
-                <p className="text-xs">Applications</p>
-                <h5 className="text-xl font-bold mb-0">
-                  {dashboard.application}
-                </h5>
-              </div>
-              <div className="flex items-center gap-2">
-                <div className="bg-green-100 text-green-600 rounded-lg p-3">
-                  <Briefcase size={18} />
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </Link>
-
-        {/* Saved Jobs */}
-        <Link to={"/app/saved-jobs"}>
-          <Card className="cursor-pointer">
-            <CardContent className="flex justify-between items-center">
-              <div>
-                <p className="text-xs">Saved Jobs</p>
-                <h5 className="text-xl font-bold mb-0">{dashboard.savedjob}</h5>
-              </div>
-              <div className="flex items-center gap-2">
-                <div className="bg-orange-100 text-orange-600 rounded-lg p-3">
-                  <Bookmark size={18} />
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </Link>
-
-        {/* Matched Jobs */}
-        <Link to={"/app/matched-jobs"}>
-          <Card className="cursor-pointer">
-            <CardContent className="flex justify-between items-center">
-              <div>
-                <p className="text-xs">Job Match</p>
-                <h5 className="text-xl  font-bold mb-0">
-                  {/* {matchedJobs?.matches_count} */} 0
-                </h5>
-              </div>
-              <div className="flex items-center gap-2">
-                <div className="bg-yellow-100 text-yellow-600 rounded-lg p-3">
-                  <Layers size={18} />
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </Link>
+        ))}
       </div>
 
-      <div className="flex flex-col md:flex-row gap-4 space-y-4">
+      <div className="flex flex-col md:flex-row gap-4">
         {/* Applicant pipeline */}
         <div className="flex-1">
           <Pipeline />
@@ -109,19 +108,6 @@ const DashboardPage = () => {
           <RecommendedJobs />
         </div>
       </div>
-
-      {/* <div className="grid gap-4 md:grid-cols-3">
-        <div className="col-span-2 space-y-4">
-         
-        </div>
-
-        <div className="col-span-1">
-          <div className="sticky top-20 flex flex-col gap-4">
-            <TemplateSlider />
-           
-          </div>
-        </div>
-      </div> */}
     </div>
   );
 };

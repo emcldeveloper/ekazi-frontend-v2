@@ -205,7 +205,7 @@ const MatchedJobsPage = () => {
     isError,
     isFetching,
     refetch,
-  } = useJobMatch();
+  } = useJobMatch({});
   const matchedJobs: MatchedJob[] = jobsData?.data ?? [];
 
   const { mutate: incrementJobView } = useIncrementJobView();

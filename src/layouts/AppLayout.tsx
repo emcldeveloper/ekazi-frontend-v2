@@ -44,7 +44,7 @@ export default function AppLayout() {
                   className="relative h-9 w-9 rounded-full p-0"
                 >
                   <Avatar className="h-9 w-9">
-                    <AvatarFallback>IB</AvatarFallback>
+                    <AvatarFallback>AV</AvatarFallback>
                   </Avatar>
                 </Button>
               </DropdownMenuTrigger>
@@ -61,7 +61,7 @@ export default function AppLayout() {
           </div>
         </header>
 
-        <div className="flex flex-1 flex-col gap-4 p-4 sm:p-8">
+        <div className="flex flex-1 flex-col gap-4 p-4 sm:px-8">
           <Outlet />
         </div>
 

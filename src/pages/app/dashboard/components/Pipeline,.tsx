@@ -1,5 +1,4 @@
 import { useState, useMemo } from "react";
-import { BsCalendar, BsChevronDown } from "react-icons/bs";
 import {
   BarChart,
   Bar,
@@ -9,19 +8,27 @@ import {
   ResponsiveContainer,
   Cell,
   LabelList,
+  Legend,
 } from "recharts";
 
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-
+import {
+  Card,
+  CardAction,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+
 import { useApplicantPipeline } from "@/hooks/dashboard";
+import { ChevronDown } from "lucide-react";
 
 /* ----------------------------------------------------- */
 interface PipelineStage {
@@ -67,12 +74,12 @@ interface ChartDataItem {
 const buildDefaultRange = (): DateRange => {
   const today = new Date();
   const start = new Date();
-  start.setDate(start.getDate() - 30);
+  start.setFullYear(start.getFullYear() - 1);
 
   return {
     start: start.toISOString().split("T")[0],
     end: today.toISOString().split("T")[0],
-    display: "Last 30 days",
+    display: "Last 12 months",
   };
 };
 
@@ -102,7 +109,7 @@ const Pipeline = () => {
 
   console.log(jobseekerpipeline);
 
-  const [filterType, setFilterType] = useState<PresetRangeValue>("lastMonth");
+  const [filterType, setFilterType] = useState<PresetRangeValue>("lastYear");
   const [showDatePicker, setShowDatePicker] = useState<boolean>(false);
 
   const [dateRange, setDateRange] = useState<DateRange>(buildDefaultRange());
@@ -217,21 +224,94 @@ const Pipeline = () => {
   );
 
   return (
-    <div className="p-2">
-      {/* Header */}
-      <div className="flex items-center justify-between mb-4">
-        <div className="text-sm">Showing data for: {dateRange.display}</div>
+    <>
+      {/* Chart */}
+      <Card className="h-full">
+        <CardHeader>
+          <CardTitle>Pipeline Overview</CardTitle>
+          <CardAction>
+            <Button
+              variant="secondary"
+              size="sm"
+              onClick={() => setShowDatePicker(true)}
+            >
+              {dateRange.display}
+              <ChevronDown size={14} />
+            </Button>
+          </CardAction>
+        </CardHeader>
+        <CardContent>
+          {totalCount === 0 ? (
+            <div className="text-center py-10">
+              <img
+                src="/assets/images/sample-bargraph.jpg"
+                alt="No Data"
+                className="w-48 opacity-70 mx-auto"
+              />
+              <h6 className="mt-3 text-muted-foreground">
+                No applicant activity found for the selected date range.
+              </h6>
+              <p className="text-sm text-muted-foreground">
+                Try another date range.
+              </p>
+            </div>
+          ) : (
+            <ResponsiveContainer width="100%" height={400}>
+              <BarChart
+                data={chartData}
+                margin={{ top: 20, bottom: 60, left: 20 }}
+              >
+                <CartesianGrid vertical={false} />
+                <XAxis
+                  dataKey="name"
+                  interval={0}
+                  angle={-45}
+                  textAnchor="end"
+                  axisLine={false}
+                  tickLine={false}
+                  hide
+                />
+                {/* <YAxis allowDecimals={false} /> */}
+                <Tooltip />
 
-        <Button
-          variant="outline"
-          onClick={() => setShowDatePicker(true)}
-          className="flex items-center gap-2 text-sm text-Blue border-Blue"
-        >
-          <BsCalendar />
-          {dateRange.display}
-          <BsChevronDown size={14} />
-        </Button>
-      </div>
+                <Legend
+                  verticalAlign="bottom"
+                  wrapperStyle={{ paddingTop: 16 }}
+                  content={() => (
+                    <div className="flex flex-wrap justify-center gap-4 pt-4">
+                      {chartData.map((item, i) => (
+                        <div
+                          key={item.name}
+                          className="flex items-center gap-2"
+                        >
+                          <span
+                            className="h-3 w-3"
+                            style={{ backgroundColor: COLORS[i] }}
+                          />
+                          <span>{item.name}</span>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                />
+
+                <Bar dataKey="value">
+                  {chartData.map((_, i) => (
+                    <Cell key={i} fill={COLORS[i]} />
+                  ))}
+
+                  <LabelList
+                    position="top"
+                    offset={12}
+                    className="fill-foreground"
+                    fontSize={12}
+                  />
+                </Bar>
+              </BarChart>
+            </ResponsiveContainer>
+          )}
+        </CardContent>
+      </Card>
 
       {/* Dialog */}
       <Dialog open={showDatePicker} onOpenChange={setShowDatePicker}>
@@ -298,65 +378,7 @@ const Pipeline = () => {
           </div>
         </DialogContent>
       </Dialog>
-
-      {/* Chart */}
-      <Card className="mt-4">
-        <CardHeader>
-          <CardTitle className="text-Blue">
-            Applicant Pipeline Overview
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          {totalCount === 0 ? (
-            <div className="text-center py-10">
-              <img
-                src="/assets/images/sample-bargraph.jpg"
-                alt="No Data"
-                className="w-48 opacity-70 mx-auto"
-              />
-              <h6 className="mt-3 text-muted-foreground">
-                No applicant activity found for the selected date range.
-              </h6>
-              <p className="text-sm text-muted-foreground">
-                Try another date range.
-              </p>
-            </div>
-          ) : (
-            <ResponsiveContainer width="100%" height={350}>
-              <BarChart
-                data={chartData}
-                margin={{ top: 20, bottom: 60, left: 20 }}
-              >
-                <CartesianGrid vertical={false} />
-                <XAxis
-                  dataKey="name"
-                  interval={0}
-                  angle={-45}
-                  textAnchor="end"
-                  axisLine={false}
-                  tickLine={false}
-                />
-                {/* <YAxis allowDecimals={false} /> */}
-                <Tooltip />
-
-                <Bar dataKey="value">
-                  {chartData.map((_, i) => (
-                    <Cell key={i} fill={COLORS[i]} />
-                  ))}
-
-                  <LabelList
-                    position="top"
-                    offset={12}
-                    className="fill-foreground"
-                    fontSize={12}
-                  />
-                </Bar>
-              </BarChart>
-            </ResponsiveContainer>
-          )}
-        </CardContent>
-      </Card>
-    </div>
+    </>
   );
 };
 

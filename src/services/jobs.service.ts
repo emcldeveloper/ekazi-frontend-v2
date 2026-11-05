@@ -1,4 +1,3 @@
-import type { IncrementJobViewPayload } from "@/@types/jobs";
 import api from "@/lib/axios";
 
 export const fetchJobs = async ({
@@ -52,8 +51,8 @@ export const fetchEmployerJobs = async ({
   return res.data;
 };
 
-export const incrementJobView = async (payload: IncrementJobViewPayload) => {
-  const res = await api.post("/applicant/jobView", payload);
+export const incrementJobView = async (id: number) => {
+  const res = await api.post(`/jobs/${id}/increment-view`);
   return res.data;
 };
 
@@ -84,8 +83,25 @@ export const getSavedJobs = async ({
   return res.data;
 };
 
-export const getMatchedJobs = async () => {
-  const res = await api.get(`/applicant/matched-jobs`);
+export const getMatchedJobs = async ({
+  page,
+  limit,
+  search,
+  industry,
+}: {
+  page: number;
+  limit: number;
+  search: string;
+  industry: string;
+}) => {
+  const res = await api.get(`/applicant/matched-jobs`, {
+    params: {
+      page,
+      limit,
+      search,
+      industry,
+    },
+  });
   return res.data;
 };
 
