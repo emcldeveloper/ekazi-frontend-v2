@@ -15,8 +15,8 @@ import api from "@/lib/axios";
  * Check Profile Completeion
  */
 export const profileCompletion = async () => {
-  const res = await api.get("/applicant/complete");
-  return res.data;
+  const res = await api.get("/applicant/apply-job-check");
+  return res.data?.data;
 };
 
 export const getProfile = async () => {

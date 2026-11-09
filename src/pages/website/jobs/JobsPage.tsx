@@ -68,6 +68,10 @@ const JobsPage = () => {
   const resultsRef = useRef<HTMLDivElement>(null);
 
   const { data: industries } = useIndustries({});
+  const selectedIndustry = industries?.find(
+    (item: any) => String(item.id) === industry,
+  );
+
   const {
     data: jobsData,
     isLoading,
@@ -124,7 +128,7 @@ const JobsPage = () => {
   return (
     <HomeLayout>
       {/* PAGE HEADER */}
-      <section className="relative isolate overflow-hidden bg-gradient-to-br from-slate-50 via-white to-orange-50/60">
+      <section className="relative isolate overflow-hidden bg-linear-to-br from-slate-50 via-white to-orange-50/60">
         <div aria-hidden className="pointer-events-none absolute inset-0 -z-10">
           <div className="absolute -right-24 -top-32 h-96 w-96 rounded-full bg-Orange/20 blur-3xl" />
           <div className="absolute -bottom-40 -left-32 h-96 w-96 rounded-full bg-Blue/10 blur-3xl" />
@@ -195,13 +199,15 @@ const JobsPage = () => {
                   className="h-10 w-full min-w-0 border-0 bg-transparent px-2 text-sm text-gray-700 shadow-none focus-visible:ring-0 sm:text-base"
                 >
                   <SelectValue placeholder="All industries">
-                    {industry ? capitalizeText(industry) : "All industries"}
+                    {selectedIndustry
+                      ? capitalizeText(selectedIndustry.name)
+                      : "All industries"}
                   </SelectValue>
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value={ALL}>All industries</SelectItem>
                   {industries?.map((item: any) => (
-                    <SelectItem key={item.id} value={item.name}>
+                    <SelectItem key={item.id} value={String(item.id)}>
                       {capitalizeText(item.name)}
                     </SelectItem>
                   ))}
@@ -258,7 +264,9 @@ const JobsPage = () => {
 
               {industry && (
                 <span className="inline-flex items-center gap-1.5 rounded-full bg-orange-50 py-1 pl-3 pr-1 text-xs font-medium text-Orange">
-                  {capitalizeText(industry)}
+                  {selectedIndustry
+                    ? capitalizeText(selectedIndustry.name)
+                    : "Industry"}
                   <button
                     type="button"
                     onClick={() => updateIndustry(ALL)}

@@ -8,7 +8,6 @@ const ProtectedRoutes = () => {
   const verified = localStorage.getItem("verified") === "true";
 
   const { data, isLoading } = useUser();
-  console.log("Protected", data);
 
   if (!token) {
     window.location.replace(FRONTEND_URL);

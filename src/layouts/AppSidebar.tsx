@@ -26,8 +26,8 @@ import {
   MessageCircle,
   Calculator,
   LibraryBig,
-  FolderArchive,
   SquareArrowOutUpRight,
+  Archive,
 } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 
@@ -69,29 +69,19 @@ const navItems: NavItem[] = [
     icon: SearchIcon,
   },
   {
-    title: "Apply External",
-    url: "/app/external-jobs",
+    title: "My Applications",
+    url: "/app/applications",
+    icon: Folder,
+  },
+  {
+    title: "External Applications",
+    url: "/app/external-applications",
     icon: SquareArrowOutUpRight,
   },
   {
-    title: "My Applications",
+    title: "Career Briefcase",
     url: "#",
-    icon: Folder,
-    items: [
-      {
-        title: "Ekazi",
-        url: "/app/applications",
-      },
-      {
-        title: "External",
-        url: "/app/external-applications",
-      },
-    ],
-  },
-  {
-    title: "My Documents",
-    url: "#",
-    icon: FolderArchive,
+    icon: Archive,
     items: [
       {
         title: "CVs",

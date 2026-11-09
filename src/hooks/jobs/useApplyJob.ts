@@ -15,6 +15,10 @@ export const useApplyJobInternal = () => {
       queryClient.invalidateQueries({
         queryKey: ["applications"],
       });
+
+      queryClient.invalidateQueries({
+        queryKey: ["jobs"],
+      });
     },
   });
 };

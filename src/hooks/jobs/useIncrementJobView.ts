@@ -7,9 +7,9 @@ export const useIncrementJobView = () => {
   return useMutation({
     mutationFn: (jobId: number) => incrementJobView(jobId),
 
-    onSuccess: (_, jobId) => {
+    onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: ["job-details", jobId],
+        queryKey: ["job-details"],
       });
 
       queryClient.invalidateQueries({

@@ -25,32 +25,25 @@ const CheckCompleteProfile = ({
   const navigate = useNavigate();
 
   const { data: completeCheck } = useCompleteProfile();
+  const canApplyJob = completeCheck?.can_apply;
+  const missingRequirements = completeCheck?.missing_requirements ?? [];
+  const completionPercent = completeCheck?.profile_completion?.total_percentage;
 
   const [missingFields, setMissingFields] = useState<string[]>([]);
   const [showModal, setShowModal] = useState(false);
   const [currentField] = useState(null);
 
   useEffect(() => {
-    if (!completeCheck) return;
+    if (!canApplyJob) return;
 
-    const missing = completeCheck.profilecheck || [];
-
-    if (missing.length > 0) {
-      setMissingFields(missing);
+    if (missingRequirements.length > 0) {
+      setMissingFields(missingRequirements);
       setShowProfileCompleteModal(true);
       setProfileComplete(false);
     } else {
       setProfileComplete(true);
     }
-  }, [completeCheck]);
-
-  const completionPercent = completeCheck?.sections
-    ? Math.round(
-        ((completeCheck.sections.length - (missingFields?.length || 0)) /
-          completeCheck.sections.length) *
-          100,
-      )
-    : 0;
+  }, [canApplyJob, missingRequirements]);
 
   return (
     <>

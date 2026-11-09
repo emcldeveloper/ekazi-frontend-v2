@@ -7,13 +7,9 @@ import { JobDetails } from "../jobs";
 
 interface ViewApplicationProps {
   selectedJob: any;
-  appliedJobIds: any;
 }
 
-const ViewApplication = ({
-  selectedJob,
-  appliedJobIds,
-}: ViewApplicationProps) => {
+const ViewApplication = ({ selectedJob }: ViewApplicationProps) => {
   const isMobile = useIsMobile();
 
   return (
@@ -21,28 +17,34 @@ const ViewApplication = ({
       {isMobile ? (
         // For mobile devices
         <Drawer>
-          <DrawerTrigger render={<Button variant="secondary">View</Button>} />
+          <DrawerTrigger
+            render={
+              <Button size="sm" variant="secondary">
+                View
+              </Button>
+            }
+          />
 
           <DrawerContent>
             <div className="flex-1 scroll-fade overflow-y-auto p-4">
-              <JobDetails
-                jobId={selectedJob.id}
-                appliedJobIds={appliedJobIds}
-              />
+              <JobDetails jobId={selectedJob.id} />
             </div>
           </DrawerContent>
         </Drawer>
       ) : (
         // For large screen devices
         <Sheet>
-          <SheetTrigger render={<Button variant="secondary">View</Button>} />
+          <SheetTrigger
+            render={
+              <Button size="sm" variant="secondary">
+                View
+              </Button>
+            }
+          />
 
           <SheetContent className="sm:max-w-3xl!">
             <div className="scrollbar overflow-y-auto px-4">
-              <JobDetails
-                jobId={selectedJob.id}
-                appliedJobIds={appliedJobIds}
-              />
+              <JobDetails jobId={selectedJob.id} />
             </div>
           </SheetContent>
         </Sheet>

@@ -58,9 +58,6 @@ const FindJobs = () => {
         <h1 className="text-2xl font-bold tracking-tight text-Blue">
           Find jobs
         </h1>
-        <p className="mt-2 text-sm text-muted-foreground">
-          Search open roles and apply with your ekazi profile.
-        </p>
       </header>
 
       <Tabs defaultValue="all">

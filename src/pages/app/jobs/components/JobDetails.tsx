@@ -1,4 +1,4 @@
-import { useState, type ReactNode } from "react";
+import { useRef, useState, type ReactNode } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   Eye,
@@ -8,6 +8,8 @@ import {
   Calendar,
   Share,
   CopyIcon,
+  ExternalLink,
+  FolderDown,
 } from "lucide-react";
 import { FaFacebook, FaLinkedin, FaWhatsapp } from "react-icons/fa";
 import { toast } from "sonner";
@@ -28,14 +30,24 @@ import { useJobDetails, useSaveJob } from "@/hooks/jobs";
 
 import LoadingState from "@/components/loading-state";
 import CheckCompleteProfile from "../../profile/components/CheckCompleteProfile";
+import { useApplicantProfile } from "@/hooks/profile";
+import {
+  downloadBlob,
+  generateJobPdf,
+  getJobPdfFileName,
+  shareJobPdf,
+} from "@/lib/jobPdf";
 
 interface JobDetailsProps {
   jobId: number;
-  appliedJobIds?: number[];
 }
 
-const JobDetails = ({ jobId, appliedJobIds = [] }: JobDetailsProps) => {
+const JobDetails = ({ jobId }: JobDetailsProps) => {
   const navigate = useNavigate();
+
+  const { data: applicant } = useApplicantProfile();
+  const isLoggedIn = !!applicant;
+  const applicantId = applicant?.applicant_id;
 
   const { data: job, isLoading } = useJobDetails(jobId);
 
@@ -43,14 +55,19 @@ const JobDetails = ({ jobId, appliedJobIds = [] }: JobDetailsProps) => {
 
   const [profileComplete, setProfileComplete] = useState(null);
   const [showProfileModal, setShowProfileModal] = useState(false);
+  const [pdfBusy, setPdfBusy] = useState(false);
+  const pdfCache = useRef<{
+    jobId: number | null;
+    promise: Promise<Blob> | null;
+  }>({ jobId: null, promise: null });
 
-  const applicantId = localStorage.getItem("applicantId");
-  const isLoggedIn = !!applicantId;
-
-  const hasApplied = appliedJobIds.includes(job?.id);
   const isExpired = job?.dead_line
     ? new Date(job?.dead_line) < new Date()
     : false;
+
+  const numberOfApplications = job?.job_email
+    ? (job?.total_non_user_applicants ?? 0)
+    : (job?.total_applicants ?? 0);
 
   const shareTitle = `Job Opening: ${
     job?.position?.name
@@ -65,9 +82,12 @@ const JobDetails = ({ jobId, appliedJobIds = [] }: JobDetailsProps) => {
 
   const handleApply = () => {
     if (job.job_email) {
-      navigate(isLoggedIn ? "/app/apply-job-email" : "/apply-job-email", {
-        state: { jobId: job.id },
-      });
+      navigate(
+        isLoggedIn ? "/app/external-applications/email" : "/jobs/email",
+        {
+          state: { jobId: job.id },
+        },
+      );
       return;
     }
 
@@ -91,9 +111,7 @@ const JobDetails = ({ jobId, appliedJobIds = [] }: JobDetailsProps) => {
       return;
     }
 
-    navigate("/app/apply-job", {
-      state: { jobId: job.id },
-    });
+    navigate(`/app/jobs/${jobId}/apply`);
   };
 
   const handleSaveJob = () => {
@@ -125,6 +143,61 @@ const JobDetails = ({ jobId, appliedJobIds = [] }: JobDetailsProps) => {
     } catch (error) {
       console.error(error);
       toast.error("Unable to copy the job link");
+    }
+  };
+
+  /* ---------- PDF ---------- */
+
+  // Build the PDF once per job and reuse it. Started when the Share menu opens,
+  // so it's usually ready by the time the user taps "Share PDF" (browsers only
+  // allow navigator.share shortly after a tap, so we want no long wait).
+  const getPdf = () => {
+    const cached = pdfCache.current;
+    if (cached.jobId === job.id && cached.promise) return cached.promise;
+
+    const promise = generateJobPdf(job, { shareUrl, shareTitle });
+    promise.catch(() => {
+      pdfCache.current = { jobId: null, promise: null };
+    });
+    pdfCache.current = { jobId: job.id, promise };
+    return promise;
+  };
+
+  const handleMenuOpenChange = (open: boolean) => {
+    if (open) getPdf().catch(() => {});
+  };
+
+  const handleDownloadPdf = async () => {
+    setPdfBusy(true);
+    try {
+      const blob = await getPdf();
+      downloadBlob(blob, getJobPdfFileName(job));
+    } catch (error) {
+      console.error(error);
+      toast.error("Unable to generate the PDF");
+    } finally {
+      setPdfBusy(false);
+    }
+  };
+
+  const handleSharePdf = async () => {
+    setPdfBusy(true);
+    try {
+      const blob = await getPdf();
+      const result = await shareJobPdf(blob, getJobPdfFileName(job), {
+        title: shareTitle,
+        text: `${shareTitle}\n${shareUrl}`,
+      });
+      if (result === "downloaded") {
+        toast.info(
+          "Sharing files isn't supported here, so the PDF was downloaded",
+        );
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error("Unable to share the PDF");
+    } finally {
+      setPdfBusy(false);
     }
   };
 
@@ -161,9 +234,7 @@ const JobDetails = ({ jobId, appliedJobIds = [] }: JobDetailsProps) => {
 
         <div className="flex gap-1 items-center text-sm">
           <Users size={16} className="text-orange-500" />
-          <span>
-            {job.total_applicants ?? job.indirect_applicant?.length ?? 0}
-          </span>
+          <span>{numberOfApplications}</span>
           <span>Applicants</span>
         </div>
 
@@ -251,7 +322,7 @@ const JobDetails = ({ jobId, appliedJobIds = [] }: JobDetailsProps) => {
       {/* Social + Actions */}
       <div className="flex justify-between items-center gap-4">
         <div className="flex gap-2">
-          {isExpired || hasApplied ? null : (
+          {isExpired ? null : (
             <>
               <Button
                 variant="outline"
@@ -271,7 +342,7 @@ const JobDetails = ({ jobId, appliedJobIds = [] }: JobDetailsProps) => {
           )}
         </div>
 
-        <DropdownMenu>
+        <DropdownMenu onOpenChange={handleMenuOpenChange}>
           <DropdownMenuTrigger
             render={<Button variant="outline" className="rounded-full" />}
           >
@@ -312,6 +383,25 @@ const JobDetails = ({ jobId, appliedJobIds = [] }: JobDetailsProps) => {
                 >
                   Facebook
                 </a>
+              </DropdownMenuItem>
+            </DropdownMenuGroup>
+
+            <DropdownMenuGroup>
+              <DropdownMenuItem
+                onClick={handleSharePdf}
+                disabled={pdfBusy}
+                className="cursor-pointer"
+              >
+                <ExternalLink size={16} />
+                <span>Share as PDF</span>
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={handleDownloadPdf}
+                disabled={pdfBusy}
+                className="cursor-pointer"
+              >
+                <FolderDown size={16} />
+                <span>Download PDF</span>
               </DropdownMenuItem>
             </DropdownMenuGroup>
           </DropdownMenuContent>

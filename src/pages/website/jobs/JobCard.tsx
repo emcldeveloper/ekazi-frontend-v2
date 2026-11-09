@@ -9,10 +9,10 @@ import { Button } from "@/components/ui/button";
 import { DEFAULT_IMG, IMG_BASE } from "@/config";
 import { useIsMobile } from "@/hooks/use-mobile";
 
-import JobDetails from "./JobDetails";
 import PremiumBadge from "@/components/premium-badge";
 import { capitalizeText } from "@/utils/helpers";
 import { useIncrementJobView } from "@/hooks/jobs";
+import { JobDetails } from "@/pages/app/jobs";
 
 interface JobCardProps {
   job: any;

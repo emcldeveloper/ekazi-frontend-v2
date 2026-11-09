@@ -63,10 +63,10 @@ const SidebarListJobs = ({
   const handleJobClick = (job: any) => {
     hasUserSelected.current = true;
 
+    incrementJobView(job.id);
+
     setActiveJob(job);
     setSelectedJob(job);
-
-    incrementJobView(job.id);
 
     if (isMobile) {
       setOpenDrawer(true);

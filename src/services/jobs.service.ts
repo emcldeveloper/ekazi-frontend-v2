@@ -105,12 +105,24 @@ export const getMatchedJobs = async ({
   return res.data;
 };
 
-export const getJobMatchData = async (applicantId: number, jobId: number) => {
-  const res = await api.get(`/applicant/jobmatchData/${applicantId}/${jobId}`);
+export const getJobMatchData = async (jobId: number) => {
+  const res = await api.get(`/applicant/profile-match`, {
+    params: {
+      jobId,
+    },
+  });
   return res.data?.data;
 };
 
-export const applyJobInternal = async (payload: any) => {
-  const res = await api.post("/applicant/jobInternalApplication", payload);
+export const applyJobInternal = async (payload: {
+  jobId: number;
+  notes: string;
+}) => {
+  const res = await api.post("/application/apply-job", payload);
+  return res.data;
+};
+
+export const applyJobEmail = async (payload: any) => {
+  const res = await api.post("/application/apply-by-emails", payload);
   return res.data;
 };

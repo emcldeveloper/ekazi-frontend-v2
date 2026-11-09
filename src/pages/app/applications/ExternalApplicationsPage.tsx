@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { MailPlus, Send } from "lucide-react";
 
-const APPLY_BY_EMAIL_ROUTE = "/app/external-jobs";
+const APPLY_BY_EMAIL_ROUTE = "/app/external-applications/email";
 
 const ExternalApplicationsPage = () => {
   return (

@@ -38,6 +38,7 @@ import ApplyByEmailPage from "./pages/app/applications/ApplyByEmailPage";
 import OtherFilesPage from "./pages/app/documents/OtherFilesPage";
 import MessagesPage from "./pages/app/messages/MessagesPage";
 import ExternalApplicationsPage from "./pages/app/applications/ExternalApplicationsPage";
+import EmailApplicationPage from "./pages/website/jobs/EmailApplicationPage";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -59,6 +60,7 @@ const App = () => {
             <Routes>
               <Route path="/" element={<HomePage />} />
               <Route path="/jobs" element={<JobsPage />} />
+              <Route path="/jobs/email" element={<EmailApplicationPage />} />
               <Route path="/employers" element={<EmployersPage />} />
               <Route path="/employers/request-demo" element={<RequestDemo />} />
               <Route path="/candidates" element={<CandidatesPage />} />
@@ -81,25 +83,34 @@ const App = () => {
               <Route element={<ProtectedRoutes />}>
                 <Route element={<AppLayout />}>
                   <Route path="/app/dashboard" element={<DashboardPage />} />
+
                   <Route path="/app/profile" element={<ProfilePage />} />
+
                   <Route path="/app/jobs" element={<AppJobsPage />} />
                   <Route
-                    path="/app/external-jobs"
-                    element={<ApplyByEmailPage />}
+                    path="/app/jobs/:jobId/apply"
+                    element={<ApplyJobPage />}
                   />
+
                   <Route path="/app/apply-job" element={<ApplyJobPage />} />
                   <Route path="/app/saved-jobs" element={<SavedJobsPage />} />
                   <Route
                     path="/app/matched-jobs"
                     element={<MatchedJobsPage />}
                   />
+
                   <Route
                     path="/app/applications"
                     element={<ApplicationsPage />}
                   />
+
                   <Route
                     path="/app/external-applications"
                     element={<ExternalApplicationsPage />}
+                  />
+                  <Route
+                    path="/app/external-applications/email"
+                    element={<ApplyByEmailPage />}
                   />
 
                   <Route path="/app/templates" element={<CVTemplatesPage />} />
