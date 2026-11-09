@@ -212,7 +212,7 @@ const MatchedJobsPage = () => {
 
   const handleJobClick = (job: MatchedJob) => {
     setSelectedJob(job);
-    incrementJobView({ job_id: job.id });
+    incrementJobView(job.id);
     setShowModal(true);
   };
 

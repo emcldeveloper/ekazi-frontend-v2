@@ -7,10 +7,9 @@ import JobDetails from "../components/JobDetails";
 
 interface ViewApplicationProps {
   selectedJob: any;
-  appliedJobIds?: any;
 }
 
-const ViewSavedJob = ({ selectedJob, appliedJobIds }: ViewApplicationProps) => {
+const ViewSavedJob = ({ selectedJob }: ViewApplicationProps) => {
   const isMobile = useIsMobile();
 
   return (
@@ -22,10 +21,7 @@ const ViewSavedJob = ({ selectedJob, appliedJobIds }: ViewApplicationProps) => {
 
           <DrawerContent>
             <div className="flex-1 scroll-fade overflow-y-auto p-4">
-              <JobDetails
-                jobId={selectedJob.job_id}
-                appliedJobIds={appliedJobIds}
-              />
+              <JobDetails jobId={selectedJob.job_id} />
             </div>
           </DrawerContent>
         </Drawer>
@@ -36,10 +32,7 @@ const ViewSavedJob = ({ selectedJob, appliedJobIds }: ViewApplicationProps) => {
 
           <SheetContent className="sm:max-w-3xl!">
             <div className="scrollbar overflow-y-auto px-4">
-              <JobDetails
-                jobId={selectedJob.job_id}
-                appliedJobIds={appliedJobIds}
-              />
+              <JobDetails jobId={selectedJob.job_id} />
             </div>
           </SheetContent>
         </Sheet>
