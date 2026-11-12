@@ -17,20 +17,29 @@ import {
   FieldSeparator,
   FieldDescription,
   FieldLabel,
+  FieldError,
 } from "@/components/ui/field";
 import { getErrorMessage } from "@/utils/axios-helpers";
 import { useResendVerificationCode, useVerification } from "@/hooks/auth";
+import { Loader } from "lucide-react";
 
 export default function VerifyAccountForm() {
   const navigate = useNavigate();
 
   const location = useLocation();
-
   const email = location.state?.email;
 
-  const { handleSubmit, control, reset } = useForm();
+  const {
+    handleSubmit,
+    control,
+    reset,
+    formState: { errors },
+  } = useForm({
+    defaultValues: {
+      code: "",
+    },
+  });
 
-  const [otp, setOtp] = useState("");
   const [countdown, setCountdown] = useState(60);
   const canResend = countdown === 0;
 
@@ -49,25 +58,13 @@ export default function VerifyAccountForm() {
 
   const { mutate: resendCode } = useResendVerificationCode();
 
-  const onSubmit = () => {
-    if (otp.length < 6) {
-      toast.error("Please enter the complete verification code");
-      return;
-    }
-
+  const onSubmit = (data: { code: string }) => {
     verifyUser(
-      { token: otp },
+      { token: data.code },
       {
         onSuccess: (res) => {
-          localStorage.setItem("token", res.token);
-          localStorage.setItem("role_id", res.data?.role_id);
-          localStorage.setItem("verified", res.data?.verified);
-
-          const role = res.data?.role_id;
-
-          // Job seeker
-          if (role === 12) {
-            navigate("/app/dashboard", { replace: true });
+          if (Number(res.data?.role_id) === 12) {
+            navigate("/login", { replace: true });
           }
 
           toast.success(res?.message || "Account verified successfully");
@@ -86,15 +83,14 @@ export default function VerifyAccountForm() {
       {
         onSuccess: (res) => {
           toast.success(res?.message || "Code sent successfully");
+          setCountdown(60);
+          reset();
         },
         onError: (err) => {
           toast.error(getErrorMessage(err));
         },
       },
     );
-
-    setCountdown(60);
-    setOtp("");
   };
 
   return (
@@ -106,29 +102,36 @@ export default function VerifyAccountForm() {
             name="code"
             control={control}
             rules={{
-              required: true,
-              minLength: 6,
+              required: "Verification code is required",
+              minLength: {
+                value: 6,
+                message: "Please enter all 6 digits",
+              },
             }}
             render={({ field }) => (
               <InputOTP
                 maxLength={6}
                 pattern={REGEXP_ONLY_DIGITS}
-                value={field.value}
+                value={field.value ?? ""}
                 onChange={field.onChange}
                 className="w-full"
               >
-                <InputOTPGroup className="w-full flex">
-                  <InputOTPSlot index={0} className="flex-1 h-10 text-xl" />
-                  <InputOTPSlot index={1} className="flex-1 h-10 text-xl" />
-                  <InputOTPSlot index={2} className="flex-1 h-10 text-xl" />
+                <InputOTPGroup className="flex w-full">
+                  <InputOTPSlot index={0} className="h-10 flex-1 text-xl" />
+                  <InputOTPSlot index={1} className="h-10 flex-1 text-xl" />
+                  <InputOTPSlot index={2} className="h-10 flex-1 text-xl" />
+
                   <InputOTPSeparator />
-                  <InputOTPSlot index={3} className="flex-1 h-10 text-xl" />
-                  <InputOTPSlot index={4} className="flex-1 h-10 text-xl" />
-                  <InputOTPSlot index={5} className="flex-1 h-10 text-xl" />
+
+                  <InputOTPSlot index={3} className="h-10 flex-1 text-xl" />
+                  <InputOTPSlot index={4} className="h-10 flex-1 text-xl" />
+                  <InputOTPSlot index={5} className="h-10 flex-1 text-xl" />
                 </InputOTPGroup>
               </InputOTP>
             )}
           />
+
+          {errors.code && <FieldError>{errors.code.message}</FieldError>}
         </Field>
 
         <Field>
@@ -137,7 +140,14 @@ export default function VerifyAccountForm() {
             disabled={isPending}
             className="bg-Blue hover:bg-blue-600"
           >
-            {isPending ? "Verifying account..." : "Verify"}
+            {isPending ? (
+              <>
+                <Loader className="animate-spin" />
+                Verifying...
+              </>
+            ) : (
+              "Verify Account"
+            )}
           </Button>
         </Field>
 

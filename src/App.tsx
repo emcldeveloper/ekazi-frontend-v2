@@ -59,109 +59,110 @@ const App = () => {
       <TooltipProvider>
         <Toaster position="top-center" richColors />
 
-        <TemplatesProvider>
-          {/* Routes */}
-          <BrowserRouter>
-            <Routes>
-              <Route path="/" element={<HomePage />} />
-              <Route path="/jobs" element={<JobsPage />} />
-              <Route path="/jobs/email" element={<EmailApplicationPage />} />
-              <Route path="/employers" element={<EmployersPage />} />
-              <Route path="/employers/request-demo" element={<RequestDemo />} />
-              <Route path="/candidates" element={<CandidatesPage />} />
-              <Route path="/pricing" element={<PricingPage />} />
-              <Route path="/articles" element={<ArticlesPage />} />
-              <Route path="/articles/:id" element={<ArticleDetails />} />
-              <Route path="/cv-builder" element={<CVBuilderPage />} />
+        {/* Routes */}
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/jobs" element={<JobsPage />} />
+            <Route path="/jobs/email" element={<EmailApplicationPage />} />
+            <Route path="/employers" element={<EmployersPage />} />
+            <Route path="/employers/request-demo" element={<RequestDemo />} />
+            <Route path="/candidates" element={<CandidatesPage />} />
+            <Route path="/pricing" element={<PricingPage />} />
+            <Route path="/articles" element={<ArticlesPage />} />
+            <Route path="/articles/:id" element={<ArticleDetails />} />
+            <Route path="/cv-builder" element={<CVBuilderPage />} />
+            <Route
+              path="/salary-calculator"
+              element={<SalaryCalculatorPage />}
+            />
+
+            <Route path="/register" element={<RegisterPage />} />
+            <Route path="/verify" element={<VerifyAccountPage />} />
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+            <Route path="/reset-password" element={<ResetPasswordPage />} />
+            <Route path="/not-verified" element={<NotVerifiedPage />} />
+
+            <Route element={<ProtectedRoutes />}>
               <Route
-                path="/salary-calculator"
-                element={<SalaryCalculatorPage />}
-              />
+                element={
+                  <TemplatesProvider>
+                    <AppLayout />
+                  </TemplatesProvider>
+                }
+              >
+                <Route path="/app/dashboard" element={<DashboardPage />} />
 
-              <Route path="/register" element={<RegisterPage />} />
-              <Route path="/verify" element={<VerifyAccountPage />} />
-              <Route path="/login" element={<LoginPage />} />
-              <Route path="/forgot-password" element={<ForgotPasswordPage />} />
-              <Route path="/reset-password" element={<ResetPasswordPage />} />
-              <Route path="/not-verified" element={<NotVerifiedPage />} />
+                <Route path="/app/profile" element={<ProfilePage />} />
 
-              <Route element={<ProtectedRoutes />}>
-                <Route element={<AppLayout />}>
-                  <Route path="/app/dashboard" element={<DashboardPage />} />
+                <Route path="/app/jobs" element={<AppJobsPage />} />
+                <Route
+                  path="/app/jobs/:jobId/apply"
+                  element={<ApplyJobPage />}
+                />
 
-                  <Route path="/app/profile" element={<ProfilePage />} />
+                <Route path="/app/apply-job" element={<ApplyJobPage />} />
+                <Route path="/app/saved-jobs" element={<SavedJobsPage />} />
+                <Route path="/app/matched-jobs" element={<MatchedJobsPage />} />
 
-                  <Route path="/app/jobs" element={<AppJobsPage />} />
-                  <Route
-                    path="/app/jobs/:jobId/apply"
-                    element={<ApplyJobPage />}
-                  />
+                <Route
+                  path="/app/applications"
+                  element={<ApplicationsPage />}
+                />
 
-                  <Route path="/app/apply-job" element={<ApplyJobPage />} />
-                  <Route path="/app/saved-jobs" element={<SavedJobsPage />} />
-                  <Route
-                    path="/app/matched-jobs"
-                    element={<MatchedJobsPage />}
-                  />
+                <Route
+                  path="/app/external-applications"
+                  element={<ExternalApplicationsPage />}
+                />
+                <Route
+                  path="/app/external-applications/email"
+                  element={<ApplyByEmailPage />}
+                />
 
-                  <Route
-                    path="/app/applications"
-                    element={<ApplicationsPage />}
-                  />
+                <Route path="/app/templates" element={<CVTemplatesPage />} />
+                <Route
+                  path="/app/templates/:id"
+                  element={<PreviewTemplate />}
+                />
+                <Route
+                  path="/app/cover-letters"
+                  element={<CoverLettersPage />}
+                />
+                <Route
+                  path="/app/cover-letters/new"
+                  element={<CreateCoverLetter />}
+                />
+                <Route path="/app/other-files" element={<OtherFilesPage />} />
+                <Route path="/app/messages" element={<MessagesPage />} />
 
-                  <Route
-                    path="/app/external-applications"
-                    element={<ExternalApplicationsPage />}
-                  />
-                  <Route
-                    path="/app/external-applications/email"
-                    element={<ApplyByEmailPage />}
-                  />
+                <Route
+                  path="/app/notifications"
+                  element={<NotificationsPage />}
+                />
 
-                  <Route path="/app/templates" element={<CVTemplatesPage />} />
-                  <Route
-                    path="/app/templates/:id"
-                    element={<PreviewTemplate />}
-                  />
-                  <Route
-                    path="/app/cover-letters"
-                    element={<CoverLettersPage />}
-                  />
-                  <Route
-                    path="/app/cover-letters/new"
-                    element={<CreateCoverLetter />}
-                  />
-                  <Route path="/app/other-files" element={<OtherFilesPage />} />
-                  <Route path="/app/messages" element={<MessagesPage />} />
+                <Route
+                  path="/app/salary-calculator"
+                  element={<AppCalculatorPage />}
+                />
 
-                  <Route
-                    path="/app/notifications"
-                    element={<NotificationsPage />}
-                  />
+                <Route path="/app/articles" element={<AppArticles />} />
+                <Route
+                  path="/app/articles/:id"
+                  element={<AppArticleDetails />}
+                />
 
-                  <Route
-                    path="/app/salary-calculator"
-                    element={<AppCalculatorPage />}
-                  />
+                <Route path="/app/settings" element={<SettingsPage />} />
 
-                  <Route path="/app/articles" element={<AppArticles />} />
-                  <Route
-                    path="/app/articles/:id"
-                    element={<AppArticleDetails />}
-                  />
-
-                  <Route path="/app/settings" element={<SettingsPage />} />
-
-                  <Route path="/app/subscription" element={<SettingsPage />} />
-                  <Route
-                    path="/app/subscription/plans"
-                    element={<SettingsPage />}
-                  />
-                </Route>
+                <Route path="/app/subscription" element={<SettingsPage />} />
+                <Route
+                  path="/app/subscription/plans"
+                  element={<SettingsPage />}
+                />
               </Route>
-            </Routes>
-          </BrowserRouter>
-        </TemplatesProvider>
+            </Route>
+          </Routes>
+        </BrowserRouter>
       </TooltipProvider>
     </QueryClientProvider>
   );

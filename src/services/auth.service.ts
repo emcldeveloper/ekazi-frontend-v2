@@ -5,18 +5,18 @@ import type {
   LoginPayload,
   RegisterPayload,
   ResendCodePayload,
-  ResetPasswordPayload,
+  ResetPayload,
   VerifyAccountPayload,
 } from "@/@types/auth";
 import api from "@/lib/axios";
 
 export const register = async (payload: RegisterPayload) => {
-  const res = await api.post("/auth/register", payload);
+  const res = await api.post("/auth/register/applicant", payload);
   return res.data;
 };
 
 export const verifyAccount = async (payload: VerifyAccountPayload) => {
-  const res = await api.post(`/auth/verify`, payload);
+  const res = await api.post(`/auth/verify-email`, payload);
   return res.data;
 };
 
@@ -31,12 +31,12 @@ export const login = async (payload: LoginPayload) => {
 };
 
 export const forgotPassword = async (payload: ForgotPasswordPayload) => {
-  const res = await api.post("/auth/reset-password", payload);
+  const res = await api.post("/auth/forgot-password", payload);
   return res.data;
 };
 
-export const resetPassword = async (payload: ResetPasswordPayload) => {
-  const res = await api.post("/auth/password-new", payload);
+export const resetPassword = async (payload: ResetPayload) => {
+  const res = await api.post("/auth/reset-password", payload);
   return res.data;
 };
 

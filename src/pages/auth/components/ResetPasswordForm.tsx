@@ -1,12 +1,13 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { EyeIcon, EyeOffIcon } from "lucide-react";
+import { EyeIcon, EyeOffIcon, Loader } from "lucide-react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { toast } from "sonner";
 
 import {
   Field,
   FieldDescription,
+  FieldError,
   FieldGroup,
   FieldLabel,
   FieldSeparator,
@@ -47,11 +48,10 @@ export default function ResetPasswordForm() {
     }
 
     const payload = {
-      ...data,
       token,
       email,
+      newPassword: data.password,
     };
-
     resetPassword(payload, {
       onSuccess: (res) => {
         toast.success(res?.message || "Password reset successfully");
@@ -94,7 +94,7 @@ export default function ResetPasswordForm() {
           </div>
 
           {errors.password && (
-            <p className="text-xs text-red-500">{errors.password.message}</p>
+            <FieldError>{errors.password.message}</FieldError>
           )}
         </Field>
 
@@ -126,9 +126,7 @@ export default function ResetPasswordForm() {
           </div>
 
           {errors.password_confirmation && (
-            <p className="text-xs text-red-500">
-              {errors.password_confirmation.message}
-            </p>
+            <FieldError>{errors.password_confirmation.message}</FieldError>
           )}
         </Field>
 
@@ -138,7 +136,14 @@ export default function ResetPasswordForm() {
             disabled={isPending}
             className="bg-Blue hover:bg-blue-800"
           >
-            {isPending ? "Resetting..." : "Reset Password"}
+            {isPending ? (
+              <>
+                <Loader className="animate-spin" />
+                Resetting...
+              </>
+            ) : (
+              "Reset Password"
+            )}
           </Button>
         </Field>
 

@@ -5,6 +5,7 @@ import { toast } from "sonner";
 import {
   Field,
   FieldDescription,
+  FieldError,
   FieldGroup,
   FieldLabel,
   FieldSeparator,
@@ -14,6 +15,7 @@ import { Button } from "@/components/ui/button";
 import { useForgotPassword } from "@/hooks/auth";
 import type { ForgotPasswordPayload } from "@/@types/auth";
 import { getErrorMessage } from "@/utils/axios-helpers";
+import { Loader } from "lucide-react";
 
 export default function ForgotPasswordForm() {
   const navigate = useNavigate();
@@ -55,9 +57,7 @@ export default function ForgotPasswordForm() {
             placeholder="example@gmail.com"
             {...register("email", { required: "Email is required" })}
           />
-          {errors.email && (
-            <p className="text-xs text-red-500">{errors.email.message}</p>
-          )}
+          {errors.email && <FieldError>{errors.email.message}</FieldError>}
         </Field>
         <Field>
           <Button
@@ -65,7 +65,14 @@ export default function ForgotPasswordForm() {
             disabled={isPending}
             className="bg-Blue hover:bg-blue-800"
           >
-            {isPending ? "Sending..." : "Send Reset Link"}
+            {isPending ? (
+              <>
+                <Loader className="animate-spin" />
+                Sending...
+              </>
+            ) : (
+              "Send Reset Link"
+            )}
           </Button>
         </Field>
 

@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { EyeIcon, EyeOffIcon } from "lucide-react";
+import { EyeIcon, EyeOffIcon, Loader } from "lucide-react";
 
 import {
   Field,
@@ -48,7 +48,10 @@ export default function LoginForm() {
         }
 
         if (!verified) {
-          navigate("/not-verified", { replace: true });
+          navigate("/not-verified", {
+            state: { email: data.username },
+            replace: true,
+          });
           return;
         }
 
@@ -121,7 +124,14 @@ export default function LoginForm() {
             disabled={isPending}
             className="bg-Blue hover:bg-blue-900"
           >
-            {isPending ? "Logging in..." : "Login"}
+            {isPending ? (
+              <>
+                <Loader className="animate-spin" />
+                Logging in...
+              </>
+            ) : (
+              "Login"
+            )}
           </Button>
         </Field>
 

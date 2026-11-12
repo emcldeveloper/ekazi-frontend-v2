@@ -5,7 +5,7 @@ export type RegisterPayload = {
   dob: string;
   gender_id: number;
   marital_status_id: number;
-  country_id: number;
+  country_id?: number;
   region_id: number;
   phone: string;
   address: string;
@@ -37,6 +37,12 @@ export type ResetPasswordPayload = {
   email: string;
   password: string;
   password_confirmation?: string;
+};
+
+export type ResetPayload = {
+  token: string;
+  email: string;
+  newPassword: string;
 };
 
 export type ChangePasswordPayload = {

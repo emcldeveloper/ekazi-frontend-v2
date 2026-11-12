@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Controller, useForm } from "react-hook-form";
-import { EyeIcon, EyeOffIcon } from "lucide-react";
+import { EyeIcon, EyeOffIcon, Loader } from "lucide-react";
 import { toast } from "sonner";
 import SearchSelect from "react-select";
 
@@ -31,9 +31,10 @@ import type {
 import { useMaritalStatus } from "@/hooks/universals/useMaritalStatus";
 import { useCountries, useRegions } from "@/hooks/universals";
 import type { RegisterPayload } from "@/@types/auth";
-import SuccessRegisterModal from "./SuccessRegisterModal";
 
 export default function RegisterForm() {
+  const navigate = useNavigate();
+
   const {
     register,
     handleSubmit,
@@ -46,7 +47,6 @@ export default function RegisterForm() {
 
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [showModal, setShowModal] = useState(false);
 
   const { mutate: registerUser, isPending } = useRegister();
 
@@ -85,10 +85,30 @@ export default function RegisterForm() {
       })) ?? [];
 
   const onSubmit = (data: RegisterPayload) => {
-    registerUser(data, {
+    const payload = {
+      firstname: data.firstname,
+      lastname: data.lastname,
+      dob: data.dob,
+      gender_id: data.gender_id,
+      marital_status_id: data.marital_status_id,
+      region_id: data.gender_id,
+      phone: data.phone,
+      address: data.address,
+      email: data.email,
+      password: data.password,
+      password_confirmation: data.password_confirmation,
+    };
+
+    registerUser(payload, {
       onSuccess: (res) => {
+        navigate("/verify", {
+          replace: true,
+          state: {
+            email: data.email,
+          },
+        });
+
         toast.success(res?.message || "Registered successfully");
-        setShowModal(true);
         reset();
       },
       onError: (err) => {
@@ -213,9 +233,7 @@ export default function RegisterForm() {
                 )}
               />
               {errors.country_id && (
-                <p className="text-xs text-red-500">
-                  {errors.country_id.message}
-                </p>
+                <FieldError>{errors.country_id.message}</FieldError>
               )}
             </Field>
 
@@ -241,9 +259,7 @@ export default function RegisterForm() {
                 )}
               />
               {errors.region_id && (
-                <p className="text-xs text-red-500">
-                  {errors.region_id.message}
-                </p>
+                <FieldError>{errors.region_id.message}</FieldError>
               )}
             </Field>
 
@@ -371,12 +387,12 @@ export default function RegisterForm() {
               />
 
               <FieldContent>
-                <FieldLabel htmlFor="terms-checkbox-2">
+                <div>
                   By clicking this checkbox, you will Agree to Our{" "}
                   <a href="#" className="text-Orange hover:underline">
                     Terms and Conditions.
                   </a>
-                </FieldLabel>
+                </div>
                 {errors.terms && (
                   <FieldError>{errors.terms.message}</FieldError>
                 )}
@@ -388,7 +404,14 @@ export default function RegisterForm() {
               disabled={isPending || !acceptedTerms}
               className="bg-Blue hover:bg-blue-800"
             >
-              {isPending ? "Registering in..." : "Register"}
+              {isPending ? (
+                <>
+                  <Loader className="animate-spin" />
+                  Registering...
+                </>
+              ) : (
+                "Register"
+              )}
             </Button>
           </FieldGroup>
 
@@ -402,11 +425,6 @@ export default function RegisterForm() {
           </FieldDescription>
         </FieldGroup>
       </form>
-
-      <SuccessRegisterModal
-        show={showModal}
-        onHide={() => setShowModal(false)}
-      />
     </div>
   );
 }
