@@ -24,7 +24,7 @@ const ViewJob = ({ jobId }: ViewJobProps) => {
       {isMobile ? (
         <Drawer>
           <DrawerTrigger
-            render={<Button variant="secondary" size="sm" />}
+            render={<Button variant="default" size="sm" />}
             onClick={handleJobClick}
           >
             View
@@ -39,7 +39,7 @@ const ViewJob = ({ jobId }: ViewJobProps) => {
         <Sheet>
           <SheetTrigger
             render={
-              <Button size="sm" variant="secondary" onClick={handleJobClick} />
+              <Button size="sm" variant="default" onClick={handleJobClick} />
             }
           >
             View

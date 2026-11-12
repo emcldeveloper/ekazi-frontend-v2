@@ -39,6 +39,11 @@ import OtherFilesPage from "./pages/app/documents/OtherFilesPage";
 import MessagesPage from "./pages/app/messages/MessagesPage";
 import ExternalApplicationsPage from "./pages/app/applications/ExternalApplicationsPage";
 import EmailApplicationPage from "./pages/website/jobs/EmailApplicationPage";
+import NotificationsPage from "./pages/app/notifications/NotificationsPage";
+import SettingsPage from "./pages/app/settings/SettingsPage";
+import AppArticles from "./pages/app/articles/AppArticles";
+import AppArticleDetails from "./pages/app/articles/components/AppArticleDetails";
+import AppCalculatorPage from "./pages/app/calculator/AppCalculatorPage";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -128,6 +133,30 @@ const App = () => {
                   />
                   <Route path="/app/other-files" element={<OtherFilesPage />} />
                   <Route path="/app/messages" element={<MessagesPage />} />
+
+                  <Route
+                    path="/app/notifications"
+                    element={<NotificationsPage />}
+                  />
+
+                  <Route
+                    path="/app/salary-calculator"
+                    element={<AppCalculatorPage />}
+                  />
+
+                  <Route path="/app/articles" element={<AppArticles />} />
+                  <Route
+                    path="/app/articles/:id"
+                    element={<AppArticleDetails />}
+                  />
+
+                  <Route path="/app/settings" element={<SettingsPage />} />
+
+                  <Route path="/app/subscription" element={<SettingsPage />} />
+                  <Route
+                    path="/app/subscription/plans"
+                    element={<SettingsPage />}
+                  />
                 </Route>
               </Route>
             </Routes>

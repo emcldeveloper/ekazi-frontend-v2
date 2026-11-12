@@ -24,14 +24,14 @@ interface TaxRatesModalProps {
 const TaxRatesModal = ({ taxData }: TaxRatesModalProps) => {
   return (
     <Dialog>
-      <DialogTrigger render={<Button>Tax Rates</Button>} />
+      <DialogTrigger render={<Button variant="outline">Tax Rates</Button>} />
 
       <DialogContent className="sm:max-w-4xl">
         <DialogHeader>
           <DialogTitle>Tanzania Tax Rates & Deductions</DialogTitle>
         </DialogHeader>
 
-        <div className="-mx-4 no-scrollbar max-h-[70vh] overflow-y-auto px-4 space-y-4">
+        <div className="-mx-4 max-h-[65vh] overflow-y-auto px-4 space-y-4">
           <h6 className="font-bold">
             Tanzania PAYE (Personal Income Tax) Table
           </h6>

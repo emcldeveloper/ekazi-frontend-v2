@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { FaUser, FaWhatsapp } from "react-icons/fa";
+import { FaWhatsapp } from "react-icons/fa";
 import html2pdf from "html2pdf.js";
 
 import { Button } from "@/components/ui/button";
@@ -9,6 +9,7 @@ import TaxRatesModal from "./TaxRatesModal";
 import SalaryForm, { type Allowance } from "./SalaryForm";
 import { useSalaryData } from "@/hooks/calculator";
 import SalaryResult from "./SalaryResult";
+import { Download, User } from "lucide-react";
 
 const SalaryCalculator = () => {
   // fetching salary data
@@ -21,7 +22,7 @@ const SalaryCalculator = () => {
   const [exchangeRate, setExchangeRate] = useState("");
   const [salaryType, setSalaryType] = useState("gross");
   const [netPay, setNetPay] = useState("");
-  const [basicPay, setBasicPay] = useState("");
+  const [basicPay, setBasicPay] = useState("2000000");
   const [totalGross, setTotalGross] = useState<number | null>(null);
   const [sscEmployee, setSscEmployee] = useState(0);
   const [pay, setPay] = useState<number | null>(null);
@@ -43,6 +44,7 @@ const SalaryCalculator = () => {
     if (!taxData) return;
     calculateTaxableAmount();
   }, [
+    taxData,
     basicPay,
     netPay,
     totalAllowance,
@@ -270,14 +272,12 @@ const SalaryCalculator = () => {
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-4">
+      {/* <div className="flex items-center justify-between mb-4">
         <h4 className="text-Blue font-semibold m-0">SALARY CALCULATOR</h4>
-      </div>
+      </div> */}
 
       <Card>
         <CardContent className="space-y-4">
-          {/* Header */}
-
           <div className="flex flex-col gap-4 md:flex-row">
             <div className="flex-1">
               {/* Form */}
@@ -315,30 +315,26 @@ const SalaryCalculator = () => {
             </div>
           </div>
 
-          {/* Action Buttons */}
-          <div className="flex flex-col gap-2.5 py-2.5">
-            {/* Top Row: User Icon Left, Count Right */}
-            <div className="flex items-center justify-between">
-              <div></div>
-
-              <div className="flex items-center gap-1">
-                <FaUser size={14} className="text-Orange" />
-                <span className="text-Blue text-lg font-bold">
-                  {formatLargeNumber(usageCount?.no_uses)}
-                </span>
-              </div>
-            </div>
-
+          <div className="flex flex-col gap-4 items-start justify-between mt-6 md:flex-row md:items-center">
             {/* Button Row */}
             <div className="flex flex-wrap items-center justify-start gap-2">
-              <Button onClick={downloadPDF}>Download</Button>
+              <Button variant="outline" onClick={downloadPDF}>
+                <Download /> Download
+              </Button>
 
-              <Button onClick={shareOnWhatsApp}>
-                <FaWhatsapp /> Share on WhatsApp
+              <Button variant="outline" onClick={shareOnWhatsApp}>
+                <FaWhatsapp /> WhatsApp
               </Button>
 
               {/* Tax Rate Modal */}
               <TaxRatesModal taxData={taxData} />
+            </div>
+
+            <div className="flex items-center gap-1 text-Blue dark:text-white">
+              <User size={18} className="text-Orange dark:text-white" />
+              <span className="text-lg font-bold ">
+                {formatLargeNumber(usageCount?.no_uses)}
+              </span>
             </div>
           </div>
         </CardContent>

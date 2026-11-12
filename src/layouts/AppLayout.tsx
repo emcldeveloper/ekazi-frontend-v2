@@ -5,10 +5,10 @@ import {
   SidebarTrigger,
 } from "@/components/ui/sidebar";
 import { AppSidebar } from "./AppSidebar";
-import { Outlet } from "react-router-dom";
+import { Link, Outlet } from "react-router-dom";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { Button } from "@/components/ui/button";
-import { BellIcon } from "lucide-react";
+import { BellIcon, LogOut } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -17,8 +17,21 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { useQueryClient } from "@tanstack/react-query";
+import { FRONTEND_URL } from "@/config";
 
 export default function AppLayout() {
+  const queryClient = useQueryClient();
+
+  // logout
+  const handleLogout = () => {
+    localStorage.clear();
+
+    queryClient.clear();
+
+    window.location.href = FRONTEND_URL;
+  };
+
   return (
     <SidebarProvider>
       <AppSidebar />
@@ -31,33 +44,45 @@ export default function AppLayout() {
           </div>
 
           <div className="flex items-center gap-2 px-4">
-            <Button variant="outline" size="icon">
+            <Button
+              variant="outline"
+              size="icon"
+              render={<Link to="/app/notifications" />}
+            >
               <BellIcon size={20} />
             </Button>
 
             <ThemeToggle />
 
-            <DropdownMenu>
-              <DropdownMenuTrigger>
-                <Button
-                  variant="ghost"
-                  className="relative h-9 w-9 rounded-full p-0"
-                >
-                  <Avatar className="h-9 w-9">
-                    <AvatarFallback>AV</AvatarFallback>
-                  </Avatar>
-                </Button>
-              </DropdownMenuTrigger>
+            <div className="hidden sm:block">
+              <Button variant="secondary" size="icon" onClick={handleLogout}>
+                <LogOut />
+              </Button>
+            </div>
 
-              <DropdownMenuContent align="end">
-                <DropdownMenuItem>Profile</DropdownMenuItem>
-                <DropdownMenuItem>Settings</DropdownMenuItem>
+            <div className="block sm:hidden">
+              <DropdownMenu>
+                <DropdownMenuTrigger>
+                  <Button
+                    variant="ghost"
+                    className="relative h-9 w-9 rounded-full p-0"
+                  >
+                    <Avatar className="h-9 w-9">
+                      <AvatarFallback>AV</AvatarFallback>
+                    </Avatar>
+                  </Button>
+                </DropdownMenuTrigger>
 
-                <DropdownMenuSeparator />
+                <DropdownMenuContent align="end">
+                  <DropdownMenuItem>Profile</DropdownMenuItem>
+                  <DropdownMenuItem>Settings</DropdownMenuItem>
 
-                <DropdownMenuItem>Logout</DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+                  <DropdownMenuSeparator />
+
+                  <DropdownMenuItem>Logout</DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
           </div>
         </header>
 

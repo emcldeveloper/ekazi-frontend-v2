@@ -97,10 +97,6 @@ const ApplicationsPage = () => {
               className="flex flex-col gap-4 rounded-3xl border border-slate-200/70 bg-white p-4 sm:flex-row sm:items-center sm:p-5"
             >
               <div className="flex min-w-0 flex-1 items-start gap-4">
-                {/* <span className="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-blue-50 text-[#1D4FA3]">
-                  <Briefcase className="size-5" aria-hidden="true" />
-                </span> */}
-
                 <div className="w-20 h-20 flex items-center justify-center bg-muted rounded-lg overflow-hidden shrink-0">
                   <img
                     src={

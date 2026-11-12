@@ -2,6 +2,8 @@ import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { useCreateInsight } from "@/hooks/calculator";
+import { Button } from "@/components/ui/button";
+import { Plus, X } from "lucide-react";
 
 export interface Allowance {
   name: string;
@@ -42,14 +44,14 @@ const Toggle = ({
   onChange: (v: string) => void;
   options: { value: string; label: string }[];
 }) => (
-  <div className="flex h-12 rounded-full bg-muted p-1">
+  <div className="flex h-14 rounded-full bg-muted p-1">
     {options.map((opt) => (
       <button
         key={opt.value}
         type="button"
         onClick={() => onChange(opt.value)}
         className={cn(
-          "flex-1 rounded-full text-sm font-medium transition-colors",
+          "flex-1 rounded-full text-base font-semibold transition-colors",
           value === opt.value
             ? "bg-background text-foreground shadow-sm"
             : "text-muted-foreground hover:text-foreground",
@@ -88,7 +90,7 @@ const SalaryForm = ({
     <form className="space-y-5" onSubmit={(e) => e.preventDefault()}>
       <FieldGroup className="gap-4">
         <Field>
-          <FieldLabel>Calculate</FieldLabel>
+          {/* <FieldLabel>Calculate</FieldLabel> */}
           <Toggle
             value={salaryType}
             onChange={(v) => {
@@ -103,7 +105,7 @@ const SalaryForm = ({
         </Field>
 
         <Field>
-          <FieldLabel>Currency</FieldLabel>
+          {/* <FieldLabel>Currency</FieldLabel> */}
           <Toggle
             value={currencyType}
             onChange={setCurrencyType}
@@ -131,7 +133,7 @@ const SalaryForm = ({
         )}
 
         <Field>
-          <FieldLabel htmlFor="salary">
+          <FieldLabel htmlFor="salary" className="text-base font-semibold">
             {isFromNet ? "Net salary" : "Basic salary"}
           </FieldLabel>
           <div className="relative">
@@ -148,7 +150,7 @@ const SalaryForm = ({
               min="1"
               max={MAX_SALARY}
               disabled={isUSD && !exchangeRate}
-              className={cn(inputClass, "pr-16")}
+              className={cn(inputClass, "pr-16 text-lg font-semibold")}
             />
             <span className="pointer-events-none absolute inset-y-0 right-5 flex items-center text-sm text-muted-foreground">
               {currency}
@@ -159,14 +161,17 @@ const SalaryForm = ({
 
       <div className="space-y-3">
         <div className="flex items-center justify-between">
-          <span className="text-sm font-medium">Allowances</span>
-          <button
+          <span className="text-base font-semibold">Allowances</span>
+          <Button
             type="button"
+            variant="outline"
+            size="sm"
             onClick={addAllowance}
-            className="text-sm font-medium text-[#D36314] hover:underline"
+            className="text-base font-semibold"
           >
-            + Add
-          </button>
+            <Plus />
+            Add
+          </Button>
         </div>
 
         {allowances.map((allowance, index) => (
@@ -196,14 +201,15 @@ const SalaryForm = ({
                 {currency}
               </span>
             </div>
-            <button
+            <Button
               type="button"
+              variant="secondary"
               onClick={() => removeAllowance(index)}
               aria-label="Remove allowance"
-              className="flex size-12 shrink-0 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+              className="size-12"
             >
-              ✕
-            </button>
+              <X />
+            </Button>
           </div>
         ))}
       </div>

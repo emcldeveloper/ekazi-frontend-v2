@@ -210,15 +210,15 @@ const JobDetails = ({ jobId }: JobDetailsProps) => {
       {/* Header */}
       <div className="flex gap-4 items-center">
         <img
-          src={`${IMG_BASE}${job.client?.logo || ""}`}
-          alt={job.client?.name || "Company Logo"}
+          src={`${IMG_BASE}${job?.client?.logo || ""}`}
+          alt={job?.client?.name || "Company Logo"}
           className="object-contain max-w-[120px] max-h-[75px]"
           onError={(e) => (e.currentTarget.src = DEFAULT_IMG)}
         />
 
         <div className="text-start">
-          <h2 className="font-semibold text-lg">{job.position?.name}</h2>
-          <p className="text-sm text-muted-foreground">{job.client?.name}</p>
+          <h2 className="font-semibold text-lg">{job?.position?.name}</h2>
+          <p className="text-sm text-muted-foreground">{job?.client?.name}</p>
         </div>
       </div>
 
@@ -228,7 +228,7 @@ const JobDetails = ({ jobId }: JobDetailsProps) => {
       <div className="grid grid-cols-3 text-start gap-4">
         <div className="flex gap-1 items-center text-sm">
           <Eye size={16} className="text-orange-500" />
-          <span>{job.statistics?.[0]?.job_views ?? 0}</span>
+          <span>{job?.statistics?.[0]?.job_views ?? 0}</span>
           <span>Views</span>
         </div>
 
@@ -240,7 +240,7 @@ const JobDetails = ({ jobId }: JobDetailsProps) => {
 
         <div className="flex gap-1 items-center text-sm">
           <Briefcase size={16} className="text-orange-500" />
-          <span>{job.job_type?.name}</span>
+          <span>{job?.job_type?.name}</span>
         </div>
 
         <div className="flex gap-1 items-center text-sm">

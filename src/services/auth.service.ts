@@ -56,7 +56,18 @@ export const deleteAccount = async (payload: DeactivatePayload) => {
   return res.data;
 };
 
+// user accounts
 export const getUser = async () => {
   const res = await api.get(`/auth/user`);
   return res.data?.data;
+};
+
+export const updateUser = async (payload: any) => {
+  const res = await api.patch(`/auth/user`, payload);
+  return res.data;
+};
+
+export const uploadUserImage = async (payload: any) => {
+  const res = await api.patch(`/auth/user/image`, payload);
+  return res.data;
 };

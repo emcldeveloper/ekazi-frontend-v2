@@ -72,6 +72,10 @@ const SalaryCalculatorPage = () => {
       <section className="relative z-10 -mt-14 bg-transparent md:-mt-16">
         <div className="mx-auto max-w-7xl px-4 sm:px-6">
           <div className="rounded-3xl border border-gray-100 bg-white p-4 shadow-2xl shadow-slate-200/70 sm:p-6 lg:p-8">
+            <div className="flex items-center justify-between mb-4">
+              <h4 className="text-Blue font-semibold m-0">SALARY CALCULATOR</h4>
+            </div>
+
             <SalaryCalculator />
           </div>
 
@@ -137,7 +141,7 @@ const SalaryCalculatorPage = () => {
               aria-hidden
               className="pointer-events-none absolute inset-0 -z-10"
             >
-              <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-black/25" />
+              <div className="absolute inset-0 bg-linear-to-br from-white/10 via-transparent to-black/25" />
               <div className="absolute -right-16 -top-20 h-72 w-72 rounded-full bg-Orange/30 blur-3xl" />
             </div>
 

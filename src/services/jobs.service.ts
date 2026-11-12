@@ -57,7 +57,7 @@ export const incrementJobView = async (id: number) => {
 };
 
 export const saveJob = async (payload: any) => {
-  const res = await api.post("/applicant/cartJobs", payload);
+  const res = await api.post("/applicant/saved-jobs", payload);
   return res.data;
 };
 

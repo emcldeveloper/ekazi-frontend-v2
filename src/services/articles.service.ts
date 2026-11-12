@@ -5,13 +5,15 @@ export const articlesApi = async ({
   page,
   limit,
   search,
+  status,
 }: {
   page: number;
   limit: number;
   search: string;
+  status: string;
 }) => {
   const res = await api.get("/blog-posts", {
-    params: { page, limit, search },
+    params: { page, limit, search, status },
   });
   return res.data;
 };

@@ -8,8 +8,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import JobDetails from "./components/JobDetails";
 import SidebarListJobs from "./components/SidebarListJobs";
 import JobFilters from "./components/JobFilters";
-import MatchedJobsPage from "./MatchedJobsPage";
-import SavedJobsPage from "./SavedJobsPage";
+import MatchedJobsPage from "./matched_jobs/MatchedJobsPage";
+import SavedJobsPage from "./saved_jobs/SavedJobsPage";
 
 const FindJobs = () => {
   const location = useLocation();

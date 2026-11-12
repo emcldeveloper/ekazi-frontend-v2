@@ -102,3 +102,20 @@ export const getGreeting = (
     hour < 12 ? "Good morning" : hour < 17 ? "Good afternoon" : "Good evening";
   return firstName ? `${timeOfDay}, ${firstName}` : timeOfDay;
 };
+
+//
+export function formatTime(createdAt: string, now = new Date()): string {
+  const date = new Date(createdAt);
+  const minutes = Math.floor((now.getTime() - date.getTime()) / 60000);
+
+  if (minutes < 1) return "Just now";
+  if (minutes < 60) return `${minutes} min ago`;
+  if (minutes < 24 * 60) return `${Math.floor(minutes / 60)} h ago`;
+  if (minutes < 2 * 24 * 60) return "Yesterday";
+
+  return date.toLocaleDateString("en-GB", {
+    day: "numeric",
+    month: "short",
+    ...(date.getFullYear() !== now.getFullYear() && { year: "numeric" }),
+  });
+}

@@ -94,7 +94,7 @@ const PromoCarousel = ({
         {slides.map((slide, i) => {
           const isActive = i === current;
           const ctaClass =
-            "h-11 rounded-full bg-white px-6 text-sm font-semibold text-gray-900 hover:bg-white/90";
+            "bg-white text-sm font-semibold text-gray-900 hover:bg-white/90";
           return (
             <div
               key={slide.id}
@@ -114,7 +114,7 @@ const PromoCarousel = ({
                   <p className="text-sm font-medium text-white/85 sm:text-base">
                     {slide.eyebrow}
                   </p>
-                  <h2 className="max-w-xl text-xl font-semibold leading-snug sm:text-2xl lg:text-3xl">
+                  <h2 className="max-w-xl text-xl font-semibold leading-snug md:text-2xl">
                     {slide.title}
                   </h2>
                   <div className="pt-3">

@@ -25,14 +25,17 @@ import {
   BellIcon,
   LogOutIcon,
 } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 export function NavUser() {
   const { isMobile } = useSidebar();
 
-  const queryClient = useQueryClient();
+  const navigate = useNavigate();
 
   // user data
   const { data: user } = useUser();
+
+  const queryClient = useQueryClient();
 
   // logout
   const handleLogout = () => {
@@ -88,7 +91,7 @@ export function NavUser() {
             <DropdownMenuGroup>
               <DropdownMenuItem>
                 <SparklesIcon />
-                Upgrade to Pro
+                Upgrade
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
@@ -101,7 +104,7 @@ export function NavUser() {
                 <CreditCardIcon />
                 Billing
               </DropdownMenuItem>
-              <DropdownMenuItem>
+              <DropdownMenuItem onClick={() => navigate("/app/notifications")}>
                 <BellIcon />
                 Notifications
               </DropdownMenuItem>

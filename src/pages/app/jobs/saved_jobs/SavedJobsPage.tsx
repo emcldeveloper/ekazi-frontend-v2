@@ -1,122 +1,143 @@
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardFooter,
-} from "@/components/ui/card";
-import {
-  Table,
-  TableHeader,
-  TableRow,
-  TableHead,
-  TableBody,
-  TableCell,
-} from "@/components/ui/table";
-import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
+import { Card, CardContent } from "@/components/ui/card";
 
-import { useSavedJobs } from "@/hooks/jobs";
-import ViewSavedJob from "./ViewSavedJob";
+import { useSavedJobs, useSaveJob } from "@/hooks/jobs";
 import { formatDate } from "@/utils/helpers";
 import { DataPagination } from "@/components/data-pagination";
 import { useState } from "react";
+import { toast } from "sonner";
+import { getErrorMessage } from "@/utils/axios-helpers";
+import { CalendarDays, Loader } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import ViewJob from "../components/ViewJob";
 
 const SavedJobsPage = () => {
   const [page, setPage] = useState(1);
   const [perPage, setPerPage] = useState(10);
+  const [savingJobId, setSavingJobId] = useState<number | null>(null);
 
   const { data: jobsData } = useSavedJobs({ page, limit: perPage });
   const savedJobs = jobsData?.data ?? [];
 
+  const { mutate: saveJobMutate } = useSaveJob();
+
+  const handleSaveJob = (jobId: number) => {
+    setSavingJobId(jobId);
+
+    saveJobMutate(
+      { job_id: jobId },
+      {
+        onSuccess: (res) => {
+          toast.success(res?.message ?? "Saved");
+        },
+        onError: (err) => {
+          toast.error(getErrorMessage(err));
+        },
+        onSettled: () => {
+          setSavingJobId(null);
+        },
+      },
+    );
+  };
+
   return (
-    <>
-      <Card>
-        <CardContent className="space-y-4">
-          <CardHeader className="p-0 flex items-center justify-between">
-            <h5 className="text-xl text-Blue font-semibold">Saved Jobs</h5>
+    <div className="space-y-4 mt-6">
+      <ul className="space-y-3">
+        {savedJobs.map((job: any) => (
+          <li key={job?.id}>
+            <Card>
+              <CardContent>
+                <div className="flex flex-col gap-4 justify-between md:flex-row">
+                  <div className="flex min-w-0 flex-1 items-start gap-4">
+                    <div className="w-20 h-20 flex items-center justify-center bg-muted rounded-lg overflow-hidden shrink-0">
+                      <img
+                        src={
+                          job.company_logo
+                            ? `https://api.ekazi.co.tz/${job.company_logo}`
+                            : "/employer.png"
+                        }
+                        alt="company logo"
+                        className="max-w-[80%] max-h-[80%] object-contain"
+                      />
+                    </div>
 
-            <Badge variant="outline">{savedJobs.length} jobs</Badge>
-          </CardHeader>
+                    <div className="min-w-0 flex-1">
+                      <h2 className="break-word text-base font-semibold text-slate-950">
+                        {job?.position}
+                      </h2>
+                      <p className="mt-0.5 break-word text-sm font-medium text-slate-600">
+                        {job?.company}
+                      </p>
+                      <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-sm text-slate-500">
+                        <span className="inline-flex items-center gap-1.5">
+                          <CalendarDays
+                            className="size-3.5"
+                            aria-hidden="true"
+                          />
+                          Posted {formatDate(job?.posted_on)}
+                        </span>
+                        {/* <span className="inline-flex items-center gap-1.5">
+                    <CalendarDays className="size-3.5" aria-hidden="true" />
+                    Applied {formatDate(.applied_at)}
+                  </span> */}
+                      </div>
+                    </div>
+                  </div>
 
-          <Separator />
-
-          <div className="w-full overflow-x-auto space-y-4">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Position & Company</TableHead>
-                  <TableHead>Posted On</TableHead>
-                  <TableHead>Deadline</TableHead>
-                  <TableHead className="text-center">Status</TableHead>
-                  <TableHead className="text-center">Actions</TableHead>
-                </TableRow>
-              </TableHeader>
-
-              <TableBody>
-                {savedJobs.length === 0 && (
-                  <TableRow>
-                    <TableCell
-                      colSpan={5}
-                      className="text-center py-6 text-muted-foreground"
+                  <div className="flex gap-2 shrink-0 self-end sm:self-center">
+                    <Button
+                      size="sm"
+                      variant="secondary"
+                      disabled={savingJobId === job.job_id}
+                      onClick={() => handleSaveJob(job.job_id)}
                     >
-                      You have no saved jobs yet.
-                    </TableCell>
-                  </TableRow>
-                )}
+                      {savingJobId === job.job_id ? (
+                        <>
+                          <Loader className="animate-spin" />
+                          Saving...
+                        </>
+                      ) : (
+                        "Save"
+                      )}
+                    </Button>
 
-                {savedJobs.map((app: any) => {
-                  return (
-                    <TableRow key={app.id}>
-                      <TableCell>
-                        <div className="text-Orange font-semibold">
-                          {app.position}
-                        </div>
-                        <div className="text-sm text-Blue">{app.company}</div>
-                      </TableCell>
+                    <ViewJob jobId={job.job_id} />
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </li>
+        ))}
+      </ul>
 
-                      <TableCell>{formatDate(app.posted_on)}</TableCell>
-
-                      <TableCell>{formatDate(app.deadline)}</TableCell>
-
-                      <TableCell className="text-center">
-                        {app.status ? (
-                          <Badge variant="secondary">Closed</Badge>
-                        ) : (
-                          <Badge variant="default">Open</Badge>
-                        )}
-                      </TableCell>
-
-                      <TableCell className="text-right">
-                        <ViewSavedJob selectedJob={app} />
-                      </TableCell>
-                    </TableRow>
-                  );
-                })}
-              </TableBody>
-            </Table>
-
-            {/* Pagination */}
-            {savedJobs.length > 0 && (
-              <DataPagination
-                page={jobsData?.page}
-                perPage={jobsData?.limit}
-                totalPages={jobsData?.totalPages}
-                onPageChange={setPage}
-                onPerPageChange={setPerPage}
-              />
-            )}
-          </div>
-        </CardContent>
-
-        {/* Footer */}
-        <CardFooter className="flex justify-between items-center px-6 py-4 bg-muted/40">
-          <div className="text-sm text-muted-foreground">
-            Showing {savedJobs.length} saved jobs
-          </div>
-        </CardFooter>
-      </Card>
-    </>
+      {/* Pagination */}
+      {savedJobs.length > 0 && (
+        <DataPagination
+          page={jobsData?.page}
+          perPage={jobsData?.limit}
+          totalPages={jobsData?.totalPages}
+          onPageChange={setPage}
+          onPerPageChange={setPerPage}
+        />
+      )}
+    </div>
   );
 };
 
 export default SavedJobsPage;
+
+//  <div className="space-y-4">
+//       <section className="mt-6 flex flex-1 items-center justify-center rounded-3xl border border-slate-200/70 bg-white px-6 py-16 text-center">
+//         <div className="max-w-md">
+//           <span className="mx-auto flex size-16 items-center justify-center rounded-2xl bg-blue-50 text-[#1D4FA3]">
+//             <Bookmark className="size-8" aria-hidden="true" />
+//           </span>
+
+//           <h2 className="mt-6 text-xl font-bold text-Blue">
+//             No saved jobs yet
+//           </h2>
+//           <p className="mt-2 text-sm text-muted-foreground">
+//             When you save a job, it will appear here.
+//           </p>
+//         </div>
+//       </section>
+//     </div>
