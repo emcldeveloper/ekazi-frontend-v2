@@ -1,5 +1,13 @@
-import { Link } from "react-router-dom";
-import { Bookmark, Briefcase, FileDown, Layers, Search } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
+import {
+  Bookmark,
+  Briefcase,
+  FileDown,
+  Layers,
+  Megaphone,
+  Search,
+  Sparkles,
+} from "lucide-react";
 
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -9,10 +17,16 @@ import { useDashboardStatistics } from "@/hooks/dashboard";
 import Pipeline from "./components/Pipeline,";
 import { useApplicantProfile } from "@/hooks/profile";
 import { getGreeting } from "@/utils/helpers";
+import PromoCard from "@/components/promos/PromoCard";
 
 const DashboardPage = () => {
+  const navigate = useNavigate();
+
   const { data: applicant } = useApplicantProfile();
   const applicantName = applicant?.applicant_profile?.first_name;
+  const completion = Number(
+    applicant?.profile_completion?.total_percentage ?? 0,
+  );
 
   const { data } = useDashboardStatistics();
 
@@ -75,6 +89,31 @@ const DashboardPage = () => {
           </Button>
         </div>
       </section>
+
+      {/* ad */}
+      {completion > 80 ? (
+        <PromoCard
+          title="Need inspiration?"
+          description="Browse professional CVs and templates to make yours stand out."
+          icon={<Megaphone className="size-5" />}
+          backgroundColor="#FEF3C7"
+          buttonText="Browse CVs"
+          onButtonClick={() => {
+            navigate("/app/templates");
+          }}
+        />
+      ) : (
+        <PromoCard
+          title={`Your profile is ${completion}% complete`}
+          description="Complete your profile to get up to 3× more views from employers."
+          icon={<Sparkles className="size-5" />}
+          backgroundColor="#DBEAFE"
+          buttonText="Complete profile"
+          onButtonClick={() => {
+            navigate("/app/profile");
+          }}
+        />
+      )}
 
       {/* Stats Grid */}
       <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-4">

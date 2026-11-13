@@ -1,5 +1,3 @@
-import { useMemo } from "react";
-
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 
@@ -18,61 +16,22 @@ import Language from "./components/language/Language";
 import Proficiencies from "./components/proficiencies/Proficiencies";
 import Trainings from "./components/trainings/Trainings";
 import Referees from "./components/referees/Referees";
-import type { PromoSlide } from "@/components/promos/Promocarousel";
-import {
-  BrowseCvIllustration,
-  FeaturedIllustration,
-  ProfileIllustration,
-} from "@/components/promos/Promoillustrations";
-import PromoCarousel from "@/components/promos/Promocarousel";
+
 import ProfileCompletionCard from "./actions/Profilecompletioncard";
 import PublicProfileCard from "./actions/Publicprofilecard";
 import ProfileSettingsCard from "./actions/Profilesettingscard";
 import LoadingState from "@/components/loading-state";
+import PromoCard from "@/components/promos/PromoCard";
+import { BadgeCheck } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const ProfilePage = () => {
-  const { data: applicant, isLoading } = useApplicantProfile();
-  const completion = Number(
-    applicant?.profile_completion?.total_percentage ?? 0,
-  );
+  const navigate = useNavigate();
 
-  const promoSlides = useMemo<PromoSlide[]>(() => {
-    const slides: PromoSlide[] = [
-      {
-        id: "featured",
-        eyebrow: "Get noticed first",
-        title:
-          "Become a featured candidate and appear at the top of employer searches",
-        cta: { label: "Subscribe now", href: "/subscription" }, // TODO: your route
-        className: "bg-Orange",
-        illustration: <FeaturedIllustration />,
-      },
-      {
-        id: "complete-profile",
-        eyebrow: `Your profile is ${completion}% complete`,
-        title:
-          "Complete your profile to get up to 3× more views from employers",
-        cta: {
-          label: "Complete profile",
-          onClick: () => window.scrollTo({ top: 0, behavior: "smooth" }),
-        },
-        className: "bg-Blue",
-        illustration: <ProfileIllustration />,
-      },
-      {
-        id: "browse-cvs",
-        eyebrow: "Need inspiration?",
-        title: "Browse professional CVs and templates to make yours stand out",
-        cta: { label: "Browse CVs", href: "/cv-templates" }, // TODO: your route
-        className: "bg-[#0f3d73]",
-        illustration: <BrowseCvIllustration />,
-      },
-    ];
-    // Don't nag users whose profile is already complete.
-    return completion >= 100
-      ? slides.filter((s) => s.id !== "complete-profile")
-      : slides;
-  }, [completion]);
+  const { data: applicant, isLoading } = useApplicantProfile();
+  // const completion = Number(
+  //   applicant?.profile_completion?.total_percentage ?? 0,
+  // );
 
   // TODO: wire these to your API mutations.
   // const handleSubscribe = async (planId: string) => {
@@ -89,9 +48,15 @@ const ProfilePage = () => {
   return (
     <div className="space-y-4">
       {!isLoading && (
-        <PromoCarousel
-          slides={promoSlides}
-          storageKey="profile-promo-dismissed"
+        <PromoCard
+          title="Get noticed first"
+          description="Become a featured candidate and appear at the top of employer searches."
+          icon={<BadgeCheck className="size-5" />}
+          backgroundColor="#C4F2E1"
+          buttonText="Subscribe now"
+          onButtonClick={() => {
+            navigate("/app/subscription");
+          }}
         />
       )}
 

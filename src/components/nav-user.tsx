@@ -89,20 +89,20 @@ export function NavUser() {
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
-              <DropdownMenuItem>
+              <DropdownMenuItem onClick={() => navigate("/app/subscription")}>
                 <SparklesIcon />
                 Upgrade
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
-              <DropdownMenuItem>
+              <DropdownMenuItem onClick={() => navigate("/app/settings")}>
                 <BadgeCheckIcon />
                 Account
               </DropdownMenuItem>
-              <DropdownMenuItem>
+              <DropdownMenuItem onClick={() => navigate("/app/subscription")}>
                 <CreditCardIcon />
-                Billing
+                Subscription
               </DropdownMenuItem>
               <DropdownMenuItem onClick={() => navigate("/app/notifications")}>
                 <BellIcon />

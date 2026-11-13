@@ -1,4 +1,13 @@
+import api from "@/lib/axios";
 import oldApi from "@/lib/axios-old";
+
+export const initiatePayment = async (payload: {
+  plan_id: number;
+  phone: string;
+}) => {
+  const res = await api.post("/payment/initiate", payload);
+  return res.data;
+};
 
 export const createSubscriptionApi = async (payload: any) => {
   const res = await oldApi.post("/applicant/accountsubscription", payload);

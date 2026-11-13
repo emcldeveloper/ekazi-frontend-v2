@@ -44,6 +44,7 @@ import SettingsPage from "./pages/app/settings/SettingsPage";
 import AppArticles from "./pages/app/articles/AppArticles";
 import AppArticleDetails from "./pages/app/articles/components/AppArticleDetails";
 import AppCalculatorPage from "./pages/app/calculator/AppCalculatorPage";
+import SubscriptionPage from "./pages/app/subscription/SubscriptionPage";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -154,7 +155,10 @@ const App = () => {
 
                 <Route path="/app/settings" element={<SettingsPage />} />
 
-                <Route path="/app/subscription" element={<SettingsPage />} />
+                <Route
+                  path="/app/subscription"
+                  element={<SubscriptionPage />}
+                />
                 <Route
                   path="/app/subscription/plans"
                   element={<SettingsPage />}

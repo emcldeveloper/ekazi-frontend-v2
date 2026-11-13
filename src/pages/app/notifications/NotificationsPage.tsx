@@ -1,35 +1,42 @@
-import { useState } from "react";
-
-import { BellOff, Search } from "lucide-react";
+import { Link } from "react-router-dom";
+import { BellOff, CircleUser, Search, Trash2 } from "lucide-react";
 
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
-
-type NotificationType =
-  | "application"
-  | "match"
-  | "deadline"
-  | "message"
-  | "system";
-
-interface Notification {
-  id: string;
-  type: NotificationType;
-  title: string;
-  body: string;
-  createdAt: string;
-  isRead: boolean;
-  link?: string;
-}
-
-// TODO: replace with the candidate's notifications from your API.
-const SAMPLE_NOTIFICATIONS: Notification[] = [];
+import {
+  useDeleteNotification,
+  useNotifications,
+  useReadAllNotifications,
+  useReadNotification,
+} from "@/hooks/notifications";
+import { formatDate } from "@/utils/helpers";
+import LoadingState from "@/components/loading-state";
 
 const JOBS_ROUTE = "/app/jobs";
 
 const NotificationsPage = () => {
-  const [notifications] = useState(SAMPLE_NOTIFICATIONS);
+  const { data: notificationsData, isLoading } = useNotifications({});
+  const notifications = notificationsData?.data ?? [];
+
+  const { mutate: readAll, isPending: isReadingAll } =
+    useReadAllNotifications();
+
+  const { mutate: readOne } = useReadNotification();
+
+  const { mutate: deleteNotification, isPending: isDeleting } =
+    useDeleteNotification();
+
+  const handleReadAll = () => {
+    readAll();
+  };
+
+  const handleRead = (id: number) => {
+    readOne(id);
+  };
+
+  const handleDelete = (id: number) => {
+    deleteNotification(id);
+  };
 
   return (
     <div className="space-y-4">
@@ -39,16 +46,23 @@ const NotificationsPage = () => {
             Notifications
           </h1>
         </div>
-        {/* <Button type="button" variant="outline">
-          <CheckCheck className="size-4 text-primary" aria-hidden="true" />
-          Mark all as read
-        </Button> */}
+
+        {notifications.length > 0 && (
+          <Button
+            size="sm"
+            variant="secondary"
+            disabled={isReadingAll}
+            onClick={handleReadAll}
+          >
+            Mark all as read
+          </Button>
+        )}
       </header>
 
-      {/* Tabs */}
-
       {/* Empty */}
-      {notifications.length === 0 ? (
+      {isLoading ? (
+        <LoadingState />
+      ) : notifications.length === 0 ? (
         <Card className="mt-6 h-full">
           <CardContent>
             <div className="flex flex-col items-center gap-4 text-center">
@@ -73,7 +87,60 @@ const NotificationsPage = () => {
           </CardContent>
         </Card>
       ) : (
-        <div className="mt-6 space-y-6">Notifications</div>
+        <div className="mt-6">
+          {notifications.map((notification: any) => (
+            <div
+              onClick={() => handleRead(notification.id)}
+              className={`flex items-start gap-3 border-b border-border/60
+        px-4 py-5 transition-colors last:border-b-0
+        hover:bg-muted/30 sm:gap-4 
+        ${!notification.readed ? "bg-gray-100 dark:bg-gray-800" : ""}`}
+            >
+              <div
+                className="flex size-11 shrink-0 items-center
+          justify-center rounded-xl"
+              >
+                <CircleUser className="size-5" />
+              </div>
+
+              <div className="min-w-0 flex-1 flex justify-between gap-2">
+                <div>
+                  <p className="text-sm leading-relaxed">
+                    {notification.message}
+                  </p>
+
+                  <time
+                    dateTime={notification.created_at}
+                    className="text-xs text-muted-foreground"
+                  >
+                    {formatDate(notification.created_at)}
+                  </time>
+                </div>
+
+                <div className="flex items-start justify-between gap-3">
+                  {!notification.readed ? (
+                    <span
+                      className="mt-1.5 size-2 shrink-0 rounded-full
+                bg-blue-600"
+                      aria-label="Unread notification"
+                    />
+                  ) : (
+                    <div>
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        disabled={isDeleting}
+                        onClick={() => handleDelete(notification.id)}
+                      >
+                        <Trash2 />
+                      </Button>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
       )}
     </div>
   );
