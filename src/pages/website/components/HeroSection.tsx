@@ -1,54 +1,32 @@
-import { useEffect, useState } from "react";
-
-import { useJobs } from "@/hooks/jobs";
-import { useIndustries, useSiteStatistics } from "@/hooks/universals";
-import { BriefcaseBusiness, CheckCircle, GraduationCap } from "lucide-react";
+import { useSiteStatistics } from "@/hooks/universals";
+import {
+  BriefcaseBusiness,
+  CheckCircle,
+  GraduationCap,
+  Search,
+} from "lucide-react";
 import Counter from "@/components/counter-up";
-import SearchFormModal from "./SearchFormModal";
+
+import { useNavigate } from "react-router-dom";
+import { useState, type FormEvent } from "react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { capitalizeText } from "@/utils/helpers";
 
 const HeroSection = () => {
+  const navigate = useNavigate();
+
+  const [keyword, setKeyword] = useState("");
+
   const { data: statistics } = useSiteStatistics();
 
-  const { data: industries } = useIndustries({});
-
-  const [filters, setFilters] = useState({
-    search: "",
-    industry: "",
-  });
-
-  const { data: jobsData, isLoading } = useJobs(filters);
-  const jobs = jobsData?.data ?? [];
-
-  const [showModal, setShowModal] = useState(false);
-
-  const handleSearch = () => {
-    setShowModal(true);
+  const handleSearch = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const search = keyword.trim();
+    navigate(search ? `/jobs?search=${encodeURIComponent(search)}` : "/jobs");
   };
-
-  const handleClose = () => {
-    setShowModal(false);
-  };
-
-  const [localSearch, setLocalSearch] = useState(filters.search);
-
-  // debounce search
-  useEffect(() => {
-    const timeout = setTimeout(() => {
-      setFilters((prev) => ({
-        ...prev,
-        search: localSearch,
-      }));
-    }, 300);
-
-    return () => clearTimeout(timeout);
-  }, [localSearch]);
 
   return (
     <section className="bg-gray-50 py-16 lg:py-0">
-      <div className="max-w-6xl mx-auto px-6 grid lg:grid-cols-2 gap-8 items-center">
+      <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-10 grid lg:grid-cols-2 gap-8 items-center">
         {/* LEFT CONTENT */}
         <div>
           <h1 className="animate__animated animate__fadeInDown text-4xl lg:text-5xl font-bold text-Blue leading-tight">
@@ -56,45 +34,41 @@ const HeroSection = () => {
             Potential Candidates
           </h1>
 
-          <p className="animate__animated animate__fadeInLeft mt-3 text-lg text-gray-600">
+          <p className="animate__animated animate__fadeInLeft mt-3 text-base text-muted-foreground">
             Set your career in motion with Ekazi. Discover opportunities,
             connect with employers, and build your future.
           </p>
 
           {/* Search */}
-          <div className="mt-8 flex flex-col md:flex-row gap-2">
-            <Input
-              placeholder="What are you looking for..."
-              value={localSearch}
-              onChange={(e) => setLocalSearch(e.target.value)}
-            />
-
-            <select
-              className="px-2 py-2 truncate rounded-lg text-sm border border-gray-200 focus:outline-none focus:ring-2 focus:ring-Orange"
-              value={filters.industry}
-              onChange={(e) =>
-                setFilters((prev) => ({
-                  ...prev,
-                  industry: e.target.value,
-                }))
-              }
-            >
-              <option value="">Select Category</option>
-
-              {industries?.map((industry: any) => (
-                <option key={industry.id} value={industry.industry_name}>
-                  {capitalizeText(industry.name)}
-                </option>
-              ))}
-            </select>
-
+          <form
+            role="search"
+            onSubmit={handleSearch}
+            className="mt-8 flex max-w-xl flex-col gap-2 rounded-full border border-slate-200 bg-white p-1 shadow-xl shadow-blue-900/10 sm:flex-row sm:items-center"
+          >
+            <label htmlFor="hero-search" className="sr-only">
+              Job title or keyword
+            </label>
+            <div className="relative flex-1">
+              <Search
+                className="pointer-events-none absolute left-4 top-1/2 size-5 -translate-y-1/2 text-slate-400"
+                aria-hidden="true"
+              />
+              <input
+                id="hero-search"
+                type="search"
+                value={keyword}
+                onChange={(event) => setKeyword(event.target.value)}
+                placeholder="Job title, company ..."
+                className="h-12 w-full rounded-xl bg-transparent pl-12 pr-3 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none"
+              />
+            </div>
             <Button
-              onClick={handleSearch}
-              className="bg-Orange hover:bg-orange-600"
+              type="submit"
+              className="h-12  bg-Orange px-6 text-sm text-white transition-colors hover:bg-orange-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1D4FA3] focus-visible:ring-offset-2"
             >
-              Search
+              Search jobs
             </Button>
-          </div>
+          </form>
 
           {/* Stats */}
           <div className="mt-12 grid grid-cols-3 gap-8">
@@ -136,13 +110,6 @@ const HeroSection = () => {
           />
         </div>
       </div>
-
-      <SearchFormModal
-        showModal={showModal}
-        handleClose={handleClose}
-        filteredJobs={jobs}
-        loading={isLoading}
-      />
     </section>
   );
 };

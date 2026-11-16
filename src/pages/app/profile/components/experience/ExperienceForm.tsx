@@ -160,9 +160,11 @@ const ExperienceForm = ({
 
   /* ---------------- Submit ---------------- */
   const onSubmit = (data: ExperiencePayload) => {
+    const { country_id, ...rest } = data;
+
     const payload = {
-      ...data,
-      ended: currentRole ? null : data.end_date,
+      ...rest,
+      end_date: currentRole ? undefined : data.end_date,
     };
 
     if (experience) {

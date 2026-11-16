@@ -16,7 +16,7 @@ export const fetchJobs = async ({
       page,
       limit,
       search,
-      industry,
+      industryId: industry,
     },
   });
 

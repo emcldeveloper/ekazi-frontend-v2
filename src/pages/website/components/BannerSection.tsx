@@ -13,8 +13,8 @@ const BannerSection = () => {
   );
 
   return (
-    <div className="w-full flex items-center justify-center sm:pt-20 bg-white">
-      <div className="sm:max-w-6xl">
+    <div className="w-full flex items-center justify-center px-6 md:px-10 sm:pt-20 bg-white">
+      <div className="sm:max-w-7xl">
         <Carousel
           plugins={[plugin.current]}
           opts={{ loop: true }}

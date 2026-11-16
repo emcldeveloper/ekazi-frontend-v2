@@ -54,7 +54,7 @@ export const createCareerObjective = async (payload: { objective: string }) => {
 
 // Experience
 export const createExperience = async (payload: ExperiencePayload) => {
-  const res = await api.post("/applicant/experiencestore", payload);
+  const res = await api.post("/applicant/positions", payload);
   return res.data;
 };
 
@@ -62,12 +62,12 @@ export const updateExperience = async (
   id: number,
   payload: ExperiencePayload,
 ) => {
-  const res = await api.post(`/applicant/updateexperience/${id}`, payload);
+  const res = await api.patch(`/applicant/positions/${id}`, payload);
   return res.data;
 };
 
 export const deleteExperience = async (id: number) => {
-  const res = await api.delete(`/applicant/deleteexperience/${id}`);
+  const res = await api.delete(`/applicant/positions/${id}`);
   return res.data;
 };
 

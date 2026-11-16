@@ -74,7 +74,7 @@ const SectionHeading = ({
       <Icon size={14} />
       {badge}
     </span>
-    <h2 className="mt-4 text-3xl font-extrabold tracking-tight text-Blue sm:text-4xl">
+    <h2 className="mt-4 text-3xl font-bold tracking-tight text-Blue sm:text-4xl">
       {title} <span className="text-Orange">{highlight}</span>
     </h2>
     <p className="mt-3 text-base text-gray-600 sm:text-lg">{subtitle}</p>
@@ -396,7 +396,7 @@ const CVBuilderPage = () => {
             </div>
 
             <div className="max-w-xl">
-              <h2 className="text-2xl font-extrabold tracking-tight text-white sm:text-3xl">
+              <h2 className="text-2xl font-bold tracking-tight text-white sm:text-3xl">
                 Turn your experience into a{" "}
                 <span className="text-Orange">polished CV</span>
               </h2>

@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 
 import { useIsMobile } from "@/hooks/use-mobile";
 import ProfileDetails from "./ProfileDetails";
+import { Eye } from "lucide-react";
 
 interface PreviewProfileProps {
   applicant: any;
@@ -19,7 +20,10 @@ const ProfilePreview = ({ applicant }: PreviewProfileProps) => {
         <Drawer>
           <DrawerTrigger
             render={
-              <Button className="w-full bg-white font-semibold text-Blue hover:bg-white/90">
+              <Button
+                variant="outline"
+                className="w-full border-Blue font-semibold text-Blue hover:bg-Blue/5 hover:text-Blue"
+              >
                 Preview profile
               </Button>
             }
@@ -36,7 +40,11 @@ const ProfilePreview = ({ applicant }: PreviewProfileProps) => {
         <Sheet>
           <SheetTrigger
             render={
-              <Button className="w-full bg-white font-semibold text-Blue hover:bg-white/90">
+              <Button
+                variant="outline"
+                className="w-full border-Blue font-semibold text-Blue hover:bg-Blue/5 hover:text-Blue"
+              >
+                <Eye />
                 Preview profile
               </Button>
             }

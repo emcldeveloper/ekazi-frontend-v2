@@ -119,6 +119,16 @@ const navItems: NavItem[] = [
       },
     ],
   },
+  // {
+  //   title: "Subscription",
+  //   url: "/app/subscription",
+  //   icon: Settings,
+  // },
+  // {
+  //   title: "Notifications",
+  //   url: "/app/notifications",
+  //   icon: Bell,
+  // },
   {
     title: "Settings",
     url: "/app/settings",

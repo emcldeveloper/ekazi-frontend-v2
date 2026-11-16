@@ -26,7 +26,7 @@ type NavItem = {
 const mainItems: NavItem[] = [
   { name: "Home", path: "/", icon: Home },
   { name: "Find Jobs", path: "/jobs", icon: Briefcase },
-  { name: "Candidates", path: "/candidates", icon: Users },
+  { name: "Job seekers", path: "/candidates", icon: Users },
   { name: "Employers", path: "/employers", icon: Building2 },
   { name: "Pricing", path: "/pricing", icon: CreditCard },
   { name: "Articles", path: "/articles", icon: Newspaper },
@@ -117,7 +117,7 @@ const Navbar = () => {
         }`}
       >
         {/* Brand accent line */}
-        <div className="h-1 w-full bg-gradient-to-r from-Blue via-Orange to-Blue" />
+        <div className="h-1 w-full bg-linear-to-r from-Blue via-Orange to-Blue" />
 
         <div className="container mx-auto px-4 sm:px-8">
           <div
@@ -138,7 +138,7 @@ const Navbar = () => {
             </NavLink>
 
             {/* DESKTOP NAV — pill container */}
-            <nav className="hidden lg:flex items-center gap-1 rounded-full border border-white/60 bg-black/5 p-1.5">
+            <nav className="hidden lg:flex items-center gap-1 rounded-full border border-white/60  p-1.5">
               {mainItems.map((item) => (
                 <NavLink
                   key={item.path}
@@ -208,7 +208,7 @@ const Navbar = () => {
 
               <Button
                 onClick={() => navigate("/register")}
-                className="group rounded-full bg-gradient-to-r from-Orange to-orange-500 px-6 font-semibold text-white shadow-lg shadow-orange-500/30 transition-all hover:-translate-y-0.5 hover:shadow-xl hover:shadow-orange-500/40"
+                className="group rounded-full bg-linear-to-r from-Orange to-orange-500 px-6 font-semibold text-white shadow-lg shadow-orange-500/30 transition-all hover:-translate-y-0.5 hover:shadow-xl hover:shadow-orange-500/40"
               >
                 Register
                 <ArrowRight

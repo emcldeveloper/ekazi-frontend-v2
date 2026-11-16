@@ -229,7 +229,7 @@ const PricingPage = () => {
               <HelpCircle size={14} />
               FAQ
             </span>
-            <h2 className="mt-4 text-3xl font-extrabold tracking-tight text-Blue sm:text-4xl">
+            <h2 className="mt-4 text-3xl font-bold tracking-tight text-Blue sm:text-4xl">
               Frequently asked <span className="text-Orange">questions</span>
             </h2>
             <p className="mt-3 text-base text-gray-600 sm:text-lg">
@@ -319,7 +319,7 @@ const PricingPage = () => {
             </div>
 
             <div className="max-w-xl">
-              <h2 className="text-2xl font-extrabold tracking-tight text-white sm:text-3xl">
+              <h2 className="text-2xl font-bold tracking-tight text-white sm:text-3xl">
                 Not sure which plan is{" "}
                 <span className="text-Orange">right for you</span>?
               </h2>

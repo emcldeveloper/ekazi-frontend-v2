@@ -290,7 +290,7 @@ const EmployersPage = () => {
             </div>
 
             <div className="max-w-xl">
-              <h2 className="text-2xl font-extrabold tracking-tight text-white sm:text-3xl">
+              <h2 className="text-2xl font-bold tracking-tight text-white sm:text-3xl">
                 Ready to find your next{" "}
                 <span className="text-Orange">great hire</span>?
               </h2>

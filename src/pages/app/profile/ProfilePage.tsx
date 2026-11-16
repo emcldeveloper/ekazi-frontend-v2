@@ -17,13 +17,11 @@ import Proficiencies from "./components/proficiencies/Proficiencies";
 import Trainings from "./components/trainings/Trainings";
 import Referees from "./components/referees/Referees";
 
-import ProfileCompletionCard from "./actions/Profilecompletioncard";
-import PublicProfileCard from "./actions/Publicprofilecard";
-import ProfileSettingsCard from "./actions/Profilesettingscard";
 import LoadingState from "@/components/loading-state";
 import PromoCard from "@/components/promos/PromoCard";
 import { BadgeCheck } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import ProfileOverviewCard from "./actions/ProfileOverviewCard";
 
 const ProfilePage = () => {
   const navigate = useNavigate();
@@ -85,7 +83,7 @@ const ProfilePage = () => {
         </div>
 
         <aside className="order-1 md:order-2 md:col-span-1">
-          <div className="space-y-4 md:sticky md:top-4">
+          <div className="space-y-4 md:sticky md:top-20">
             {isLoading ? (
               <>
                 <Skeleton className="h-56 w-full rounded-xl" />
@@ -95,16 +93,10 @@ const ProfilePage = () => {
               </>
             ) : (
               <>
-                <ProfileCompletionCard applicant={applicant} />
-                <PublicProfileCard applicant={applicant} />
-                <ProfileSettingsCard
+                <ProfileOverviewCard
                   applicant={applicant}
                   onChange={handleSettingChange}
                 />
-                {/* <FeaturedCandidateCard
-                    applicant={applicant}
-                    onSubscribe={handleSubscribe}
-                  /> */}
               </>
             )}
           </div>

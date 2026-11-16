@@ -117,7 +117,20 @@ const BasicInfoModal = ({ applicant }: BasicInfoModalProps) => {
   }, [applicant, reset]);
 
   const onSubmit = (data: PersonalInfoPayload) => {
-    savePersonalInfo(data, {
+    const payload = {
+      first_name: data.first_name,
+      middle_name: data.middle_name,
+      last_name: data.last_name,
+      dob: data.dob,
+      phone: data.phone,
+      region_id: data.region_id,
+      sub_location: data.sub_location,
+      postal: data.postal,
+      gender_id: data.gender_id,
+      marital_status_id: data.marital_status_id,
+    };
+
+    savePersonalInfo(payload, {
       onSuccess: (res) => {
         toast.success(res?.message || "Profile updated");
         reset();

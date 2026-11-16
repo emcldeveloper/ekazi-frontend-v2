@@ -8,12 +8,13 @@ import { formatDate } from "@/utils/helpers";
 import ViewJob from "../components/ViewJob";
 import { Card, CardContent } from "@/components/ui/card";
 import { useSaveJob } from "@/hooks/jobs";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { toast } from "sonner";
 import { getErrorMessage } from "@/utils/axios-helpers";
 import { DataPagination } from "@/components/data-pagination";
 
 const PROFILE_ROUTE = "/app/profile";
+const ALLOWED_RECOMMENDATIONS = ["Recommended", "Potential Match"];
 
 function LoadingRow() {
   return (
@@ -39,7 +40,12 @@ const MatchedJobsPage = () => {
     isError,
     refetch,
   } = useJobMatch({ page, limit: perPage });
-  const matchedJobs = jobsData?.data ?? [];
+  const matchedJobs = useMemo(() => {
+    const all = jobsData?.data ?? [];
+    return all.filter((job: any) =>
+      ALLOWED_RECOMMENDATIONS.includes(job.recommendation),
+    );
+  }, [jobsData]);
 
   const { mutate: saveJobMutate } = useSaveJob();
 

@@ -18,7 +18,7 @@ export type PersonalInfoPayload = {
   last_name: string;
   dob: string;
   phone: string;
-  country_id: number;
+  country_id?: number;
   region_id: number;
   sub_location?: string;
   postal?: string;

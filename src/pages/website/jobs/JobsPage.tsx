@@ -80,7 +80,7 @@ const JobsPage = () => {
     page,
     limit: perPage,
     search: debouncedSearch,
-    industry,
+    industry: industry,
   }) as any;
 
   const jobs = jobsData?.data ?? [];

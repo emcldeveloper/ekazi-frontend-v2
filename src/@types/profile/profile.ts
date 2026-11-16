@@ -135,14 +135,14 @@ export type ExperiencePayload = {
   applicant_employer_id: number;
   employer_name: string;
   region_id: number;
-  country_id: number;
+  country_id?: number;
   sub_location: string;
   position_id: number;
   position_name: string;
   position_level_id: number;
   industry_id: number;
   start_date: string;
-  end_date: string;
+  end_date?: string;
   start_salary_id: number;
   end_salary_id: number;
   responsibility: string;

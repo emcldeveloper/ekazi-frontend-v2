@@ -78,6 +78,7 @@ export default function LoginForm() {
             type="username"
             placeholder="example@gmail.com"
             {...register("username", { required: "Email is required" })}
+            className="h-10"
           />
           {errors.username && (
             <FieldError>{errors.username.message}</FieldError>
@@ -105,6 +106,7 @@ export default function LoginForm() {
                   message: "Password must be at least 6 characters",
                 },
               })}
+              className="h-10"
             />
             <span
               onClick={() => setShowPassword(!showPassword)}
@@ -122,7 +124,7 @@ export default function LoginForm() {
           <Button
             type="submit"
             disabled={isPending}
-            className="bg-Blue hover:bg-blue-900"
+            className="bg-Blue hover:bg-blue-900 h-10"
           >
             {isPending ? (
               <>
