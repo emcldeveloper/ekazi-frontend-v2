@@ -46,9 +46,9 @@ export type ResetPayload = {
 };
 
 export type ChangePasswordPayload = {
-  old_password: string;
-  new_password: string;
-  confirm_new_password?: string;
+  currentPassword: string;
+  newPassword: string;
+  confirmNewPassword?: string;
 };
 
 export type DeactivatePayload = {

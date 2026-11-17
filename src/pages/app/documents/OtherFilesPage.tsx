@@ -9,7 +9,6 @@ import {
   Paperclip,
   Pencil,
   Plus,
-  ShieldCheck,
   Tag,
   Trash2,
   Upload,
@@ -304,19 +303,6 @@ export default function OtherFilesPage() {
           Upload file
         </Button>
       </header>
-
-      <section className="mt-6 flex items-center gap-4 rounded-2xl bg-accent-foreground p-4 text-white sm:px-5">
-        <div className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-white/10">
-          <ShieldCheck className="size-5 text-orange-500" aria-hidden="true" />
-        </div>
-        <div>
-          <h2 className="text-sm font-bold">You choose who sees your files</h2>
-          <p className="mt-0.5 text-sm text-slate-300">
-            A file is only shared when you attach it to an application. PDF
-            works best, up to {MAX_FILE_MB} MB per file.
-          </p>
-        </div>
-      </section>
 
       <div
         role="group"

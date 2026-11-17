@@ -45,6 +45,7 @@ import AppArticles from "./pages/app/articles/AppArticles";
 import AppArticleDetails from "./pages/app/articles/components/AppArticleDetails";
 import AppCalculatorPage from "./pages/app/calculator/AppCalculatorPage";
 import SubscriptionPage from "./pages/app/subscription/SubscriptionPage";
+import SavedTemplatesPage from "./pages/app/documents/SavedTemplatesPage";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -121,11 +122,15 @@ const App = () => {
                   element={<ApplyByEmailPage />}
                 />
 
-                <Route path="/app/templates" element={<CVTemplatesPage />} />
+                <Route path="/app/cv-builder" element={<CVTemplatesPage />} />
+
                 <Route
                   path="/app/templates/:id"
                   element={<PreviewTemplate />}
                 />
+
+                <Route path="/app/templates" element={<SavedTemplatesPage />} />
+
                 <Route
                   path="/app/cover-letters"
                   element={<CoverLettersPage />}
@@ -135,6 +140,7 @@ const App = () => {
                   element={<CreateCoverLetter />}
                 />
                 <Route path="/app/other-files" element={<OtherFilesPage />} />
+
                 <Route path="/app/messages" element={<MessagesPage />} />
 
                 <Route

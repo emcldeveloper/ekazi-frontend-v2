@@ -1,14 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import {
-  ArrowRight,
-  BriefcaseBusiness,
-  Download,
-  Paperclip,
-  Pencil,
-  Plus,
-  Trash2,
-} from "lucide-react";
+import { Download, Paperclip, Pencil, Plus, Trash2 } from "lucide-react";
 
 import {
   AlertDialog,
@@ -110,35 +102,6 @@ export default function CoverLettersPage() {
           New cover letter
         </Button>
       </header>
-
-      <section className="mt-6 flex flex-col gap-4 rounded-2xl bg-accent-foreground p-4 text-white sm:flex-row sm:items-center sm:justify-between sm:px-5">
-        <div className="flex items-center gap-4">
-          <div className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-white/10">
-            <BriefcaseBusiness
-              className="size-5 text-orange-500"
-              aria-hidden="true"
-            />
-          </div>
-          <div>
-            <h2 className="text-sm font-bold">
-              Applying on ekazi uses your profile
-            </h2>
-            <p className="mt-0.5 text-sm text-slate-300">
-              No CV upload needed. Download a letter as PDF when applying
-              outside ekazi.
-            </p>
-          </div>
-        </div>
-        <Button
-          type="button"
-          variant="ghost"
-          onClick={() => navigate(ROUTES.profile)}
-          className="shrink-0 self-start font-semibold text-white hover:bg-white/10 hover:text-white sm:self-auto"
-        >
-          View profile
-          <ArrowRight className="size-4" aria-hidden="true" />
-        </Button>
-      </section>
 
       <section
         aria-label="Your cover letters"

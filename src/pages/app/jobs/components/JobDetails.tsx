@@ -81,6 +81,9 @@ const JobDetails = ({ jobId }: JobDetailsProps) => {
   const encodedUrl = encodeURIComponent(shareUrl);
 
   const handleApply = () => {
+    if (!job) return;
+
+    // Email applications
     if (job.job_email) {
       navigate(
         isLoggedIn ? "/app/external-applications/email" : "/jobs/email",
@@ -91,26 +94,31 @@ const JobDetails = ({ jobId }: JobDetailsProps) => {
       return;
     }
 
+    // External applications
     if (job.job_external_url) {
-      window.open(job.job_external_url?.external_url, "_blank");
+      window.open(job.job_external_url.external_url, "_blank");
       return;
     }
 
+    // Require authentication
     if (!isLoggedIn) {
       navigate("/login");
       return;
     }
 
+    // Profile completion check still loading
     if (profileComplete === null) {
-      // still loading
+      toast.info("Checking your profile. Please try again shortly.");
       return;
     }
 
+    // Profile is incomplete
     if (!profileComplete) {
       setShowProfileModal(true);
       return;
     }
 
+    // Profile complete — proceed with application
     navigate(`/app/jobs/${jobId}/apply`);
   };
 

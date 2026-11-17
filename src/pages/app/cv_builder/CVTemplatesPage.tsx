@@ -2,19 +2,14 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Eye } from "lucide-react";
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
 
 import { useCVData } from "@/context/TemplatesContext";
 
 import { TEMPLATES } from "./data/constants";
-import {
-  useCVCount,
-  useCVNormalized,
-  useIncrementCVCount,
-} from "@/hooks/cv";
+import { useCVCount, useCVNormalized, useIncrementCVCount } from "@/hooks/cv";
 import TemplateThumbnail from "./components/TemplateThumbnail";
 
 export default function CVTemplatesPage() {
@@ -60,96 +55,100 @@ export default function CVTemplatesPage() {
   };
 
   return (
-    <>
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-xl text-Blue">Templates</CardTitle>
-          <Separator />
-        </CardHeader>
-        <CardContent className="px-4 space-y-4">
-          {/* ── Template Selection Grid ── */}
-          <div className="flex items-center gap-2 mb-6 overflow-y-scroll">
-            {[
-              "all",
-              "classic",
-              "sidebar-left",
-              "sidebar-right",
-              "header",
-              "header-sidebar",
-              "modern-sidebar",
-            ].map((tab) => (
-              <Button
-                key={tab}
-                onClick={() => setActiveTab(tab)}
-                className={`rounded-full capitalize transition ${
-                  activeTab === tab
-                    ? "bg-Orange text-white"
-                    : "bg-gray-100 text-gray-600 hover:bg-Orange hover:text-white"
-                }`}
-              >
-                {tab}
-              </Button>
-            ))}
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-3 gap-5">
-            {TEMPLATES.filter((t) => {
-              if (activeTab === "all") return true;
-              return t.category === activeTab;
+    <div className="space-y-4">
+      <header className="max-w-2xl">
+        <h1 className="text-2xl font-bold tracking-tight text-Blue">
+          CV Builder
+        </h1>
+        <p className="mt-2 text-sm text-muted-foreground">
+          Turn your completed profile into a professional CV by choosing a
+          template that best showcases your skills and experience.
+        </p>
+      </header>
+
+      <div className="mt-6">
+        {/* ── Template Selection Grid ── */}
+        <div className="flex items-center gap-2 mb-6 overflow-y-scroll">
+          {[
+            "all",
+            "classic",
+            "sidebar-left",
+            "sidebar-right",
+            "header",
+            "header-sidebar",
+            "modern-sidebar",
+          ].map((tab) => (
+            <Button
+              key={tab}
+              onClick={() => setActiveTab(tab)}
+              className={`rounded-full capitalize transition ${
+                activeTab === tab
+                  ? "bg-Orange text-white"
+                  : "bg-gray-100 text-gray-600 hover:bg-Orange hover:text-white"
+              }`}
+            >
+              {tab}
+            </Button>
+          ))}
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-3 gap-5">
+          {TEMPLATES.filter((t) => {
+            if (activeTab === "all") return true;
+            return t.category === activeTab;
+          })
+            .sort((a, b) => {
+              const aViews = getTemplateViewCount(a.id);
+              const bViews = getTemplateViewCount(b.id);
+
+              // Lower viewed templates get higher chance
+              const aScore = aViews + Math.random() * 50;
+              const bScore = bViews + Math.random() * 50;
+
+              return aScore - bScore;
             })
-              .sort((a, b) => {
-                const aViews = getTemplateViewCount(a.id);
-                const bViews = getTemplateViewCount(b.id);
+            .map((t) => {
+              const TComp = t.Component;
+              const viewCount = getTemplateViewCount(t.id);
+              return (
+                <Card
+                  key={t.id}
+                  onClick={() => {
+                    handlecvincrementSubmit(t.id);
+                    handlePreview(t.id);
+                  }}
+                  className="p-0  hover:border-gray-300 hover:shadow-lg transition-all overflow-hidden group cursor-pointer"
+                >
+                  <CardContent className="p-0">
+                    {/* Thumbnail — scaled down live render */}
+                    <TemplateThumbnail>
+                      <TComp profile={profile} />
+                    </TemplateThumbnail>
 
-                // Lower viewed templates get higher chance
-                const aScore = aViews + Math.random() * 50;
-                const bScore = bViews + Math.random() * 50;
-
-                return aScore - bScore;
-              })
-              .map((t) => {
-                const TComp = t.Component;
-                const viewCount = getTemplateViewCount(t.id);
-                return (
-                  <Card
-                    key={t.id}
-                    onClick={() => {
-                      handlecvincrementSubmit(t.id);
-                      handlePreview(t.id);
-                    }}
-                    className="p-0  hover:border-gray-300 hover:shadow-lg transition-all overflow-hidden group cursor-pointer"
-                  >
-                    <CardContent className="p-0">
-                      {/* Thumbnail — scaled down live render */}
-                      <TemplateThumbnail>
-                        <TComp profile={profile} />
-                      </TemplateThumbnail>
-
-                      <div className="p-4">
-                        <div className="flex items-center justify-between">
-                          <span className="text-xs text-Orange flex items-center gap-1">
-                            <Eye size={14} /> {viewCount}
-                          </span>
-                          {t.tier === "premium" ? (
-                            <Badge className="bg-orange-50 text-orange-700">
-                              {t.tier}
-                            </Badge>
-                          ) : (
-                            <Badge className="bg-gray-100 text-gray-700">
-                              {t.tier}
-                            </Badge>
-                          )}
-                        </div>
-                        <span className="font-semibold text-gray-900 text-sm">
-                          {t.name}
+                    <div className="p-4">
+                      <div className="flex items-center justify-between">
+                        <span className="text-xs text-Orange flex items-center gap-1">
+                          <Eye size={14} /> {viewCount}
                         </span>
+                        {t.tier === "premium" ? (
+                          <Badge className="bg-orange-50 text-orange-700">
+                            {t.tier}
+                          </Badge>
+                        ) : (
+                          <Badge className="bg-gray-100 text-gray-700">
+                            {t.tier}
+                          </Badge>
+                        )}
                       </div>
-                    </CardContent>
-                  </Card>
-                );
-              })}
-          </div>
-        </CardContent>
-      </Card>
-    </>
+                      <span className="font-semibold text-gray-900 text-sm">
+                        {t.name}
+                      </span>
+                    </div>
+                  </CardContent>
+                </Card>
+              );
+            })}
+        </div>
+      </div>
+    </div>
   );
 }

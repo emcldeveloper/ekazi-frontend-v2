@@ -1,6 +1,12 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { EyeIcon, EyeOffIcon, Trash2Icon, LockKeyhole } from "lucide-react";
+import {
+  EyeIcon,
+  EyeOffIcon,
+  Trash2Icon,
+  LockKeyhole,
+  Loader,
+} from "lucide-react";
 import { toast } from "sonner";
 
 import {
@@ -37,13 +43,20 @@ const DeleteAccount = () => {
   const {
     register,
     handleSubmit,
+    watch,
     reset,
     formState: { errors },
   } = useForm<DeleteAccountFormValues>({
     defaultValues: {
       deletePassword: "",
+      confirmation: "",
     },
   });
+
+  const password = watch("deletePassword");
+  const confirmation = watch("confirmation");
+
+  const canDelete = password.trim().length > 0 && confirmation === "DELETE";
 
   const resetDialog = () => {
     setStep(1);
@@ -65,6 +78,7 @@ const DeleteAccount = () => {
     deleteAccount(
       {
         password: data.deletePassword,
+        confirmation: data.confirmation,
       },
       {
         onSuccess: (res) => {
@@ -101,8 +115,8 @@ const DeleteAccount = () => {
               <AlertDialogTitle>Delete Account?</AlertDialogTitle>
 
               <AlertDialogDescription>
-                This action will permanently delete your account and associated
-                data. This action cannot be undone.
+                This action is permanent and cannot be undone. Enter your
+                current password and type DELETE to confirm.
               </AlertDialogDescription>
             </AlertDialogHeader>
 
@@ -144,7 +158,7 @@ const DeleteAccount = () => {
                     type={showPassword ? "text" : "password"}
                     placeholder="Enter your password"
                     autoComplete="current-password"
-                    className="pr-10"
+                    className="pr-10 text-xs"
                     aria-invalid={!!errors.deletePassword}
                     {...register("deletePassword", {
                       required: "Password is required",
@@ -171,6 +185,37 @@ const DeleteAccount = () => {
                   <FieldError>{errors.deletePassword.message}</FieldError>
                 )}
               </Field>
+
+              <Field>
+                <FieldLabel htmlFor="confirmation">
+                  Confirm account deletion
+                </FieldLabel>
+
+                <p className="text-xs text-muted-foreground">
+                  Type{" "}
+                  <span className="font-bold text-destructive">DELETE</span> to
+                  confirm that you want to permanently delete your account.
+                </p>
+
+                <Input
+                  id="confirmation"
+                  type="text"
+                  placeholder="Type DELETE to confirm"
+                  autoComplete="off"
+                  aria-invalid={!!errors.confirmation}
+                  {...register("confirmation", {
+                    required: "Confirmation is required",
+                    validate: (value) =>
+                      value === "DELETE" ||
+                      "Please type DELETE exactly to confirm",
+                  })}
+                  className="text-xs"
+                />
+
+                {errors.confirmation && (
+                  <FieldError>{errors.confirmation.message}</FieldError>
+                )}
+              </Field>
             </div>
 
             <AlertDialogFooter>
@@ -183,8 +228,19 @@ const DeleteAccount = () => {
                 Back
               </Button>
 
-              <Button type="submit" variant="destructive" disabled={isPending}>
-                {isPending ? "Deleting..." : "Delete"}
+              <Button
+                type="submit"
+                variant="destructive"
+                disabled={isPending || !canDelete}
+              >
+                {isPending ? (
+                  <>
+                    <Loader className="animate-spin" />
+                    Deleting...
+                  </>
+                ) : (
+                  "Delete Account"
+                )}
               </Button>
             </AlertDialogFooter>
           </form>

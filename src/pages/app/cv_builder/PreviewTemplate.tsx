@@ -3,7 +3,6 @@ import { useNavigate, useParams } from "react-router-dom";
 import { ArrowLeft, Bookmark, Download, Eye } from "lucide-react";
 import { toast } from "sonner";
 
-import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 
 import { useCVData } from "@/context/TemplatesContext";
@@ -327,44 +326,42 @@ const PreviewTemplate = () => {
         </div>
       </div>
 
-      <Card>
-        <CardContent>
-          {/* Scaled A4 visible preview */}
-          <div className="mx-auto w-full max-w-[1000px]">
-            <MultiPageA4Preview
-              containerRef={previewRef}
-              shadow={true}
-              watermark={true}
-              logoSrc={logoSrc ?? undefined}
-              watermarkSrc={watermarkSrc ?? undefined}
-            >
-              {SelectedComponent && <SelectedComponent profile={profile} />}
-            </MultiPageA4Preview>
+      <div>
+        {/* Scaled A4 visible preview */}
+        <div className="mx-auto w-full max-w-[1000px]">
+          <MultiPageA4Preview
+            containerRef={previewRef}
+            shadow={true}
+            watermark={true}
+            logoSrc={logoSrc ?? undefined}
+            watermarkSrc={watermarkSrc ?? undefined}
+          >
+            {SelectedComponent && <SelectedComponent profile={profile} />}
+          </MultiPageA4Preview>
+        </div>
+
+        {/* Hidden off-screen renders — used only for PDF capture */}
+        {SelectedComponent && (
+          <div
+            style={{
+              position: "absolute",
+              left: "-9999px",
+              top: 0,
+              zIndex: -1,
+            }}
+          >
+            {/* freeRef → with watermark (free / pay-per-download) */}
+            <MultiPageA4Download containerRef={freeRef} shadow={false}>
+              <SelectedComponent profile={profile} />
+            </MultiPageA4Download>
+
+            {/* proRef → no watermark (standard / premium subscribers) */}
+            <MultiPageA4Download containerRef={proRef} shadow={false}>
+              <SelectedComponent profile={profile} />
+            </MultiPageA4Download>
           </div>
-
-          {/* Hidden off-screen renders — used only for PDF capture */}
-          {SelectedComponent && (
-            <div
-              style={{
-                position: "absolute",
-                left: "-9999px",
-                top: 0,
-                zIndex: -1,
-              }}
-            >
-              {/* freeRef → with watermark (free / pay-per-download) */}
-              <MultiPageA4Download containerRef={freeRef} shadow={false}>
-                <SelectedComponent profile={profile} />
-              </MultiPageA4Download>
-
-              {/* proRef → no watermark (standard / premium subscribers) */}
-              <MultiPageA4Download containerRef={proRef} shadow={false}>
-                <SelectedComponent profile={profile} />
-              </MultiPageA4Download>
-            </div>
-          )}
-        </CardContent>
-      </Card>
+        )}
+      </div>
 
       <DownloadModal
         open={showModal}

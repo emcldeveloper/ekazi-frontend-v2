@@ -51,7 +51,7 @@ const ProfilePreview = ({ applicant }: PreviewProfileProps) => {
           />
 
           <SheetContent className="sm:max-w-3xl!">
-            <div className="scrollbar overflow-y-auto px-4">
+            <div className="scrollbar overflow-y-auto">
               <ProfileDetails applicant={applicant} />
             </div>
           </SheetContent>

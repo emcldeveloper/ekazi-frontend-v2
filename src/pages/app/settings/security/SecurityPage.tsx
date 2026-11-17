@@ -36,8 +36,8 @@ const SecurityPage = () => {
 
   const onSubmit = (data: ChangePasswordPayload) => {
     const payload = {
-      old_password: data.old_password,
-      new_password: data.new_password,
+      currentPassword: data.currentPassword,
+      newPassword: data.newPassword,
     };
 
     changePassword(payload, {
@@ -66,7 +66,7 @@ const SecurityPage = () => {
                   <Input
                     type={showPassword ? "text" : "password"}
                     placeholder="******"
-                    {...register("old_password", {
+                    {...register("currentPassword", {
                       required: "Password is required",
                       minLength: {
                         value: 8,
@@ -86,8 +86,8 @@ const SecurityPage = () => {
                   </span>
                 </div>
 
-                {errors.old_password && (
-                  <FieldError>{errors.old_password.message}</FieldError>
+                {errors.currentPassword && (
+                  <FieldError>{errors.currentPassword.message}</FieldError>
                 )}
               </Field>
 
@@ -97,7 +97,7 @@ const SecurityPage = () => {
                   <Input
                     type={showNewPassword ? "text" : "password"}
                     placeholder="******"
-                    {...register("new_password", {
+                    {...register("newPassword", {
                       required: "New password is required",
                       minLength: {
                         value: 8,
@@ -117,8 +117,8 @@ const SecurityPage = () => {
                   </span>
                 </div>
 
-                {errors.new_password && (
-                  <FieldError>{errors.new_password.message}</FieldError>
+                {errors.newPassword && (
+                  <FieldError>{errors.newPassword.message}</FieldError>
                 )}
               </Field>
 
@@ -128,10 +128,10 @@ const SecurityPage = () => {
                   <Input
                     type={showConfirmPassword ? "text" : "password"}
                     placeholder="******"
-                    {...register("confirm_new_password", {
+                    {...register("confirmNewPassword", {
                       required: "Please confirm your new password",
                       validate: (value) =>
-                        value === getValues("new_password") ||
+                        value === getValues("newPassword") ||
                         "Passwords do not match.",
                     })}
                   />
@@ -147,8 +147,8 @@ const SecurityPage = () => {
                   </span>
                 </div>
 
-                {errors.confirm_new_password && (
-                  <FieldError>{errors.confirm_new_password.message}</FieldError>
+                {errors.confirmNewPassword && (
+                  <FieldError>{errors.confirmNewPassword.message}</FieldError>
                 )}
               </Field>
             </FieldGroup>

@@ -29,6 +29,7 @@ import {
   SquareArrowOutUpRight,
   Archive,
   Settings,
+  FilePen,
 } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 
@@ -78,6 +79,11 @@ const navItems: NavItem[] = [
     title: "External Applications",
     url: "/app/external-applications",
     icon: SquareArrowOutUpRight,
+  },
+  {
+    title: "CV Builder",
+    url: "/app/cv-builder",
+    icon: FilePen,
   },
   {
     title: "Career Briefcase",

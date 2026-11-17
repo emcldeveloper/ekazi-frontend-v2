@@ -47,12 +47,15 @@ export const changePassword = async (payload: ChangePasswordPayload) => {
 };
 
 export const deactivateAccount = async (payload: DeactivatePayload) => {
-  const res = await api.post("/auth/deactivate-account", payload);
+  const res = await api.post("/auth/deactivate", payload);
   return res.data;
 };
 
-export const deleteAccount = async (payload: DeactivatePayload) => {
-  const res = await api.post("/auth/delete-account", payload);
+export const deleteAccount = async (payload: {
+  password: string;
+  confirmation: string;
+}) => {
+  const res = await api.delete("/auth/account", { data: payload });
   return res.data;
 };
 

@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { useApplications } from "@/hooks/applications";
 import { formatDate } from "@/utils/helpers";
 import ViewApplication from "./ViewApplication";
+import { Card, CardContent } from "@/components/ui/card";
 
 const JOBS_ROUTE = "/app/jobs";
 
@@ -65,24 +66,25 @@ const ApplicationsPage = () => {
 
     if (applications.length === 0) {
       return (
-        <div className="rounded-3xl border border-slate-200/70 bg-white px-6 py-16 text-center">
-          <span className="mx-auto flex size-16 items-center justify-center rounded-2xl bg-blue-50 text-[#1D4FA3]">
-            <Briefcase className="size-8" aria-hidden="true" />
-          </span>
-          <h2 className="mt-6 text-xl font-bold text-slate-950">
-            No applications yet
-          </h2>
-          <p className="mt-2 text-base text-slate-600">
-            When you apply for a job on ekazi, it will appear here.
-          </p>
-          <Link
-            to={JOBS_ROUTE}
-            className="mt-6 inline-flex h-11 items-center justify-center gap-2 rounded-xl bg-[#1D4FA3] px-5 text-sm font-semibold text-white shadow-lg shadow-blue-900/20 transition-colors hover:bg-[#18428A] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1D4FA3] focus-visible:ring-offset-2"
-          >
-            <Search className="size-4" aria-hidden="true" />
-            Search for jobs
-          </Link>
-        </div>
+        <Card className="h-full">
+          <CardContent>
+            <div className="flex flex-col items-center text-center">
+              <span className="mx-auto flex size-16 items-center justify-center rounded-2xl bg-blue-50 text-[#1D4FA3]">
+                <Briefcase className="size-8" aria-hidden="true" />
+              </span>
+              <h2 className="mt-6 text-xl font-bold text-Blue">
+                No applications yet
+              </h2>
+              <p className="mt-2 text-sm text-muted-foreground">
+                When you apply for a job on ekazi, it will appear here.
+              </p>
+              <Button className="mt-6">
+                <Search className="size-4" aria-hidden="true" />
+                <Link to={JOBS_ROUTE}>Search for jobs</Link>
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
       );
     }
 

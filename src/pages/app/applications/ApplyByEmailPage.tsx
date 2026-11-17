@@ -2,15 +2,7 @@ import { useState, type ChangeEvent } from "react";
 import { useForm } from "react-hook-form";
 import { useLocation, useNavigate } from "react-router-dom";
 
-import {
-  ArrowLeft,
-  FileText,
-  Loader,
-  Mail,
-  Send,
-  Upload,
-  X,
-} from "lucide-react";
+import { ArrowLeft, FileText, Loader, Send, Upload, X } from "lucide-react";
 
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -160,7 +152,7 @@ const ApplyJobByEmailPage = () => {
         </p>
       </header>
 
-      <section className="mt-6 flex items-center gap-4 rounded-2xl bg-Blue p-4 text-white sm:px-5">
+      {/* <section className="mt-6 flex items-center gap-4 rounded-2xl bg-Blue p-4 text-white sm:px-5">
         <div className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-white/10">
           <Mail className="size-5 text-orange-500" aria-hidden="true" />
         </div>
@@ -170,7 +162,7 @@ const ApplyJobByEmailPage = () => {
             {employerEmail || "the employer's email address"}
           </p>
         </div>
-      </section>
+      </section> */}
 
       <Card>
         <CardContent>

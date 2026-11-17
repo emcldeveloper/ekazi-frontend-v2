@@ -99,7 +99,7 @@ const DashboardPage = () => {
           backgroundColor="#FEF3C7"
           buttonText="Browse CVs"
           onButtonClick={() => {
-            navigate("/app/templates");
+            navigate("/app/cv-builder");
           }}
         />
       ) : (
