@@ -43,7 +43,7 @@ const HeroSection = () => {
           <form
             role="search"
             onSubmit={handleSearch}
-            className="mt-8 flex max-w-xl flex-col gap-2 rounded-full border border-slate-200 bg-white p-1 shadow-xl shadow-blue-900/10 sm:flex-row sm:items-center"
+            className="mt-8 flex max-w-xl flex-row gap-2 rounded-full border border-slate-200 bg-white p-1 shadow-xl shadow-blue-900/10 sm:flex-row sm:items-center"
           >
             <label htmlFor="hero-search" className="sr-only">
               Job title or keyword
@@ -63,8 +63,9 @@ const HeroSection = () => {
               />
             </div>
             <Button
+              size="lg"
               type="submit"
-              className="h-12  bg-Orange px-6 text-sm text-white transition-colors hover:bg-orange-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1D4FA3] focus-visible:ring-offset-2"
+              className=" bg-Orange hover:bg-orange-500"
             >
               Search jobs
             </Button>

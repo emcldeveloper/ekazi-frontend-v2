@@ -3,7 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
-import { CheckCircle2, Loader, XCircle } from "lucide-react";
+import { ArrowLeft, CheckCircle2, Loader, XCircle } from "lucide-react";
 
 import {
   Dialog,
@@ -102,6 +102,9 @@ const ApplyJobPage = () => {
 
   return (
     <div className="space-y-4">
+      <Button variant="ghost" onClick={() => navigate(-1)} className="px-0">
+        <ArrowLeft /> Back
+      </Button>
       <header>
         <h1 className="text-2xl font-bold tracking-tight text-Blue">
           Submit Application

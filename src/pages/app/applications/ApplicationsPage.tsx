@@ -1,29 +1,26 @@
-import { Link } from "react-router-dom";
-import { Briefcase, CalendarDays, Search } from "lucide-react";
+import { Link, useSearchParams } from "react-router-dom";
+import { Briefcase, Search } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 
 import { useApplications } from "@/hooks/applications";
-import { formatDate } from "@/utils/helpers";
-import ViewApplication from "./ViewApplication";
-import { Card, CardContent } from "@/components/ui/card";
+import { LoadingRow } from "../jobs/components/LoadingRow";
+import OtherJobCard from "../jobs/components/OtherJobCard";
+import AppViewJob from "../jobs/AppViewJob";
 
 const JOBS_ROUTE = "/app/jobs";
 
-function LoadingRow() {
-  return (
-    <li className="flex animate-pulse items-center gap-4 rounded-3xl border border-slate-200/70 bg-white p-4 sm:p-5">
-      <div className="size-12 shrink-0 rounded-2xl bg-[#ECECF3]" />
-      <div className="min-w-0 flex-1 space-y-2.5">
-        <div className="h-4 w-1/2 rounded-full bg-[#ECECF3]" />
-        <div className="h-3 w-1/3 rounded-full bg-[#ECECF3]" />
-        <div className="h-3 w-3/5 rounded-full bg-[#ECECF3]" />
-      </div>
-    </li>
-  );
-}
-
 const ApplicationsPage = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const jobIdParam = searchParams.get("jobId");
+
+  const activeJobId =
+    jobIdParam && /^\d+$/.test(jobIdParam) && Number(jobIdParam) > 0
+      ? Number(jobIdParam)
+      : null;
+
   const {
     data: applicationsData,
     isLoading,
@@ -31,6 +28,28 @@ const ApplicationsPage = () => {
     refetch,
   } = useApplications();
   const applications = applicationsData?.data ?? [];
+
+  const handleJobClick = (jobId: number) => {
+    setSearchParams(
+      (prev) => {
+        const params = new URLSearchParams(prev);
+        params.set("jobId", String(jobId));
+        return params;
+      },
+      { preventScrollReset: true },
+    );
+  };
+
+  const handleJobClose = () => {
+    setSearchParams(
+      (prev) => {
+        const params = new URLSearchParams(prev);
+        params.delete("jobId");
+        return params;
+      },
+      { replace: true, preventScrollReset: true },
+    );
+  };
 
   const renderContent = () => {
     if (isLoading) {
@@ -91,49 +110,13 @@ const ApplicationsPage = () => {
     return (
       <ul aria-label="Your applications" className="space-y-3">
         {applications.map((app: any) => {
-          const job = app.job;
-
           return (
-            <li
-              key={app?.id}
-              className="flex flex-col gap-4 rounded-3xl border border-slate-200/70 bg-white p-4 sm:flex-row sm:items-center sm:p-5"
-            >
-              <div className="flex min-w-0 flex-1 items-start gap-4">
-                <div className="w-20 h-20 flex items-center justify-center bg-muted rounded-lg overflow-hidden shrink-0">
-                  <img
-                    src={
-                      job.company_logo
-                        ? `https://api.ekazi.co.tz/${job.company_logo}`
-                        : "/employer.png"
-                    }
-                    alt="company logo"
-                    className="max-w-[80%] max-h-[80%] object-contain"
-                  />
-                </div>
-
-                <div className="min-w-0 flex-1">
-                  <h2 className="break-word text-base font-semibold text-slate-950">
-                    {job?.position}
-                  </h2>
-                  <p className="mt-0.5 break-word text-sm font-medium text-slate-600">
-                    {job?.company}
-                  </p>
-                  <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-sm text-slate-500">
-                    <span className="inline-flex items-center gap-1.5">
-                      <CalendarDays className="size-3.5" aria-hidden="true" />
-                      Posted {formatDate(job?.posted_on)}
-                    </span>
-                    <span className="inline-flex items-center gap-1.5">
-                      <CalendarDays className="size-3.5" aria-hidden="true" />
-                      Applied {formatDate(app.applied_at)}
-                    </span>
-                  </div>
-                </div>
-              </div>
-
-              <div className="shrink-0 self-end sm:self-center">
-                <ViewApplication selectedJob={job} />
-              </div>
+            <li key={app?.id}>
+              <OtherJobCard
+                job={app}
+                isActive={activeJobId === app.job_id}
+                onClick={() => handleJobClick(app.job_id)}
+              />
             </li>
           );
         })}
@@ -163,6 +146,17 @@ const ApplicationsPage = () => {
       <section aria-busy={isLoading} className="mt-6">
         {renderContent()}
       </section>
+
+      {/* Job details Sheet / Drawer */}
+      <AppViewJob
+        jobId={activeJobId}
+        open={activeJobId !== null}
+        onOpenChange={(open) => {
+          if (!open) {
+            handleJobClose();
+          }
+        }}
+      />
     </div>
   );
 };

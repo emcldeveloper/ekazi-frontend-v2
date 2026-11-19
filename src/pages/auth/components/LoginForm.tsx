@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { EyeIcon, EyeOffIcon, Loader } from "lucide-react";
@@ -21,6 +21,9 @@ import { getErrorMessage } from "@/utils/axios-helpers";
 
 export default function LoginForm() {
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const from = location.state?.from || "/app/dashboard";
 
   const [showPassword, setShowPassword] = useState(false);
 
@@ -59,8 +62,8 @@ export default function LoginForm() {
         localStorage.setItem("verified", String(res.data?.verified));
 
         toast.success(res?.message || "Logged in successfully");
+        navigate(from, { replace: true });
         reset();
-        navigate("/app/dashboard", { replace: true });
       },
       onError: (err) => {
         toast.error(getErrorMessage(err));

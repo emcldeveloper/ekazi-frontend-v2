@@ -31,7 +31,7 @@ const formatDate = (date?: string) => {
 };
 
 const ArticleCard = ({ article }: ArticleCardProps) => {
-  const articleUrl = `/articles/${article.slug || article.id}`;
+  const articleUrl = `/articles/${article.id}`;
 
   const imageUrl = article.featured_image
     ? `${IMG_BASE.replace(/\/$/, "")}/${article.featured_image.replace(/^\//, "")}`

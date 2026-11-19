@@ -117,7 +117,7 @@ const Navbar = () => {
         }`}
       >
         {/* Brand accent line */}
-        <div className="h-1 w-full bg-linear-to-r from-Blue via-Orange to-Blue" />
+        <div className="h-0.5 w-full bg-linear-to-r from-Blue via-Orange to-Blue" />
 
         <div className="container mx-auto px-4 sm:px-8">
           <div
@@ -207,8 +207,9 @@ const Navbar = () => {
               </Button>
 
               <Button
+                size="lg"
                 onClick={() => navigate("/register")}
-                className="group rounded-full bg-linear-to-r from-Orange to-orange-500 px-6 font-semibold text-white shadow-lg shadow-orange-500/30 transition-all hover:-translate-y-0.5 hover:shadow-xl hover:shadow-orange-500/40"
+                className="bg-Orange hover:bg-orange-500"
               >
                 Register
                 <ArrowRight
@@ -307,9 +308,9 @@ const Navbar = () => {
             </Button>
             <Button
               onClick={() => navigate("/register")}
-              className="w-full rounded-full bg-gradient-to-r from-Orange to-orange-500 font-semibold text-white shadow-lg shadow-orange-500/30"
+              className="bg-Orange hover:bg-orange-500 w-full"
             >
-              Create free account
+              Create account
               <ArrowRight size={16} className="ml-1" />
             </Button>
           </div>

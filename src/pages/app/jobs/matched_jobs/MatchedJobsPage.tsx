@@ -1,38 +1,30 @@
-import { Link } from "react-router-dom";
-import { BriefcaseBusiness, CalendarDays, Loader } from "lucide-react";
+import { Link, useSearchParams } from "react-router-dom";
+import { BriefcaseBusiness } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 
 import { useJobMatch } from "@/hooks/jobs/useJobMatch";
-import { formatDate } from "@/utils/helpers";
-import ViewJob from "../components/ViewJob";
 import { Card, CardContent } from "@/components/ui/card";
-import { useSaveJob } from "@/hooks/jobs";
-import { useMemo, useState } from "react";
-import { toast } from "sonner";
-import { getErrorMessage } from "@/utils/axios-helpers";
+import { useState } from "react";
 import { DataPagination } from "@/components/data-pagination";
+import { LoadingRow } from "../components/LoadingRow";
+import AppViewJob from "../AppViewJob";
+import MatchedJobCard from "./MatchedJobCard";
 
-const PROFILE_ROUTE = "/app/profile";
-const ALLOWED_RECOMMENDATIONS = ["Recommended", "Potential Match"];
-
-function LoadingRow() {
-  return (
-    <li className="flex animate-pulse items-center gap-4 rounded-3xl border border-slate-200/70 bg-white p-4 sm:p-5">
-      <div className="size-12 shrink-0 rounded-2xl bg-[#ECECF3]" />
-      <div className="min-w-0 flex-1 space-y-2.5">
-        <div className="h-4 w-1/2 rounded-full bg-[#ECECF3]" />
-        <div className="h-3 w-1/3 rounded-full bg-[#ECECF3]" />
-        <div className="h-3 w-3/5 rounded-full bg-[#ECECF3]" />
-      </div>
-    </li>
-  );
-}
+const PROFILE_ROUTE = "/job/profile";
 
 const MatchedJobsPage = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const jobIdParam = searchParams.get("jobId");
+
+  const activeJobId =
+    jobIdParam && /^\d+$/.test(jobIdParam) && Number(jobIdParam) > 0
+      ? Number(jobIdParam)
+      : null;
+
   const [page, setPage] = useState(1);
   const [perPage, setPerPage] = useState(10);
-  const [savingJobId, setSavingJobId] = useState<number | null>(null);
 
   const {
     data: jobsData,
@@ -40,31 +32,27 @@ const MatchedJobsPage = () => {
     isError,
     refetch,
   } = useJobMatch({ page, limit: perPage });
-  const matchedJobs = useMemo(() => {
-    const all = jobsData?.data ?? [];
-    return all.filter((job: any) =>
-      ALLOWED_RECOMMENDATIONS.includes(job.recommendation),
-    );
-  }, [jobsData]);
+  const matchedJobs = jobsData?.data ?? [];
 
-  const { mutate: saveJobMutate } = useSaveJob();
-
-  const handleSaveJob = (jobId: number) => {
-    setSavingJobId(jobId);
-
-    saveJobMutate(
-      { job_id: jobId },
-      {
-        onSuccess: (res) => {
-          toast.success(res?.message ?? "Saved");
-        },
-        onError: (err) => {
-          toast.error(getErrorMessage(err));
-        },
-        onSettled: () => {
-          setSavingJobId(null);
-        },
+  const handleJobClick = (jobId: number) => {
+    setSearchParams(
+      (prev) => {
+        const params = new URLSearchParams(prev);
+        params.set("jobId", String(jobId));
+        return params;
       },
+      { preventScrollReset: true },
+    );
+  };
+
+  const handleJobClose = () => {
+    setSearchParams(
+      (prev) => {
+        const params = new URLSearchParams(prev);
+        params.delete("jobId");
+        return params;
+      },
+      { replace: true, preventScrollReset: true },
     );
   };
 
@@ -128,67 +116,11 @@ const MatchedJobsPage = () => {
       <ul aria-label="Matched jobs" className="space-y-3">
         {matchedJobs.map((job: any) => (
           <li key={job?.id}>
-            <Card>
-              <CardContent>
-                <div className="flex flex-col gap-4 justify-between md:flex-row">
-                  <div className="flex min-w-0 flex-1 items-start gap-4">
-                    <div className="w-20 h-20 flex items-center justify-center bg-muted rounded-lg overflow-hidden shrink-0">
-                      <img
-                        src={
-                          job.company_logo
-                            ? `https://api.ekazi.co.tz/${job.company_logo}`
-                            : "/employer.png"
-                        }
-                        alt="company logo"
-                        className="max-w-[80%] max-h-[80%] object-contain"
-                      />
-                    </div>
-
-                    <div className="min-w-0 flex-1">
-                      <h2 className="break-word text-base font-semibold text-slate-950">
-                        {job?.position}
-                      </h2>
-                      <p className="mt-0.5 break-word text-sm font-medium text-slate-600">
-                        {job?.company}
-                      </p>
-                      <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-sm text-slate-500">
-                        <span className="inline-flex items-center gap-1.5">
-                          <CalendarDays
-                            className="size-3.5"
-                            aria-hidden="true"
-                          />
-                          Posted {formatDate(job?.posted_on)}
-                        </span>
-                        {/* <span className="inline-flex items-center gap-1.5">
-                    <CalendarDays className="size-3.5" aria-hidden="true" />
-                    Applied {formatDate(.applied_at)}
-                  </span> */}
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="flex gap-2 shrink-0 self-end sm:self-center">
-                    <Button
-                      size="sm"
-                      variant="secondary"
-                      disabled={savingJobId === job.job_id}
-                      onClick={() => handleSaveJob(job.job_id)}
-                    >
-                      {savingJobId === job.job_id ? (
-                        <>
-                          <Loader className="animate-spin" />
-                          Saving...
-                        </>
-                      ) : (
-                        "Save"
-                      )}
-                    </Button>
-
-                    <ViewJob jobId={job.job_id} />
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+            <MatchedJobCard
+              job={job}
+              isActive={activeJobId === job.job_id}
+              onClick={() => handleJobClick(job.job_id)}
+            />
           </li>
         ))}
       </ul>
@@ -211,6 +143,17 @@ const MatchedJobsPage = () => {
           onPerPageChange={setPerPage}
         />
       )}
+
+      {/* Job details Sheet / Drawer */}
+      <AppViewJob
+        jobId={activeJobId}
+        open={activeJobId !== null}
+        onOpenChange={(open) => {
+          if (!open) {
+            handleJobClose();
+          }
+        }}
+      />
     </div>
   );
 };

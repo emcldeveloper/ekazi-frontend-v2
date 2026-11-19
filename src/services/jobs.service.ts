@@ -83,6 +83,11 @@ export const getSavedJobs = async ({
   return res.data;
 };
 
+export const deleteSavedJob = async (jobId: number) => {
+  const res = await api.delete(`/applicant/saved-jobs/${jobId}`);
+  return res.data;
+};
+
 export const getMatchedJobs = async ({
   page,
   limit,
@@ -125,4 +130,18 @@ export const applyJobInternal = async (payload: {
 export const applyJobEmail = async (payload: any) => {
   const res = await api.post("/application/apply-by-emails", payload);
   return res.data;
+};
+
+// JOBS BY CATEGORIES, COMPANY INDUSTRY AND LOCATION
+export const jobsByCategory = async () => {
+  const res = await api.get("/jobs-by-category");
+  return res.data?.data;
+};
+export const jobsByIndustry = async () => {
+  const res = await api.get("/jobs-by-industry");
+  return res.data?.data;
+};
+export const jobsByLocation = async () => {
+  const res = await api.get("/jobs-by-region");
+  return res.data?.data;
 };

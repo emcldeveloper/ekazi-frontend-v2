@@ -30,7 +30,7 @@ import { useJobDetails, useSaveJob } from "@/hooks/jobs";
 
 import LoadingState from "@/components/loading-state";
 import CheckCompleteProfile from "../../profile/components/CheckCompleteProfile";
-import { useApplicantProfile } from "@/hooks/profile";
+
 import {
   downloadBlob,
   generateJobPdf,
@@ -45,9 +45,8 @@ interface JobDetailsProps {
 const JobDetails = ({ jobId }: JobDetailsProps) => {
   const navigate = useNavigate();
 
-  const { data: applicant } = useApplicantProfile();
-  const isLoggedIn = !!applicant;
-  const applicantId = applicant?.applicant_id;
+  const token = localStorage.getItem("token");
+  const isLoggedIn = Boolean(token);
 
   const { data: job, isLoading } = useJobDetails(jobId);
 
@@ -61,9 +60,7 @@ const JobDetails = ({ jobId }: JobDetailsProps) => {
     promise: Promise<Blob> | null;
   }>({ jobId: null, promise: null });
 
-  const isExpired = job?.dead_line
-    ? new Date(job?.dead_line) < new Date()
-    : false;
+  const isExpired = job?.status === "Expired";
 
   const numberOfApplications = job?.job_email
     ? (job?.total_non_user_applicants ?? 0)
@@ -102,7 +99,11 @@ const JobDetails = ({ jobId }: JobDetailsProps) => {
 
     // Require authentication
     if (!isLoggedIn) {
-      navigate("/login");
+      navigate("/login", {
+        state: {
+          from: `/app/jobs?jobId=${jobId}`,
+        },
+      });
       return;
     }
 
@@ -129,7 +130,6 @@ const JobDetails = ({ jobId }: JobDetailsProps) => {
 
     saveJobMutate(
       {
-        applicant_id: applicantId,
         job_id: job.id,
       },
       {
@@ -333,87 +333,89 @@ const JobDetails = ({ jobId }: JobDetailsProps) => {
           {isExpired ? null : (
             <>
               <Button
+                onClick={handleApply}
+                className=" bg-Blue hover:bg-blue-900"
+              >
+                Apply Now
+              </Button>
+
+              <Button
                 variant="outline"
                 className=""
                 onClick={isLoggedIn ? handleSaveJob : () => navigate("/login")}
               >
                 Save Job
               </Button>
-
-              <Button
-                onClick={handleApply}
-                className=" bg-Blue hover:bg-blue-900"
-              >
-                Apply Now
-              </Button>
             </>
           )}
         </div>
 
-        <DropdownMenu onOpenChange={handleMenuOpenChange}>
-          <DropdownMenuTrigger
-            render={<Button variant="outline" className="rounded-full" />}
-          >
-            <Share /> Share
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuGroup>
-              <DropdownMenuItem
-                onClick={handleCopyLink}
-                className="cursor-pointer"
-              >
-                <CopyIcon size={16} />
-                <span>Copy Link</span>
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <FaWhatsapp color="#25D366" />
-                <a
-                  href={`https://api.whatsapp.com/send?text=${encodedTitle}%20${encodedUrl}`}
-                  target="_blank"
+        {isExpired ? null : (
+          <DropdownMenu onOpenChange={handleMenuOpenChange}>
+            <DropdownMenuTrigger
+              render={<Button variant="outline" className="rounded-full" />}
+            >
+              <Share /> Share
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuGroup>
+                <DropdownMenuItem
+                  onClick={handleCopyLink}
+                  className="cursor-pointer"
                 >
-                  WhatsApp
-                </a>
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <FaLinkedin color="#0077b5" />
-                <a
-                  href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}`}
-                  target="_blank"
-                >
-                  Linkedin
-                </a>
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <FaFacebook color="#3b5998" />
-                <a
-                  href={`https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`}
-                  target="_blank"
-                >
-                  Facebook
-                </a>
-              </DropdownMenuItem>
-            </DropdownMenuGroup>
+                  <CopyIcon size={16} />
+                  <span>Copy Link</span>
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  <FaWhatsapp color="#25D366" />
+                  <a
+                    href={`https://api.whatsapp.com/send?text=${encodedTitle}%20${encodedUrl}`}
+                    target="_blank"
+                  >
+                    WhatsApp
+                  </a>
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  <FaLinkedin color="#0077b5" />
+                  <a
+                    href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}`}
+                    target="_blank"
+                  >
+                    Linkedin
+                  </a>
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  <FaFacebook color="#3b5998" />
+                  <a
+                    href={`https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`}
+                    target="_blank"
+                  >
+                    Facebook
+                  </a>
+                </DropdownMenuItem>
+              </DropdownMenuGroup>
 
-            <DropdownMenuGroup>
-              <DropdownMenuItem
-                onClick={handleSharePdf}
-                disabled={pdfBusy}
-                className="cursor-pointer"
-              >
-                <ExternalLink size={16} />
-                <span>Share as PDF</span>
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                onClick={handleDownloadPdf}
-                disabled={pdfBusy}
-                className="cursor-pointer"
-              >
-                <FolderDown size={16} />
-                <span>Download PDF</span>
-              </DropdownMenuItem>
-            </DropdownMenuGroup>
-          </DropdownMenuContent>
-        </DropdownMenu>
+              <DropdownMenuGroup>
+                <DropdownMenuItem
+                  onClick={handleSharePdf}
+                  disabled={pdfBusy}
+                  className="cursor-pointer"
+                >
+                  <ExternalLink size={16} />
+                  <span>Share as PDF</span>
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={handleDownloadPdf}
+                  disabled={pdfBusy}
+                  className="cursor-pointer"
+                >
+                  <FolderDown size={16} />
+                  <span>Download PDF</span>
+                </DropdownMenuItem>
+              </DropdownMenuGroup>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        )}
       </div>
 
       {isLoggedIn && (

@@ -228,7 +228,7 @@ const JobsPage = () => {
           {!isLoading && (jobs.length > 0 || hasFilters) && (
             <div className="mb-6 flex flex-wrap items-center gap-3">
               {jobs.length > 0 && (
-                <p className="text-sm text-gray-500">
+                <p className="text-base text-gray-500">
                   {typeof total === "number" ? (
                     <>
                       <span className="font-semibold text-Blue">
@@ -249,7 +249,7 @@ const JobsPage = () => {
               )}
 
               {debouncedSearch && (
-                <span className="inline-flex items-center gap-1.5 rounded-full bg-gray-50 py-1 pl-3 pr-1 text-xs text-gray-600">
+                <span className="inline-flex items-center gap-1.5 rounded-full bg-gray-50 py-1 pl-3 pr-1 text-base text-gray-600">
                   "{debouncedSearch}"
                   <button
                     type="button"
@@ -263,7 +263,7 @@ const JobsPage = () => {
               )}
 
               {industry && (
-                <span className="inline-flex items-center gap-1.5 rounded-full bg-orange-50 py-1 pl-3 pr-1 text-xs font-medium text-Orange">
+                <span className="inline-flex items-center gap-1.5 rounded-full bg-orange-50 py-1 pl-3 pr-1 text-base font-medium text-Orange">
                   {selectedIndustry
                     ? capitalizeText(selectedIndustry.name)
                     : "Industry"}
@@ -282,7 +282,7 @@ const JobsPage = () => {
                 <button
                   type="button"
                   onClick={clearFilters}
-                  className="text-xs font-medium text-gray-500 underline-offset-4 hover:text-Orange hover:underline"
+                  className="text-base font-medium text-gray-500 underline-offset-4 hover:text-Orange hover:underline"
                 >
                   Clear all
                 </button>
