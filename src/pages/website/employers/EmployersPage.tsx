@@ -20,7 +20,6 @@ import { Button } from "@/components/ui/button";
 import { DataPagination } from "@/components/data-pagination";
 
 import { useEmployers } from "@/hooks/employers";
-import { useSiteStatistics } from "@/hooks/universals";
 import { useDebounce } from "@/hooks/useDebounce";
 import HomeLayout from "@/layouts/HomeLayout";
 import EmployerCard from "./EmployerCard";
