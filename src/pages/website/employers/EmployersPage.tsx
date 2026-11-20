@@ -81,7 +81,6 @@ const EmployersPage = () => {
   const debouncedSearch = useDebounce(search, 500);
   const directoryRef = useRef<HTMLDivElement>(null);
 
-  const { data: statistics } = useSiteStatistics();
   const {
     data: employersData,
     isLoading,
