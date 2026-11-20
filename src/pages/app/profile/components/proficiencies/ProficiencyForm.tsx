@@ -194,16 +194,16 @@ const ProficiencyForm = ({
         <Field>
           <FieldLabel>Started *</FieldLabel>
           <Input
-            type="date"
-            {...register("started", { required: "Date is required" })}
+            placeholder="e.g 2014"
+            {...register("started", { required: "Started year is required" })}
           />
           {errors.started && <FieldError>{errors.started.message}</FieldError>}
         </Field>
         <Field>
           <FieldLabel>Ended *</FieldLabel>
           <Input
-            type="date"
-            {...register("ended", { required: "Date is required" })}
+            placeholder="e.g 2015"
+            {...register("ended", { required: "End year is required" })}
           />
           {errors.ended && <FieldError>{errors.ended.message}</FieldError>}
         </Field>
@@ -211,20 +211,30 @@ const ProficiencyForm = ({
         <Field>
           <FieldLabel>Award Name *</FieldLabel>
           <Input
+            placeholder="e.g CPA(T), CISCO..."
             {...register("award", { required: "Award name is required" })}
           />
           {errors.award && <FieldError>{errors.award.message}</FieldError>}
         </Field>
 
         <Field>
-          <FieldLabel>Attachment *</FieldLabel>
+          <FieldLabel>Attachment {!proficiency && "*"}</FieldLabel>
+
           <Input
             type="file"
-            accept=".pdf,.jpg,.png"
+            accept=".pdf,.jpg,.jpeg,.png"
             {...register("attachment", {
-              required: "Attachment is required",
+              validate: (files) => {
+                if (proficiency) return true;
+
+                return (
+                  (files instanceof FileList && files.length > 0) ||
+                  "Attachment is required"
+                );
+              },
             })}
           />
+
           {errors.attachment && (
             <FieldError>{errors.attachment.message}</FieldError>
           )}

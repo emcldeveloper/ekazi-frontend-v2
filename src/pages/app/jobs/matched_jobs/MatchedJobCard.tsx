@@ -53,10 +53,11 @@ const MatchedJobCard = ({
   onClick,
 }: MatchedJobCardProps) => {
   const jobTitle = job.position || job.title || "Untitled position";
-
   const address = job.location?.addresses?.[0];
   const region = job.location?.region?.name;
   const countryName = job.location?.country?.name;
+  const companyName = job.company;
+  const companyLogo = job.company_logo;
 
   const location = [
     address?.sub_location ? capitalizeText(address.sub_location) : null,
@@ -102,9 +103,15 @@ const MatchedJobCard = ({
         <div className="flex h-[75px] w-[120px] shrink-0 items-center justify-center rounded-lg p-2">
           <img
             src={
-              job.company_logo ? `${IMG_BASE}${job.company_logo}` : DEFAULT_IMG
+              companyLogo
+                ? `${IMG_BASE}/${companyLogo.replace(/^\/+/, "")}`
+                : DEFAULT_IMG
             }
-            alt={job.company || "Company Logo"}
+            alt={companyName || "Company Logo"}
+            onError={(e) => {
+              e.currentTarget.onerror = null;
+              e.currentTarget.src = DEFAULT_IMG;
+            }}
             className="max-h-full max-w-full object-contain"
           />
         </div>

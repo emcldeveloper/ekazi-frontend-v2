@@ -14,6 +14,7 @@ import {
 } from "@/hooks/profile";
 import { useOrganizations } from "@/hooks/universals";
 import type { TrainingPayload } from "@/@types/profile/profile";
+import type { OptionType } from "@/@types/universals";
 
 interface TrainingFormProps {
   training?: any;
@@ -130,9 +131,23 @@ const TrainingForm = ({ training, onLoadingChange }: TrainingFormProps) => {
             rules={{ required: "Training name is required" }}
             render={({ field }) => (
               <CreatableSelect
-                {...field}
+                name={field.name}
+                ref={field.ref}
+                onBlur={field.onBlur}
                 options={trainingOptions}
-                placeholder="Select training..."
+                placeholder="Select or enter training..."
+                isClearable
+                value={
+                  trainingOptions.find(
+                    (option: OptionType) => option.label === field.value,
+                  ) ??
+                  (field.value
+                    ? { value: field.value, label: field.value }
+                    : null)
+                }
+                onChange={(option) => {
+                  field.onChange(option?.label ?? "");
+                }}
               />
             )}
           />
@@ -151,9 +166,23 @@ const TrainingForm = ({ training, onLoadingChange }: TrainingFormProps) => {
             rules={{ required: "Institution is required" }}
             render={({ field }) => (
               <CreatableSelect
-                {...field}
+                name={field.name}
+                ref={field.ref}
+                onBlur={field.onBlur}
                 options={institutionOptions}
-                placeholder="Select institution..."
+                placeholder="Select or enter institution..."
+                isClearable
+                value={
+                  institutionOptions.find(
+                    (option: OptionType) => option.label === field.value,
+                  ) ??
+                  (field.value
+                    ? { value: field.value, label: field.value }
+                    : null)
+                }
+                onChange={(option) => {
+                  field.onChange(option?.label ?? "");
+                }}
               />
             )}
           />

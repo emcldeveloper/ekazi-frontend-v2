@@ -14,7 +14,7 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
-import { FRONTEND_URL } from "@/config";
+import { BASE_URL, FRONTEND_URL } from "@/config";
 import { useUser } from "@/hooks/auth";
 import { useQueryClient } from "@tanstack/react-query";
 import {
@@ -34,6 +34,10 @@ export function NavUser() {
 
   // user data
   const { data: user } = useUser();
+
+  const accountImage = user?.profile_picture
+    ? `${BASE_URL}/${user.profile_picture.replace(/^\//, "")}`
+    : `${BASE_URL}/uploads/picture/pre_photo.jpg`;
 
   const queryClient = useQueryClient();
 
@@ -56,11 +60,14 @@ export function NavUser() {
             }
           >
             <Avatar>
-              <AvatarImage src={user.avatar} alt={user.name} />
-              <AvatarFallback>CN</AvatarFallback>
+              <AvatarImage src={accountImage} alt={user.username} />
+              <AvatarFallback>
+                {" "}
+                {user?.username?.charAt(0)?.toUpperCase() || "U"}
+              </AvatarFallback>
             </Avatar>
             <div className="grid flex-1 text-left text-sm leading-tight">
-              <span className="truncate font-medium">{user.name}</span>
+              <span className="truncate font-medium">{user.username}</span>
               <span className="truncate text-xs">{user.email}</span>
             </div>
             <ChevronsUpDownIcon className="ml-auto size-4" />

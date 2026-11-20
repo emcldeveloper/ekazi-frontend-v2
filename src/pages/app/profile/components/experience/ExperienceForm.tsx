@@ -50,6 +50,14 @@ const ExperienceForm = ({
   experience,
   onLoadingChange,
 }: ExperienceFormProps) => {
+  const [selectedEmployer, setSelectedEmployer] = useState<OptionType | null>(
+    null,
+  );
+
+  const [selectedPosition, setSelectedPosition] = useState<OptionType | null>(
+    null,
+  );
+
   const [employerSearch, setEmployerSearch] = useState("");
   const [positionSearch, setPositionSearch] = useState("");
   const [industrySearch] = useState("");
@@ -118,7 +126,7 @@ const ExperienceForm = ({
       label: level.name,
     })) ?? [];
 
-  const { data: salaryRanges } = useSalaryRanges();
+  const { data: salaryRanges } = useSalaryRanges({});
   const rangesOptions =
     salaryRanges?.map((range: SalaryRange) => ({
       value: range.id,
@@ -140,9 +148,27 @@ const ExperienceForm = ({
   useEffect(() => {
     if (!experience) return;
 
+    setSelectedEmployer(
+      experience.employer
+        ? {
+            value: experience.employer.id,
+            label: experience.employer.name,
+          }
+        : null,
+    );
+
+    setSelectedPosition(
+      experience.position
+        ? {
+            value: experience.position.id,
+            label: experience.position.name,
+          }
+        : null,
+    );
+
     reset({
       experience_type_id: experience?.experience_type.id,
-      applicant_employer_id: experience.employer.id,
+      applicant_employer_id: experience?.employer.id,
       country_id: experience?.region.country.id,
       region_id: experience?.region.id,
       sub_location: experience?.sub_location,
@@ -228,21 +254,50 @@ const ExperienceForm = ({
 
         <Field>
           <FieldLabel>Employer *</FieldLabel>
+
           <Controller
             name="applicant_employer_id"
             control={control}
             rules={{ required: "Employer is required" }}
-            render={({ field }) => (
-              <CreatableSelect
-                {...field}
-                options={employerOptions}
-                onInputChange={(inputValue) => {
-                  setEmployerSearch(inputValue);
-                }}
-                isClearable
-              />
-            )}
+            render={({ field }) => {
+              const selectedOption =
+                (selectedEmployer &&
+                String(selectedEmployer.value) === String(field.value)
+                  ? selectedEmployer
+                  : null) ??
+                employerOptions.find(
+                  (option: OptionType) =>
+                    String(option.value) === String(field.value),
+                ) ??
+                (experience?.employer?.id != null &&
+                String(experience.employer.id) === String(field.value)
+                  ? {
+                      value: experience.employer.id,
+                      label: experience.employer.name,
+                    }
+                  : null);
+
+              return (
+                <CreatableSelect
+                  {...field}
+                  isClearable
+                  options={employerOptions}
+                  value={selectedOption}
+                  onChange={(option) => {
+                    setSelectedEmployer(option);
+                    field.onChange(option?.value ?? null);
+                  }}
+                  onInputChange={(inputValue, actionMeta) => {
+                    if (actionMeta.action === "input-change") {
+                      setEmployerSearch(inputValue);
+                    }
+                  }}
+                  placeholder="Select or create employer"
+                />
+              );
+            }}
           />
+
           {errors.applicant_employer_id && (
             <FieldError>{errors.applicant_employer_id.message}</FieldError>
           )}
@@ -319,21 +374,50 @@ const ExperienceForm = ({
       <FieldGroup className="grid grid-cols-1 sm:grid-cols-2">
         <Field>
           <FieldLabel>Position *</FieldLabel>
+
           <Controller
             name="position_id"
             control={control}
             rules={{ required: "Position is required" }}
-            render={({ field }) => (
-              <CreatableSelect
-                {...field}
-                options={positionOptions}
-                onInputChange={(inputValue) => {
-                  setPositionSearch(inputValue);
-                }}
-                isClearable
-              />
-            )}
+            render={({ field }) => {
+              const selectedOption =
+                (selectedPosition &&
+                String(selectedPosition.value) === String(field.value)
+                  ? selectedPosition
+                  : null) ??
+                positionOptions.find(
+                  (option: OptionType) =>
+                    String(option.value) === String(field.value),
+                ) ??
+                (experience?.position?.id != null &&
+                String(experience.position.id) === String(field.value)
+                  ? {
+                      value: experience.position.id,
+                      label: experience.position.name,
+                    }
+                  : null);
+
+              return (
+                <CreatableSelect
+                  {...field}
+                  isClearable
+                  options={positionOptions}
+                  value={selectedOption}
+                  onChange={(option) => {
+                    setSelectedPosition(option);
+                    field.onChange(option?.value ?? null);
+                  }}
+                  onInputChange={(inputValue, actionMeta) => {
+                    if (actionMeta.action === "input-change") {
+                      setPositionSearch(inputValue);
+                    }
+                  }}
+                  placeholder="Select or create position"
+                />
+              );
+            }}
           />
+
           {errors.position_id && (
             <FieldError>{errors.position_id.message}</FieldError>
           )}

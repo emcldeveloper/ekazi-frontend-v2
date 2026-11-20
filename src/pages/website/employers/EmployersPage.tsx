@@ -96,10 +96,6 @@ const EmployersPage = () => {
   const total = employersData?.total ?? employersData?.meta?.total;
   const isSearching = search !== debouncedSearch || (isFetching && !isLoading);
 
-  const employerCount = statistics?.employers
-    ? `${Number(statistics.employers).toLocaleString()}+`
-    : undefined;
-
   // Bring the directory back into view when the page changes (not on first load).
   const prevPage = useRef(page);
   useEffect(() => {
@@ -124,7 +120,7 @@ const EmployersPage = () => {
   return (
     <HomeLayout>
       {/* 1. HERO — employer entry point */}
-      <FeaturedEmployersBanner employerCount={employerCount} />
+      <FeaturedEmployersBanner />
 
       {/* 4. DIRECTORY — companies already hiring */}
       <section className="bg-white py-16 lg:py-24">

@@ -13,7 +13,7 @@ export const useSavePersonalInfo = () => {
 
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: ["applicant_profile"],
+        queryKey: ["applicant-profile"],
       });
       queryClient.invalidateQueries({
         queryKey: ["personal-info"],
@@ -29,7 +29,7 @@ export const useSaveBackgroundImage = () => {
     mutationFn: uploadBackgroundImage,
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: ["applicant_profile"],
+        queryKey: ["applicant-profile"],
       });
     },
   });
@@ -42,7 +42,7 @@ export const useSaveProfileImage = () => {
     mutationFn: uploadProfileImage,
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: ["applicant_profile"],
+        queryKey: ["applicant-profile"],
       });
     },
   });

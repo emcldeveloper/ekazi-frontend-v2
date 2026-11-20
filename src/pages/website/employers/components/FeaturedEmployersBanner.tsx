@@ -1,6 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { ArrowRight, Building2, Star, Users } from "lucide-react";
+import { ArrowRight, Building2 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 
@@ -8,15 +8,8 @@ import { Button } from "@/components/ui/button";
 export const RECRUITMENT_LOGIN_URL = "https://recruitment.ekazi.co.tz/login";
 
 type FeaturedEmployersBannerProps = {
-  employerCount?: string;
   className?: string;
 };
-
-const avatars = [
-  "https://images.unsplash.com/photo-1531123897727-8f129e1688ce?w=100&h=100&fit=crop",
-  "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop",
-  "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop",
-];
 
 const heroImage =
   "https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=1200&q=80&auto=format&fit=crop";
@@ -26,7 +19,6 @@ const heroImage =
  * Sends employers to the recruitment platform to sign in and post jobs.
  */
 const FeaturedEmployersBanner: React.FC<FeaturedEmployersBannerProps> = ({
-  employerCount = "500+",
   className = "",
 }) => {
   const navigate = useNavigate();
@@ -34,11 +26,11 @@ const FeaturedEmployersBanner: React.FC<FeaturedEmployersBannerProps> = ({
   return (
     <section
       aria-labelledby="employers-hero-title"
-      className={`relative isolate overflow-hidden bg-gradient-to-br from-slate-50 via-white to-orange-50/60 ${className}`}
+      className={`relative isolate overflow-hidden bg-linear-to-br from-slate-50 via-white to-orange-50/60 ${className}`}
     >
       {/* Background decoration (same language as the homepage hero) */}
       <div aria-hidden className="pointer-events-none absolute inset-0 -z-10">
-        <div className="absolute -right-24 -top-32 h-[28rem] w-[28rem] rounded-full bg-Orange/20 blur-3xl" />
+        <div className="absolute -right-24 -top-32 h-[28rem] w-md rounded-full bg-Orange/20 blur-3xl" />
         <div className="absolute -bottom-40 -left-32 h-[30rem] w-[30rem] rounded-full bg-Blue/10 blur-3xl" />
         <div
           className="absolute inset-0 opacity-[0.35]"
@@ -67,7 +59,7 @@ const FeaturedEmployersBanner: React.FC<FeaturedEmployersBannerProps> = ({
             className="animate__animated animate__fadeInDown mt-5 text-4xl font-bold leading-[1.1] tracking-tight text-Blue sm:text-5xl lg:text-[52px]"
           >
             Hire smarter & manage recruitment{" "}
-            <span className="bg-gradient-to-r from-Orange to-orange-400 bg-clip-text text-transparent">
+            <span className="bg-linear-to-r from-Orange to-orange-400 bg-clip-text text-transparent">
               effortlessly
             </span>
           </h1>
@@ -104,57 +96,16 @@ const FeaturedEmployersBanner: React.FC<FeaturedEmployersBannerProps> = ({
               Sign in to your dashboard
             </a>
           </p>
-
-          <div className="mt-8 flex items-center gap-3.5 text-sm text-gray-600">
-            <div className="flex -space-x-2.5">
-              {avatars.map((src) => (
-                <img
-                  key={src}
-                  src={src}
-                  alt=""
-                  loading="lazy"
-                  className="h-9 w-9 rounded-full border-2 border-white object-cover shadow-sm"
-                />
-              ))}
-            </div>
-            <span>
-              Join{" "}
-              <strong className="text-Blue">{employerCount} employers</strong>{" "}
-              hiring on Ekazi
-            </span>
-          </div>
         </div>
 
         {/* Media */}
         <div className="relative mx-auto w-full max-w-xl lg:col-span-6 lg:max-w-none">
-          <div className="absolute -inset-3 -z-10 rotate-2 rounded-[2rem] bg-gradient-to-br from-Orange to-orange-300 opacity-90 shadow-2xl shadow-orange-500/30" />
+          <div className="absolute -inset-3 -z-10 rotate-2 rounded-[2rem] bg-linear-to-br from-Orange to-orange-300 opacity-90 shadow-2xl shadow-orange-500/30" />
           <img
             src={heroImage}
             alt="A diverse team collaborating around laptops in a modern office"
             className="h-72 w-full rounded-3xl object-cover shadow-2xl shadow-slate-900/20 sm:h-[400px]"
           />
-
-          {/* Floating chip: applicants */}
-          <div className="emp-float absolute bottom-4 left-4 flex items-center gap-3 rounded-2xl bg-white/95 px-4 py-3 shadow-xl backdrop-blur lg:-left-8 lg:bottom-8">
-            <div className="grid h-10 w-10 place-items-center rounded-xl bg-Blue/10 text-Blue">
-              <Users className="h-5 w-5" />
-            </div>
-            <div className="text-xs text-gray-500">
-              <p className="text-base font-bold text-Blue">3x more</p>
-              applicants
-            </div>
-          </div>
-
-          {/* Floating chip: placement */}
-          <div className="emp-float-delay absolute right-4 top-4 hidden items-center gap-3 rounded-2xl bg-white/95 px-4 py-3 shadow-xl backdrop-blur sm:flex lg:-right-6 lg:top-8">
-            <div className="grid h-10 w-10 place-items-center rounded-xl bg-orange-50 text-Orange">
-              <Star className="h-5 w-5 fill-current" />
-            </div>
-            <div className="text-xs text-gray-500">
-              <p className="text-base font-bold text-Blue">Top placement</p>
-              in search
-            </div>
-          </div>
         </div>
       </div>
 

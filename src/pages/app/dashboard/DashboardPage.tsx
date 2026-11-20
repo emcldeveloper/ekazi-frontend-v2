@@ -1,16 +1,14 @@
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import {
   Bookmark,
   Briefcase,
   FileDown,
   Layers,
   Megaphone,
-  Search,
   Sparkles,
 } from "lucide-react";
 
 import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 
 import RecommendedJobs from "./components/RecommendedJobs";
 import { useDashboardStatistics } from "@/hooks/dashboard";
@@ -82,12 +80,12 @@ const DashboardPage = () => {
           </p>
         </div>
 
-        <div className="flex shrink-0 flex-col gap-2 sm:flex-row">
+        {/* <div className="flex shrink-0 flex-col gap-2 sm:flex-row">
           <Button render={<Link to="/app/jobs" />}>
             <Search className="size-4" aria-hidden="true" />
             Find jobs
           </Button>
-        </div>
+        </div> */}
       </section>
 
       {/* ad */}

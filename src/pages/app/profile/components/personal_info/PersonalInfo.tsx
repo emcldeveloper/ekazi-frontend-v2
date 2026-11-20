@@ -32,7 +32,7 @@ const PersonalInfo = ({ applicant }: PersonalInfoProps) => {
           />
 
           <div className="absolute bottom-0 left-20 h-6 w-6">
-            <ProfileImageModal />
+            <ProfileImageModal currentImageUrl={profileImage} />
           </div>
         </div>
 

@@ -1,11 +1,12 @@
 import { Download } from "lucide-react";
 
 import { Separator } from "@/components/ui/separator";
-import { formatName, getFileNameFromUrl } from "@/utils/helpers";
+import { formatName } from "@/utils/helpers";
 import CreateReferee from "./CreateReferee";
 import SectionTitle from "../SectionTitle";
 import UpdateReferee from "./UpdateReferee";
 import DeleteReferee from "./DeleteReferee";
+import { getFileNameFromUrl } from "@/utils/file-helpers";
 
 interface RefereesProps {
   applicant: any;

@@ -10,5 +10,6 @@ export const useNotifications = ({ page = 1, limit = 25, search = "" }) => {
         search,
       }),
     queryKey: ["notifications", page, limit, search],
+    refetchInterval: 30000,
   });
 };

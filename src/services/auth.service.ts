@@ -71,6 +71,6 @@ export const updateUser = async (payload: any) => {
 };
 
 export const uploadUserImage = async (payload: any) => {
-  const res = await api.patch(`/auth/user/image`, payload);
+  const res = await api.patch(`/auth/user/profile-picture`, payload);
   return res.data;
 };

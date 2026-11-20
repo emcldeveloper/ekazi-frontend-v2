@@ -132,12 +132,12 @@ export type ExperiencePayload = {
   id?: number;
   applicant_id: number;
   experience_type_id: number;
-  applicant_employer_id: number;
+  applicant_employer_id: number | string;
   employer_name: string;
   region_id: number;
   country_id?: number;
   sub_location: string;
-  position_id: number;
+  position_id: number | string;
   position_name: string;
   position_level_id: number;
   industry_id: number;
@@ -197,8 +197,8 @@ export type CulturesPayload = {
 export type ProficiencyPayload = {
   organization_id: number | string;
   proficiency_id: number | string;
-  started: string;
-  ended: string;
+  started: number | string;
+  ended: number | string;
   award: string;
   attachment: File;
 };

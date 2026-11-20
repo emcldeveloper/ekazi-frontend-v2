@@ -30,6 +30,7 @@ import {
   Archive,
   Settings,
   FilePen,
+  Bell,
 } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 
@@ -110,6 +111,11 @@ const navItems: NavItem[] = [
     icon: MessageCircle,
   },
   {
+    title: "Notifications",
+    url: "/app/notifications",
+    icon: Bell,
+  },
+  {
     title: "Salary Calculator",
     url: "/app/salary-calculator",
     icon: Calculator,
@@ -130,11 +136,7 @@ const navItems: NavItem[] = [
   //   url: "/app/subscription",
   //   icon: Settings,
   // },
-  // {
-  //   title: "Notifications",
-  //   url: "/app/notifications",
-  //   icon: Bell,
-  // },
+
   {
     title: "Settings",
     url: "/app/settings",

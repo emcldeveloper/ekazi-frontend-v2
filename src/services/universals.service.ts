@@ -85,8 +85,22 @@ export const getJobTypes = async () => {
   return res.data?.data;
 };
 
-export const getSalaryRanges = async () => {
-  const res = await api.get("/salary-ranges");
+export const getSalaryRanges = async ({
+  search,
+  page,
+  limit,
+}: {
+  search: string;
+  page: number;
+  limit: number;
+}) => {
+  const res = await api.get("/salary-ranges", {
+    params: {
+      search,
+      page,
+      limit,
+    },
+  });
   return res.data?.data;
 };
 

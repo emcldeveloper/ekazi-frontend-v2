@@ -30,7 +30,7 @@ const AddExperience = () => {
           <DialogTitle>Add Experience</DialogTitle>
         </DialogHeader>
 
-        <div className="-mx-4 max-h-[70vh] overflow-y-auto px-4">
+        <div className="-mx-4 max-h-[65vh] overflow-y-auto px-4">
           <ExperienceForm onLoadingChange={setIsSubmitting} />
         </div>
 

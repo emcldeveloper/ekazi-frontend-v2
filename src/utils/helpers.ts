@@ -74,18 +74,6 @@ export const formatCurrency = (amount: number) =>
     maximumFractionDigits: 0,
   }).format(amount);
 
-export const getFileNameFromUrl = (url: string | null | undefined): string => {
-  if (!url) return "";
-  const fullName = url.split("/").pop() as string;
-  const dotIndex = fullName.lastIndexOf(".");
-  if (dotIndex === -1) return fullName;
-
-  const name = fullName.slice(0, dotIndex);
-  const ext = fullName.slice(dotIndex);
-
-  return name.length > 10 ? `${name.slice(0, 7)}...${ext}` : fullName;
-};
-
 export const formatName = (...parts: string[]): string =>
   parts
     .filter(Boolean)

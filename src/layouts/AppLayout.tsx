@@ -5,7 +5,7 @@ import {
   SidebarTrigger,
 } from "@/components/ui/sidebar";
 import { AppSidebar } from "./AppSidebar";
-import { Link, Outlet } from "react-router-dom";
+import { Link, Outlet, useNavigate } from "react-router-dom";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { Button } from "@/components/ui/button";
 import { BellIcon, LogOut } from "lucide-react";
@@ -16,12 +16,25 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useQueryClient } from "@tanstack/react-query";
-import { FRONTEND_URL } from "@/config";
+import { BASE_URL, FRONTEND_URL } from "@/config";
+import { useUser } from "@/hooks/auth";
+import { useNotifications } from "@/hooks/notifications";
 
 export default function AppLayout() {
+  const navigate = useNavigate();
+
   const queryClient = useQueryClient();
+
+  const { data: notifications } = useNotifications({});
+  const unReadNotifications = notifications?.unread_count ?? 0;
+
+  const { data: user } = useUser();
+
+  const accountImage = user?.profile_picture
+    ? `${BASE_URL}/${user?.profile_picture.replace(/^\//, "")}`
+    : `${BASE_URL}/uploads/picture/pre_photo.jpg`;
 
   // logout
   const handleLogout = () => {
@@ -47,9 +60,16 @@ export default function AppLayout() {
             <Button
               variant="outline"
               size="icon"
+              className="relative"
               render={<Link to="/app/notifications" />}
             >
               <BellIcon size={20} />
+
+              {unReadNotifications > 0 && (
+                <span className="absolute -top-0.5 -right-0.5 flex h-3 min-w-3 items-center justify-center rounded-full bg-Orange px-1 text-[10px] font-semibold text-white">
+                  {unReadNotifications > 99 ? "99+" : unReadNotifications}
+                </span>
+              )}
             </Button>
 
             <ThemeToggle />
@@ -68,18 +88,25 @@ export default function AppLayout() {
                     className="relative h-9 w-9 rounded-full p-0"
                   >
                     <Avatar className="h-9 w-9">
-                      <AvatarFallback>AV</AvatarFallback>
+                      <AvatarImage src={accountImage} alt={user.username} />
+                      <AvatarFallback>
+                        {" "}
+                        {user?.username?.charAt(0)?.toUpperCase() || "U"}
+                      </AvatarFallback>
                     </Avatar>
                   </Button>
                 </DropdownMenuTrigger>
 
                 <DropdownMenuContent align="end">
-                  <DropdownMenuItem>Profile</DropdownMenuItem>
-                  <DropdownMenuItem>Settings</DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => navigate("/app/settings")}>
+                    Account
+                  </DropdownMenuItem>
 
                   <DropdownMenuSeparator />
 
-                  <DropdownMenuItem>Logout</DropdownMenuItem>
+                  <DropdownMenuItem onClick={handleLogout}>
+                    Logout
+                  </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
             </div>

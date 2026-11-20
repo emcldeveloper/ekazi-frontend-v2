@@ -12,7 +12,7 @@ import {
   DialogTrigger,
   DialogClose,
 } from "@/components/ui/dialog";
-import { Field, FieldLabel } from "@/components/ui/field";
+import { Field, FieldError, FieldLabel } from "@/components/ui/field";
 import { Button } from "@/components/ui/button";
 
 import CreatableSelect from "react-select/creatable";
@@ -128,9 +128,7 @@ const AddPersonalitiesModal = ({
             />
 
             {errors.personality && (
-              <p className="text-sm text-red-500">
-                {errors.personality.message}
-              </p>
+              <FieldError>{errors.personality.message}</FieldError>
             )}
           </Field>
         </form>

@@ -1,79 +1,70 @@
-import { useEffect, useRef, useState, type ChangeEvent } from "react";
-import { Link } from "react-router-dom";
-import {
-  Camera,
-  CheckCircle2,
-  Mail,
-  ShieldCheck,
-  Sparkles,
-} from "lucide-react";
+import { useEffect } from "react";
+import { useForm } from "react-hook-form";
+import { CheckCircle2, Loader } from "lucide-react";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
+import {
+  Field,
+  FieldError,
+  FieldGroup,
+  FieldLabel,
+} from "@/components/ui/field";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
 
-import { useUploadUserImage, useUser } from "@/hooks/auth";
+import { useUpdateUser, useUser } from "@/hooks/auth";
+import AccountImageModal from "./AccountImageModal";
+import { BASE_URL } from "@/config";
 import { toast } from "sonner";
-import { useForm } from "react-hook-form";
+import { getErrorMessage } from "@/utils/axios-helpers";
+
+type FormDataPayload = {
+  username: string;
+  email: string;
+};
 
 const AccountPage = () => {
   const { data: user } = useUser();
+
+  const accountImage = user?.profile_picture
+    ? `${BASE_URL}/${user.profile_picture.replace(/^\//, "")}`
+    : `${BASE_URL}/uploads/picture/pre_photo.jpg`;
 
   const {
     register,
     handleSubmit,
     reset,
-    formState: { isDirty, isSubmitting },
-  } = useForm({
-    defaultValues: {
-      username: "",
-      email: "",
-      phone: "",
-    },
-  });
+    formState: { errors },
+  } = useForm<FormDataPayload>();
 
-  const { mutate: uploadImage } = useUploadUserImage();
-
-  const fileInputRef = useRef<HTMLInputElement>(null);
-
-  const [previewImage, setPreviewImage] = useState("");
+  const { mutate: updateUser, isPending } = useUpdateUser();
 
   useEffect(() => {
     if (user) {
       reset({
-        username: user.username || "",
-        email: user.email || "",
-        phone: user.phone || "",
+        username: user.username,
+        email: user.email,
       });
-
-      setPreviewImage(user.imgurl || "");
     }
   }, [user, reset]);
 
-  const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
+  const onSubmit = (data: FormDataPayload) => {
+    const payload = {
+      username: data.username,
+    };
 
-    if (!file) return;
+    updateUser(payload, {
+      onSuccess: (res) => {
+        toast.success(res?.message || "Username updated");
 
-    if (!["image/jpeg", "image/png", "image/webp"].includes(file.type)) {
-      toast.error("Please select a JPG, PNG or WEBP image.");
-      return;
-    }
-
-    if (file.size > 5 * 1024 * 1024) {
-      toast.error("Image must not exceed 5MB.");
-      return;
-    }
-
-    setPreviewImage(URL.createObjectURL(file));
-    uploadImage(file);
+        reset();
+      },
+      onError: (err) => toast.error(getErrorMessage(err)),
+    });
   };
-
-  const onSubmit = () => {};
 
   return (
     <Card className="mt-6 border shadow-sm">
@@ -91,73 +82,32 @@ const AccountPage = () => {
         {/* Profile Header */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="flex items-center gap-8">
-            <div className="relative">
-              <Avatar className="h-20 w-20 border">
-                <AvatarImage src={previewImage} alt="Profile" />
-                <AvatarFallback className="bg-blue-50 text-blue-700 text-xl">
-                  {user?.username?.charAt(0)?.toUpperCase() || "U"}
-                </AvatarFallback>
-              </Avatar>
-
-              <Button
-                type="button"
-                variant="ghost"
-                onClick={() => fileInputRef.current?.click()}
-                className="absolute -bottom-1 -right-1 flex h-7 w-7 items-center justify-center rounded-full border bg-background shadow-sm hover:bg-muted"
-              >
-                <Camera size={14} />
-              </Button>
-            </div>
+            <Avatar className="h-20 w-20 border">
+              <AvatarImage src={accountImage} alt="Profile" />
+              <AvatarFallback className="bg-blue-50 text-blue-700 text-xl">
+                {user?.username?.charAt(0)?.toUpperCase() || "U"}
+              </AvatarFallback>
+            </Avatar>
 
             <div className="space-y-1">
               <div className="flex flex-wrap items-center gap-2">
                 <h3 className="font-semibold text-base">
                   {user?.username || "Username"}
                 </h3>
-
-                {user?.verified && (
-                  <Badge className="bg-green-50 text-green-700 border border-green-200 hover:bg-green-50">
-                    <CheckCircle2 className="mr-1 h-3 w-3" />
-                    Verified
-                  </Badge>
-                )}
               </div>
 
               <p className="text-sm text-muted-foreground">{user?.email}</p>
 
-              <Button
-                variant="link"
-                size="sm"
-                className="p-0"
-                render={<Link to="/app/subscription/plans" />}
-              >
-                <Sparkles /> Upgrade to featured
-              </Button>
-
-              {/* <Badge variant="secondary" className="gap-1">
-                <Crown size={12} />
-                {user?.role?.name || "Member"} Account
-              </Badge> */}
+              {user?.verified && (
+                <Badge className="bg-green-50 text-green-700 border border-green-200 hover:bg-green-50">
+                  <CheckCircle2 className="mr-1 h-3 w-3" />
+                  Verified
+                </Badge>
+              )}
             </div>
           </div>
 
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => fileInputRef.current?.click()}
-            className="gap-2"
-          >
-            <Camera size={14} />
-            Change photo
-          </Button>
-
-          <input
-            ref={fileInputRef}
-            type="file"
-            accept="image/png,image/jpeg,image/webp"
-            className="hidden"
-            onChange={handleImageChange}
-          />
+          <AccountImageModal currentImageUrl={accountImage} />
         </div>
 
         <Separator />
@@ -175,7 +125,18 @@ const AccountPage = () => {
             <FieldGroup className="space-y-2">
               <Field className="grid grid-cols-1 sm:grid-cols-[200px_1fr] items-center gap-2 sm:gap-4">
                 <FieldLabel>Username</FieldLabel>
-                <Input {...register("username")} placeholder="Enter username" />
+                <div>
+                  <Input
+                    {...register("username", {
+                      required: "Username is required",
+                    })}
+                    placeholder="Enter username"
+                    className="mb-1"
+                  />
+                  {errors.username && (
+                    <FieldError>{errors.username.message}</FieldError>
+                  )}
+                </div>
               </Field>
 
               <Field className="grid grid-cols-1 sm:grid-cols-[200px_1fr] items-center gap-2 sm:gap-4">
@@ -187,14 +148,6 @@ const AccountPage = () => {
                   readOnly
                 />
               </Field>
-
-              <Field className="grid grid-cols-1 sm:grid-cols-[200px_1fr] items-center gap-2 sm:gap-4">
-                <FieldLabel>Phone number</FieldLabel>
-                <Input
-                  {...register("phone")}
-                  placeholder="Enter phone number"
-                />
-              </Field>
             </FieldGroup>
 
             <div className="flex justify-end gap-2">
@@ -202,53 +155,18 @@ const AccountPage = () => {
                 Cancel
               </Button>
 
-              <Button type="submit" disabled={!isDirty || isSubmitting}>
-                Save changes
+              <Button type="submit" disabled={isPending}>
+                {isPending ? (
+                  <>
+                    <Loader className="animate-spin" />
+                    Saving...
+                  </>
+                ) : (
+                  "Save changes"
+                )}
               </Button>
             </div>
           </form>
-        </div>
-
-        <Separator />
-
-        {/* Account Information */}
-        <div className="space-y-4">
-          <div>
-            <h3 className="font-semibold text-sm">Account Information</h3>
-            <p className="text-xs text-muted-foreground mt-1">
-              Information about your account membership and access.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div className="flex items-start gap-3 rounded-lg border p-4">
-              <div className="rounded-md bg-blue-50 p-2 text-blue-600">
-                <ShieldCheck size={18} />
-              </div>
-
-              <div>
-                <p className="text-xs text-muted-foreground">Account type</p>
-                <p className="font-medium text-sm mt-1">
-                  {user?.role?.name || "Member"}
-                </p>
-              </div>
-            </div>
-
-            <div className="flex items-start gap-3 rounded-lg border p-4">
-              <div className="rounded-md bg-green-50 p-2 text-green-600">
-                <Mail size={18} />
-              </div>
-
-              <div>
-                <p className="text-xs text-muted-foreground">
-                  Email verification
-                </p>
-                <p className="font-medium text-sm mt-1">
-                  {user?.verified ? "Verified" : "Not verified"}
-                </p>
-              </div>
-            </div>
-          </div>
         </div>
       </CardContent>
     </Card>

@@ -1,15 +1,12 @@
 import { Download } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
-import {
-  capitalizeText,
-  formatYear,
-  getFileNameFromUrl,
-} from "@/utils/helpers";
+import { capitalizeText, formatYear } from "@/utils/helpers";
 import CreateTraining from "./CreateTraining";
 import SectionTitle from "../SectionTitle";
 import { Badge } from "@/components/ui/badge";
 import UpdateTraining from "./UpdateTraining";
 import DeleteTraining from "./DeleteTraining";
+import { getFileNameFromUrl, getFileUrl } from "@/utils/file-helpers";
 
 interface TrainingsProps {
   applicant: any;
@@ -52,7 +49,7 @@ const Trainings = ({ applicant }: TrainingsProps) => {
                   {/* Attachment */}
                   {training.attachment && (
                     <a
-                      href={training.attachment}
+                      href={getFileUrl(training.attachment)}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="flex items-center gap-1 text-xs text-primary hover:underline"

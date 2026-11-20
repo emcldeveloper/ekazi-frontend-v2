@@ -108,8 +108,8 @@ const EducationForm = ({ education, onLoadingChange }: EducationFormProps) => {
       reset({
         education_level_id: education.education_level?.id,
         college_id: education.college?.id,
-        course_id: education.course_id?.id,
-        major_id: education.major_id?.id,
+        course_id: education.course?.id,
+        major_id: education.major?.id,
         started: education.started,
         ended: education.ended,
       });

@@ -11,6 +11,7 @@ import {
 } from "@/hooks/notifications";
 import { formatDate } from "@/utils/helpers";
 import LoadingState from "@/components/loading-state";
+import { Badge } from "@/components/ui/badge";
 
 const JOBS_ROUTE = "/app/jobs";
 
@@ -89,56 +90,53 @@ const NotificationsPage = () => {
       ) : (
         <div className="mt-6">
           {notifications.map((notification: any) => (
-            <div
-              onClick={() => handleRead(notification.id)}
-              className={`flex items-start gap-3 border-b border-border/60
-        px-4 py-5 transition-colors last:border-b-0
-        hover:bg-muted/30 sm:gap-4 
-        ${!notification.readed ? "bg-gray-100 dark:bg-gray-800" : ""}`}
-            >
-              <div
-                className="flex size-11 shrink-0 items-center
+            <Card size="sm">
+              <CardContent>
+                <div
+                  onClick={() => handleRead(notification.id)}
+                  className={`flex items-start gap-3 border-b border-border/60 py-5 last:border-b-0 sm:gap-4 hover:cursor-pointer`}
+                >
+                  <div
+                    className="flex size-11 shrink-0 items-center
           justify-center rounded-xl"
-              >
-                <CircleUser className="size-5" />
-              </div>
-
-              <div className="min-w-0 flex-1 flex justify-between gap-2">
-                <div>
-                  <p className="text-sm leading-relaxed">
-                    {notification.message}
-                  </p>
-
-                  <time
-                    dateTime={notification.created_at}
-                    className="text-xs text-muted-foreground"
                   >
-                    {formatDate(notification.created_at)}
-                  </time>
-                </div>
+                    <CircleUser className="size-5" />
+                  </div>
 
-                <div className="flex items-start justify-between gap-3">
-                  {!notification.readed ? (
-                    <span
-                      className="mt-1.5 size-2 shrink-0 rounded-full
-                bg-blue-600"
-                      aria-label="Unread notification"
-                    />
-                  ) : (
+                  <div className="min-w-0 flex-1 flex justify-between gap-2">
                     <div>
-                      <Button
-                        size="sm"
-                        variant="ghost"
-                        disabled={isDeleting}
-                        onClick={() => handleDelete(notification.id)}
+                      <p className="text-sm leading-relaxed">
+                        {notification.message}
+                      </p>
+
+                      <time
+                        dateTime={notification.created_at}
+                        className="text-xs text-muted-foreground"
                       >
-                        <Trash2 />
-                      </Button>
+                        {formatDate(notification.created_at)}
+                      </time>
                     </div>
-                  )}
+
+                    <div className="flex items-start justify-between gap-3">
+                      {!notification.readed ? (
+                        <Badge>Unread</Badge>
+                      ) : (
+                        <div>
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            disabled={isDeleting}
+                            onClick={() => handleDelete(notification.id)}
+                          >
+                            <Trash2 />
+                          </Button>
+                        </div>
+                      )}
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </div>
+              </CardContent>
+            </Card>
           ))}
         </div>
       )}

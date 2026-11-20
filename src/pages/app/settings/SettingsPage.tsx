@@ -12,10 +12,6 @@ const SettingsPage = () => {
             Settings
           </h1>
         </div>
-        {/* <Button type="button" variant="outline">
-          <CheckCheck className="size-4 text-primary" aria-hidden="true" />
-          Mark all as read
-        </Button> */}
       </header>
 
       <Tabs defaultValue="account">

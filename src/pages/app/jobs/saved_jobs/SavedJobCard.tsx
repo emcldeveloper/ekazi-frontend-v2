@@ -143,8 +143,16 @@ const SavedJobCard = ({
         {/* Company logo */}
         <div className="flex h-[75px] w-[120px] shrink-0 items-center justify-center rounded-lg  p-2">
           <img
-            src={companyLogo ? `${IMG_BASE}${companyLogo}` : DEFAULT_IMG}
+            src={
+              companyLogo
+                ? `${IMG_BASE}/${companyLogo.replace(/^\/+/, "")}`
+                : DEFAULT_IMG
+            }
             alt={companyName || "Company Logo"}
+            onError={(e) => {
+              e.currentTarget.onerror = null;
+              e.currentTarget.src = DEFAULT_IMG;
+            }}
             className="max-h-full max-w-full object-contain"
           />
         </div>

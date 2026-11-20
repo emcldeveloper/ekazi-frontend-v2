@@ -5,6 +5,8 @@ import { formatDate } from "@/utils/helpers";
 import EditEducation from "./EditEducation";
 import DeleteEducation from "./DeleteEducation";
 import SectionTitle from "../SectionTitle";
+import { Download } from "lucide-react";
+import { getFileNameFromUrl, getFileUrl } from "@/utils/file-helpers";
 
 interface EducationProps {
   applicant: any;
@@ -50,6 +52,19 @@ const Education = ({ applicant }: EducationProps) => {
                     {formatDate(education.started)} –{" "}
                     {formatDate(education.ended)}
                   </p>
+
+                  {/* Attachment */}
+                  {education.attachment && (
+                    <a
+                      href={getFileUrl(education.attachment)}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-1 text-xs text-primary hover:underline"
+                    >
+                      <Download className="w-3.5 h-3.5" />
+                      {getFileNameFromUrl(education.attachment)}
+                    </a>
+                  )}
                 </div>
 
                 <div>

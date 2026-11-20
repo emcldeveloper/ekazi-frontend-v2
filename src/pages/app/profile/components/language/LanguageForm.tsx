@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { useForm, Controller } from "react-hook-form";
 import SearchSelect from "react-select";
 
-import { FieldLabel } from "@/components/ui/field";
+import { FieldError, FieldLabel } from "@/components/ui/field";
 
 import { toast } from "sonner";
 import { getErrorMessage } from "@/utils/axios-helpers";
@@ -157,11 +157,7 @@ const LanguageForm = ({ language, onLoadingChange }: LanguageFormProps) => {
               )}
             />
 
-            {errors[name] && (
-              <p className="text-sm text-destructive mt-1">
-                {errors[name].message}
-              </p>
-            )}
+            {errors[name] && <FieldError>{errors[name].message}</FieldError>}
           </div>
         </div>
       ))}

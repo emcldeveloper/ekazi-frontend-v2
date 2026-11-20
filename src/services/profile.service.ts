@@ -31,7 +31,7 @@ export const updatePersonalInfo = async (payload: PersonalInfoPayload) => {
 };
 
 export const uploadProfileImage = async (formData: FormData) => {
-  const res = await api.post("/applicant/profileimagesave", formData);
+  const res = await api.patch("/applicant/profile-picture", formData);
   return res.data;
 };
 
@@ -230,7 +230,7 @@ export const createTraining = async (payload: FormData) => {
 };
 
 export const updateTraining = async (id: number, payload: FormData) => {
-  const res = await api.post(`/applicant/trainings/${id}`, payload);
+  const res = await api.patch(`/applicant/trainings/${id}`, payload);
   return res.data;
 };
 

@@ -2,15 +2,12 @@ import { Download } from "lucide-react";
 
 import { Separator } from "@/components/ui/separator";
 
-import {
-  capitalizeText,
-  formatYear,
-  getFileNameFromUrl,
-} from "@/utils/helpers";
+import { capitalizeText } from "@/utils/helpers";
 import CreateProficiency from "./CreateProficiency";
 import SectionTitle from "../SectionTitle";
 import UpdateProficiency from "./UpdateProficiency";
 import DeleteProficiency from "./DeleteProficiency";
+import { getFileNameFromUrl, getFileUrl } from "@/utils/file-helpers";
 
 interface ProficienciesProps {
   applicant: any;
@@ -54,13 +51,13 @@ const Proficiencies = ({ applicant }: ProficienciesProps) => {
                   </p>
 
                   <div>
-                    {formatYear(item.started)} - {formatYear(item.ended)}
+                    {item.started} - {item.ended}
                   </div>
 
                   {/* Attachment */}
                   {item.attachment && (
                     <a
-                      href={item.attachment}
+                      href={getFileUrl(item.attachment)}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="flex items-center gap-1 text-xs text-primary hover:underline"

@@ -32,10 +32,10 @@ const EditExperience = ({ experience }: EditExperienceProps) => {
 
       <DialogContent className="sm:max-w-3xl">
         <DialogHeader>
-          <DialogTitle>Add Experience</DialogTitle>
+          <DialogTitle>Update Experience</DialogTitle>
         </DialogHeader>
 
-        <div className="-mx-4 max-h-[70vh] overflow-y-auto px-4">
+        <div className="-mx-4 max-h-[65vh] overflow-y-auto px-4">
           <ExperienceForm
             experience={experience}
             onLoadingChange={setIsSubmitting}
