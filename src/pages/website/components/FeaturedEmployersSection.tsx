@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { DEFAULT_IMG, IMG_BASE } from "@/config";
+import { BASE_URL, DEFAULT_IMG, IMG_BASE } from "@/config";
 import { useEmployers } from "@/hooks/employers";
 
 // Repeat the list until a row is long enough to scroll seamlessly,
@@ -81,9 +81,18 @@ const FeaturedEmployersSection = () => {
               >
                 {row.map((employer: any, idx: number) => {
                   const name = employer.client_name || "Employer";
-                  const logoURL = employer.logo
-                    ? `${IMG_BASE}/${employer.logo}`
+                  // const logoURL = employer.logo
+                  //   ? `${IMG_BASE}/${employer.logo}`
+                  //   : DEFAULT_IMG;
+
+                  const logo = employer.logo;
+                  const primaryLogo = logo
+                    ? `${BASE_URL}/${logo}`
                     : DEFAULT_IMG;
+                  const secondaryLogo = logo
+                    ? `${IMG_BASE}/${logo}`
+                    : DEFAULT_IMG;
+
                   // Second half is the visual duplicate; hide it from screen readers.
                   const isDuplicate = idx >= row.length / 2;
 
@@ -99,12 +108,19 @@ const FeaturedEmployersSection = () => {
                       className="group relative flex h-20 w-36 shrink-0 items-center justify-center rounded-2xl border border-gray-100 bg-white px-5 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-orange-200 hover:shadow-lg hover:shadow-orange-500/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-Orange sm:h-24 sm:w-44"
                     >
                       <img
-                        src={logoURL}
+                        src={primaryLogo}
                         alt={name}
                         loading="lazy"
-                        onError={(e) => {
-                          if (e.currentTarget.src !== DEFAULT_IMG)
-                            e.currentTarget.src = DEFAULT_IMG;
+                        onError={({ currentTarget: img }) => {
+                          const attempted = img.getAttribute("src");
+
+                          if (attempted === DEFAULT_IMG) return;
+
+                          img.src =
+                            attempted === primaryLogo &&
+                            secondaryLogo !== primaryLogo
+                              ? secondaryLogo
+                              : DEFAULT_IMG;
                         }}
                         className="max-h-12 max-w-full object-contain opacity-70 grayscale transition duration-300 group-hover:opacity-100 group-hover:grayscale-0 sm:max-h-14"
                       />
@@ -140,91 +156,3 @@ const FeaturedEmployersSection = () => {
 };
 
 export default FeaturedEmployersSection;
-
-// import { useNavigate } from "react-router-dom";
-
-// import { DEFAULT_IMG, IMG_BASE } from "@/config";
-// import { useEmployers } from "@/hooks/employers";
-
-// const FeaturedEmployersSection = () => {
-//   const navigate = useNavigate();
-
-//   const { data: jobCompanies, isLoading } = useEmployers({});
-
-//   const safeCompanies = jobCompanies?.data ?? [];
-
-//   const employers = [
-//     ...safeCompanies,
-//     ...safeCompanies,
-//     ...safeCompanies,
-//     ...safeCompanies,
-//   ];
-
-//   return (
-//     <section className="bg-white  overflow-hidden">
-//       <div className="container mx-auto px-10 py-16">
-//         {/* Title */}
-//         <h2 className="text-center text-3xl font-semibold text-Blue mb-10">
-//           Featured Employers
-//         </h2>
-
-//         {/* Loader */}
-//         {isLoading ? (
-//           <div className="flex justify-center">
-//             <div className="h-8 w-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
-//           </div>
-//         ) : (
-//           <div className="relative w-full overflow-hidden">
-//             {/* Scroll container */}
-//             <div className="flex gap-4 employer-scroll">
-//               {employers.map((employer, idx) => {
-//                 const logoURL = employer.logo
-//                   ? `${IMG_BASE}/${employer.logo}`
-//                   : DEFAULT_IMG;
-
-//                 return (
-//                   <div
-//                     key={`${employer.id}-${idx}`}
-//                     onClick={() =>
-//                       navigate(`/employer/details`, {
-//                         state: { client: employer },
-//                       })
-//                     }
-//                     className="shrink-0"
-//                   >
-//                     <div className="w-24 h-24 md:w-28 md:h-28 bg-white border border-white rounded-xl flex items-center justify-center hover:shadow-md transition hover:-translate-y-1 cursor-pointer">
-//                       <img
-//                         src={logoURL}
-//                         alt={employer.client_name || "Employer"}
-//                         className="max-w-full max-h-full object-contain"
-//                       />
-//                     </div>
-//                   </div>
-//                 );
-//               })}
-//             </div>
-//           </div>
-//         )}
-//       </div>
-
-//       {/* Animation */}
-//       <style>{`
-//         .employer-scroll {
-//           animation: scrollLeft 35s linear infinite;
-//           width: max-content;
-//         }
-
-//         @keyframes scrollLeft {
-//           0% {
-//             transform: translateX(0);
-//           }
-//           100% {
-//             transform: translateX(-50%);
-//           }
-//         }
-//       `}</style>
-//     </section>
-//   );
-// };
-
-// export default FeaturedEmployersSection;

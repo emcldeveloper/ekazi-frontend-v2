@@ -15,7 +15,7 @@ import {
   type LucideIcon,
 } from "lucide-react";
 
-import { IMG_BASE } from "@/config";
+import { BASE_URL, DEFAULT_IMG, IMG_BASE } from "@/config";
 import JoinModal from "./components/JoinModal";
 import MessageModal from "./components/MessageModal";
 import RateModal from "./components/RateModal";
@@ -157,9 +157,6 @@ const ContactTile = ({
 /* ---------- main component ---------- */
 
 const EmployerDetails = ({ employer }: EmployerDetailsProps) => {
-  const [logoFailed, setLogoFailed] = useState(false);
-  const hasLogo = employer.logo && !logoFailed;
-
   const address = getAddress(employer);
   const location = buildLocation(address);
   const streetAddress = clean(address?.location_notes);
@@ -199,6 +196,10 @@ const EmployerDetails = ({ employer }: EmployerDetailsProps) => {
   const about = clean(employer.additional_info);
   const description = clean(descriptionEntry?.description);
 
+  const logo = employer.logo;
+  const primaryLogo = logo ? `${BASE_URL}/${logo}` : DEFAULT_IMG;
+  const secondaryLogo = logo ? `${IMG_BASE}/${logo}` : DEFAULT_IMG;
+
   const hasContact =
     location || streetAddress || phones.length || emails.length || website;
 
@@ -208,18 +209,21 @@ const EmployerDetails = ({ employer }: EmployerDetailsProps) => {
       <header className="space-y-6">
         <div className="flex flex-col gap-5 sm:flex-row sm:items-start">
           <div className="flex h-24 w-24 shrink-0 items-center justify-center overflow-hidden rounded-2xl border bg-white shadow-sm">
-            {hasLogo ? (
-              <img
-                src={`${IMG_BASE}${employer.logo}`}
-                alt={employer.client_name}
-                onError={() => setLogoFailed(true)}
-                className="h-full w-full object-contain p-3"
-              />
-            ) : (
-              <span className="text-2xl font-bold text-primary">
-                {getInitials(employer.client_name)}
-              </span>
-            )}
+            <img
+              src={primaryLogo}
+              alt={employer.client_name}
+              onError={({ currentTarget: img }) => {
+                const attempted = img.getAttribute("src");
+
+                if (attempted === DEFAULT_IMG) return;
+
+                img.src =
+                  attempted === primaryLogo && secondaryLogo !== primaryLogo
+                    ? secondaryLogo
+                    : DEFAULT_IMG;
+              }}
+              className="h-full w-full object-contain p-3"
+            />
           </div>
 
           <div className="min-w-0 space-y-3">
@@ -363,148 +367,3 @@ const EmployerDetails = ({ employer }: EmployerDetailsProps) => {
 };
 
 export default EmployerDetails;
-
-// import { Building2, Clock, MapPin, Phone, Mail, Globe } from "lucide-react";
-
-// import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-
-// import { DEFAULT_IMG, IMG_BASE } from "@/config";
-// import JoinModal from "./components/JoinModal";
-// import MessageModal from "./components/MessageModal";
-// import RateModal from "./components/RateModal";
-// import EmployerJobs from "./EmployerJobs";
-
-// interface EmployerDetailsProps {
-//   employer: any;
-// }
-
-// const EmployerDetails = ({ employer }: EmployerDetailsProps) => {
-//   const logoUrl = employer.logo
-//     ? `${IMG_BASE}${employer.logo}`
-//     : `${DEFAULT_IMG}`;
-
-//   const createdAt = employer.created_at
-//     ? new Date(employer.created_at).toLocaleDateString("en-US", {
-//         month: "short",
-//         day: "numeric",
-//         year: "numeric",
-//       })
-//     : "";
-
-//   const region = employer.addresses?.[0]?.region?.region_name;
-//   const country = employer.addresses?.[0]?.region?.country?.name;
-//   const location = employer.addresses?.[0]?.sub_location;
-
-//   const phone = employer.client_phones?.[0]?.phone_number;
-//   const email = employer.client_emails?.[0]?.client_email;
-//   const website = employer.client_description?.website;
-
-//   const additionalInfo =
-//     employer.additional_info || "No additional info provided.";
-//   const description =
-//     employer.client_description?.description || "No description available.";
-
-//   return (
-//     <div className="py-10 space-y-4">
-//       <Card>
-//         <CardContent className="space-y-4">
-//           <div className="flex gap-6">
-//             <div className="w-30 h-30">
-//               <img
-//                 src={logoUrl}
-//                 alt="Client Logo"
-//                 className="w-full object-contain"
-//               />
-//             </div>
-
-//             <div className="w-full flex justify-between text-sm text-muted-foreground">
-//               {/* Info */}
-//               <div className="space-y-1">
-//                 <h5 className="text-lg text-Blue font-bold uppercase">
-//                   {employer.client_name}
-//                 </h5>
-
-//                 <div className="flex items-center gap-2">
-//                   <Building2 size={16} />
-//                   <p>
-//                     {employer.industry?.industry_name ||
-//                       "Industry not available"}
-//                   </p>
-//                 </div>
-
-//                 <div className="flex items-center gap-2">
-//                   <Clock size={16} />
-//                   <p>{createdAt}</p>
-//                 </div>
-//               </div>
-//             </div>
-//           </div>
-
-//           {/* Actions */}
-//           <div className="flex gap-4 items-center justify-between">
-//             <JoinModal employer={employer} />
-
-//             <MessageModal clientId={employer.id} />
-
-//             <RateModal clientId={employer.id} />
-//           </div>
-//         </CardContent>
-//       </Card>
-
-//       <Card>
-//         <CardHeader>
-//           <CardTitle className="text-Orange">Contact Information</CardTitle>
-//         </CardHeader>
-//         <CardContent>
-//           {/* Contact */}
-//           <div className="space-y-1">
-//             <p className=" flex items-center gap-2">
-//               <MapPin size={16} />
-//               {location}, {region}, {country}
-//             </p>
-
-//             {phone && (
-//               <p className=" flex items-center gap-2">
-//                 <Phone size={16} />
-//                 {phone}
-//               </p>
-//             )}
-//             {email && (
-//               <p className="flex items-center gap-2">
-//                 <Mail size={16} />
-//                 {email}
-//               </p>
-//             )}
-//             {website && (
-//               <p className="flex items-center gap-2">
-//                 <Globe size={16} />
-//                 <a
-//                   href={`https://${website}`}
-//                   target="_blank"
-//                   rel="noreferrer"
-//                   className="hover:underline"
-//                 >
-//                   {website}
-//                 </a>
-//               </p>
-//             )}
-//           </div>
-//         </CardContent>
-//       </Card>
-
-//       <Card>
-//         <CardHeader>
-//           <CardTitle className="text-Orange">About Company</CardTitle>
-//         </CardHeader>
-//         <CardContent>
-//           <p className="fw-bold text-primary mb-3">{additionalInfo}</p>
-//           <p className="text-muted">{description}</p>
-//         </CardContent>
-//       </Card>
-
-//       <EmployerJobs employer={employer} />
-//     </div>
-//   );
-// };
-
-// export default EmployerDetails;

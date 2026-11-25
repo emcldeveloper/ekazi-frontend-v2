@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 
 import { useIsMobile } from "@/hooks/use-mobile";
 import EmployerDetails from "./EmployerDetails";
+import { BASE_URL, DEFAULT_IMG, IMG_BASE } from "@/config";
 
 interface EmployerCardProps {
   employer: any;
@@ -41,16 +42,29 @@ const getInitials = (name?: string) =>
     .join("");
 
 const EmployerLogo = ({ employer }: { employer: any }) => {
-  const [failed, setFailed] = useState(false);
+  const [failed] = useState(false);
   const hasLogo = employer.logo && !failed;
+
+  const logo = employer.logo;
+  const primaryLogo = logo ? `${BASE_URL}/${logo}` : DEFAULT_IMG;
+  const secondaryLogo = logo ? `${IMG_BASE}/${logo}` : DEFAULT_IMG;
 
   return (
     <div className="flex h-20 w-20 shrink-0 items-center justify-center overflow-hidden rounded-2xl border bg-white shadow-sm transition-transform duration-300 group-hover:scale-105">
       {hasLogo ? (
         <img
-          src={`https://api.ekazi.co.tz/${employer.logo}`}
+          src={primaryLogo}
           alt={employer.client_name}
-          onError={() => setFailed(true)}
+          onError={({ currentTarget: img }) => {
+            const attempted = img.getAttribute("src");
+
+            if (attempted === DEFAULT_IMG) return;
+
+            img.src =
+              attempted === primaryLogo && secondaryLogo !== primaryLogo
+                ? secondaryLogo
+                : DEFAULT_IMG;
+          }}
           className="h-full w-full object-contain p-2"
         />
       ) : (
@@ -144,109 +158,3 @@ const EmployerCard = ({ employer }: EmployerCardProps) => {
 };
 
 export default EmployerCard;
-
-// import { MapPin, Building2 } from "lucide-react";
-
-// import { Drawer, DrawerContent, DrawerTrigger } from "@/components/ui/drawer";
-// import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-// import { Card, CardContent } from "@/components/ui/card";
-// import { Button } from "@/components/ui/button";
-
-// import { useIsMobile } from "@/hooks/use-mobile";
-// import EmployerDetails from "./EmployerDetails";
-
-// interface EmployerCardProps {
-//   employer: any;
-// }
-
-// const EmployerCard = ({ employer }: EmployerCardProps) => {
-//   const isMobile = useIsMobile();
-
-//   const renderLocation = (employer: any) => {
-//     const locationParts = [];
-
-//     if (
-//       employer.addresses?.[0]?.sub_location &&
-//       employer.addresses?.[0].sub_location !== "1"
-//     ) {
-//       locationParts.push(employer.addresses?.[0].sub_location);
-//     }
-//     if (employer.addresses?.[0]?.region?.region_name) {
-//       locationParts.push(employer.addresses?.[0].region.region_name);
-//     }
-//     if (employer.addresses?.[0]?.region?.country?.name) {
-//       locationParts.push(employer.addresses?.[0].region.country.name);
-//     }
-
-//     return locationParts.join(", ") || "Location not available";
-//   };
-
-//   return (
-//     <Card>
-//       <CardContent>
-//         <div className="grid grid-cols-12 items-center gap-4">
-//           {/* Logo */}
-//           <div className="col-span-3 md:col-span-2 flex justify-center">
-//             <img
-//               src={
-//                 employer.logo
-//                   ? `https://api.ekazi.co.tz/${employer.logo}`
-//                   : "/img/default.png"
-//               }
-//               alt={employer.client_name}
-//               className="w-20 object-contain rounded-md"
-//             />
-//           </div>
-
-//           {/* Info */}
-//           <div className="col-span-6 md:col-span-8 space-y-1">
-//             <h6 className="text-primary font-semibold truncate">
-//               {employer.client_name}
-//             </h6>
-
-//             <div className="flex items-center gap-2 text-sm text-muted-foreground">
-//               <Building2 className="h-4 w-4" />
-//               <span>
-//                 {employer.industry?.industry_name || "Industry not available"}
-//               </span>
-//             </div>
-
-//             <div className="flex items-center gap-2 text-sm text-muted-foreground">
-//               <MapPin className="h-4 w-4" />
-//               <span>{renderLocation(employer)}</span>
-//             </div>
-//           </div>
-
-//           {/* View Button */}
-//           <div className="col-span-3 md:col-span-2 flex justify-end">
-//             {isMobile ? (
-//               <Drawer>
-//                 <DrawerTrigger render={<Button variant="outline" size="sm" />}>
-//                   View
-//                 </DrawerTrigger>
-//                 <DrawerContent className="border-none">
-//                   <div className="flex-1 scroll-fade overflow-y-auto p-4">
-//                     <EmployerDetails employer={employer} />
-//                   </div>
-//                 </DrawerContent>
-//               </Drawer>
-//             ) : (
-//               <Sheet>
-//                 <SheetTrigger render={<Button variant="outline" size="sm" />}>
-//                   View
-//                 </SheetTrigger>
-//                 <SheetContent className="sm:max-w-3xl!">
-//                   <div className="scrollbar overflow-y-auto px-4">
-//                     <EmployerDetails employer={employer} />
-//                   </div>
-//                 </SheetContent>
-//               </Sheet>
-//             )}
-//           </div>
-//         </div>
-//       </CardContent>
-//     </Card>
-//   );
-// };
-
-// export default EmployerCard;
