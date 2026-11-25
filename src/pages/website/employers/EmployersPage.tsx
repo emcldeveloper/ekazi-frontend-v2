@@ -2,7 +2,6 @@ import { useEffect, useRef, useState, type ElementType } from "react";
 import {
   ArrowRight,
   Building2,
-  LogIn,
   Loader2,
   SearchIcon,
   Users,
