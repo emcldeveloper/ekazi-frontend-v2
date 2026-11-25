@@ -4,7 +4,8 @@ import { ArrowRight, Building2 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 
-// Where employers sign in / post jobs. Shared by the employers page CTAs.
+export const RECRUITMENT_REGISTER_URL =
+  "https://recruitment.ekazi.co.tz/register";
 export const RECRUITMENT_LOGIN_URL = "https://recruitment.ekazi.co.tz/login";
 
 type FeaturedEmployersBannerProps = {
@@ -14,10 +15,6 @@ type FeaturedEmployersBannerProps = {
 const heroImage =
   "https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=1200&q=80&auto=format&fit=crop";
 
-/**
- * Employer hero — the top of the Employers page.
- * Sends employers to the recruitment platform to sign in and post jobs.
- */
 const FeaturedEmployersBanner: React.FC<FeaturedEmployersBannerProps> = ({
   className = "",
 }) => {
@@ -59,7 +56,7 @@ const FeaturedEmployersBanner: React.FC<FeaturedEmployersBannerProps> = ({
             className="animate__animated animate__fadeInDown mt-5 text-4xl font-bold leading-[1.1] tracking-tight text-Blue sm:text-5xl lg:text-[52px]"
           >
             Hire smarter & manage recruitment{" "}
-            <span className="bg-linear-to-r from-Orange to-orange-400 bg-clip-text text-transparent">
+            <span className="bg-linear-to-r from-Orange to-orange-500 bg-clip-text text-transparent">
               effortlessly
             </span>
           </h1>
@@ -71,17 +68,17 @@ const FeaturedEmployersBanner: React.FC<FeaturedEmployersBannerProps> = ({
 
           <div className="animate__animated animate__fadeInUp mt-8 flex flex-col gap-3 sm:flex-row">
             <a
-              href={RECRUITMENT_LOGIN_URL}
-              className="inline-flex h-12 items-center justify-center gap-1 rounded-full bg-Orange px-7 text-base font-semibold text-white shadow-lg shadow-orange-500/30 transition hover:-translate-y-0.5 hover:bg-orange-600 focus:outline-none focus-visible:ring-4 focus-visible:ring-orange-200"
+              href={RECRUITMENT_REGISTER_URL}
+              className="inline-flex h-12 items-center justify-center gap-1 rounded-full bg-Orange px-7 text-base font-semibold text-white shadow-lg shadow-orange-500/30 transition hover:-translate-y-0.5 hover:bg-orange-500 focus:outline-none focus-visible:ring-4 focus-visible:ring-orange-200"
             >
-              Post a Job
+              Register
               <ArrowRight className="h-4 w-4" />
             </a>
             <Button
               size="lg"
               variant="outline"
               onClick={() => navigate("/employers/request-demo")}
-              className="h-12 rounded-full border-Blue/20 bg-white px-7 text-base text-Blue transition hover:border-Blue hover:bg-Blue hover:text-white"
+              className="h-12 rounded-full border-Blue/20 bg-white px-7 text-base  text-Blue transition hover:border-Blue hover:bg-Blue hover:text-white"
             >
               Request a Demo
             </Button>

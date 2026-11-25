@@ -279,7 +279,7 @@ const EmployersPage = () => {
               aria-hidden
               className="pointer-events-none absolute inset-0 -z-10"
             >
-              <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-black/25" />
+              <div className="absolute inset-0 bg-linear-to-br from-white/10 via-transparent to-black/25" />
               <div className="absolute -right-16 -top-20 h-72 w-72 rounded-full bg-Orange/30 blur-3xl" />
             </div>
 
@@ -288,9 +288,6 @@ const EmployersPage = () => {
                 Ready to find your next{" "}
                 <span className="text-Orange">great hire</span>?
               </h2>
-              <p className="mt-2 text-white/70">
-                Sign in to your employer dashboard and post a job today.
-              </p>
             </div>
 
             <div className="flex w-full flex-col gap-3 sm:w-auto sm:flex-row">
@@ -298,15 +295,8 @@ const EmployersPage = () => {
                 href={RECRUITMENT_LOGIN_URL}
                 className="inline-flex h-12 items-center justify-center gap-1 rounded-full bg-Orange px-7 font-semibold text-white shadow-lg shadow-orange-500/30 transition hover:-translate-y-0.5 hover:bg-orange-600"
               >
-                Post a Job
+                Register
                 <ArrowRight className="h-4 w-4" />
-              </a>
-              <a
-                href={RECRUITMENT_LOGIN_URL}
-                className="inline-flex h-12 items-center justify-center gap-2 rounded-full border border-white/25 bg-white/5 px-7 text-white backdrop-blur transition hover:border-white hover:bg-white hover:text-Blue"
-              >
-                <LogIn className="h-4 w-4" />
-                Sign in
               </a>
             </div>
           </div>
