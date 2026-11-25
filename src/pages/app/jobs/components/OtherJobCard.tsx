@@ -1,5 +1,5 @@
 import { Card, CardContent } from "@/components/ui/card";
-import { DEFAULT_IMG, IMG_BASE } from "@/config";
+import { BASE_URL, DEFAULT_IMG } from "@/config";
 import { capitalizeText, formatDate } from "@/utils/helpers";
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
@@ -112,7 +112,7 @@ const OtherJobCard = ({
           <img
             src={
               companyLogo
-                ? `${IMG_BASE}/${companyLogo.replace(/^\/+/, "")}`
+                ? `${BASE_URL}/${companyLogo.replace(/^\/+/, "")}`
                 : DEFAULT_IMG
             }
             alt={companyName || "Company Logo"}

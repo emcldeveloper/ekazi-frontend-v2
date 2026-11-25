@@ -4,7 +4,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 
-import { DEFAULT_IMG, IMG_BASE } from "@/config";
+import { BASE_URL, DEFAULT_IMG } from "@/config";
 import { capitalizeText, formatDate } from "@/utils/helpers";
 import { cn } from "@/lib/utils";
 
@@ -145,7 +145,7 @@ const SavedJobCard = ({
           <img
             src={
               companyLogo
-                ? `${IMG_BASE}/${companyLogo.replace(/^\/+/, "")}`
+                ? `${BASE_URL}/${companyLogo.replace(/^\/+/, "")}`
                 : DEFAULT_IMG
             }
             alt={companyName || "Company Logo"}

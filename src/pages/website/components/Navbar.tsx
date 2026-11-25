@@ -10,7 +10,6 @@ import {
   LogIn,
   Menu,
   Newspaper,
-  PlusCircle,
   Users,
   X,
 } from "lucide-react";
@@ -294,7 +293,7 @@ const Navbar = () => {
               onClick={() => navigate(ROUTES.candidateLogin)}
               className="font-medium text-Blue hover:bg-gray-50 hover:text-Orange"
             >
-              Sign in
+              Log In
             </Button>
             <Button
               onClick={() => navigate(ROUTES.candidateRegister)}
@@ -383,7 +382,7 @@ const Navbar = () => {
               onClick={() => navigate(ROUTES.candidateLogin)}
               className="w-full border-gray-300 font-medium text-Blue hover:text-Orange"
             >
-              Sign in
+              Log In
             </Button>
           </div>
         </aside>
@@ -403,7 +402,7 @@ const MobileSection = ({
     <p className="mb-1 px-3 text-xs font-semibold uppercase tracking-wider text-gray-400">
       {title}
     </p>
-    {items.map(({ name, path, icon: Icon }) => (
+    {items.map(({ name, path }) => (
       <ItemLink
         key={path}
         to={path}

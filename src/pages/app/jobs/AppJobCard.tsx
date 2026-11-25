@@ -1,5 +1,5 @@
 import { Card, CardContent } from "@/components/ui/card";
-import { DEFAULT_IMG, IMG_BASE } from "@/config";
+import { BASE_URL, DEFAULT_IMG, IMG_BASE } from "@/config";
 import { capitalizeText, formatDate } from "@/utils/helpers";
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
@@ -24,6 +24,10 @@ const AppJobCard = ({ job, isActive = false, onClick }: JobCardProps) => {
   ]
     .filter(Boolean)
     .join(", ");
+
+  const logo = job.client?.logo;
+  const primaryLogo = logo ? `${BASE_URL}/${logo}` : DEFAULT_IMG;
+  const secondaryLogo = logo ? `${IMG_BASE}/${logo}` : DEFAULT_IMG;
 
   return (
     <Card
@@ -59,11 +63,20 @@ const AppJobCard = ({ job, isActive = false, onClick }: JobCardProps) => {
         {/* Company logo */}
         <div className="flex h-[75px] w-[120px] shrink-0 items-center justify-center rounded-lg p-2">
           <img
-            src={
-              job.client?.logo ? `${IMG_BASE}${job.client.logo}` : DEFAULT_IMG
-            }
+            key={primaryLogo}
+            src={primaryLogo}
             alt={job.client?.name || "Company Logo"}
             className="max-h-full max-w-full object-contain"
+            onError={({ currentTarget: img }) => {
+              const attempted = img.getAttribute("src");
+
+              if (attempted === DEFAULT_IMG) return;
+
+              img.src =
+                attempted === primaryLogo && secondaryLogo !== primaryLogo
+                  ? secondaryLogo
+                  : DEFAULT_IMG;
+            }}
           />
         </div>
 
