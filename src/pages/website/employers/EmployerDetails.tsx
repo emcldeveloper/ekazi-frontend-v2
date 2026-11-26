@@ -1,4 +1,3 @@
-import { useState } from "react";
 import {
   Building2,
   CalendarDays,
@@ -25,16 +24,6 @@ import { formatDate } from "@/utils/helpers";
 interface EmployerDetailsProps {
   employer: any;
 }
-
-/* ---------- helpers ---------- */
-
-const getInitials = (name?: string) =>
-  (name ?? "?")
-    .split(" ")
-    .filter(Boolean)
-    .slice(0, 2)
-    .map((word) => word[0]?.toUpperCase())
-    .join("");
 
 /** Treats null, "", "null", "1" and whitespace-only strings as empty, and collapses tabs/newlines. */
 const clean = (value?: string | null) => {

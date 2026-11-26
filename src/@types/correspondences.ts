@@ -24,3 +24,57 @@ export type CorrespondenceCategory =
   | "issue"
   | "note"
   | "general";
+
+export type CorrespondenceUser = {
+  id: number;
+  name?: string;
+  username?: string;
+  first_name?: string;
+  last_name?: string;
+  email?: string;
+  profile_picture?: string | null;
+  avatar?: string | null;
+};
+
+export type ThreadParticipantRecord = {
+  id?: number;
+  user_id: number;
+  role?: string;
+  last_read_at?: string | null;
+  user?: CorrespondenceUser;
+};
+
+export type ThreadMessage = {
+  id: number;
+  thread_id: number;
+  sender_id?: number;
+  user_id?: number;
+  sender?: CorrespondenceUser;
+  user?: CorrespondenceUser;
+  message?: string;
+  body?: string;
+  category?: CorrespondenceCategory;
+  subject?: string | null;
+  reply_to_id?: number | null;
+  read_at?: string | null;
+  created_at: string;
+  updated_at?: string;
+};
+
+export type CorrespondenceThread = {
+  id: number;
+  subject: string;
+  job_id?: number | null;
+  job?: {
+    id: number;
+    title?: string;
+    job_title?: string;
+    company?: { id?: number; name?: string; company_name?: string } | null;
+  } | null;
+  participants?: ThreadParticipantRecord[];
+  latest_message?: ThreadMessage | null;
+  last_message?: ThreadMessage | null;
+  unread_count?: number;
+  created_at: string;
+  updated_at?: string;
+};
