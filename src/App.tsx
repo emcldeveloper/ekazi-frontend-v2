@@ -141,7 +141,7 @@ const App = () => {
                 />
                 <Route path="/app/other-files" element={<OtherFilesPage />} />
 
-                <Route path="/app/messages" element={<MessagesPage />} />
+                <Route path="/app/correspondences" element={<MessagesPage />} />
 
                 <Route
                   path="/app/notifications"

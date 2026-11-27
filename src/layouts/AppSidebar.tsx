@@ -106,8 +106,8 @@ const navItems: NavItem[] = [
     ],
   },
   {
-    title: "Messages",
-    url: "/app/messages",
+    title: "Correspondences",
+    url: "/app/correspondences",
     icon: MessageCircle,
   },
   {

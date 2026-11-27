@@ -3,7 +3,6 @@ import { Link, useSearchParams } from "react-router-dom";
 import { MessageCircle, Search } from "lucide-react";
 
 import type { CorrespondenceThread } from "@/@types/correspondences";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   Empty,
@@ -16,7 +15,7 @@ import {
 import { useUser } from "@/hooks/auth";
 import { useThreads } from "@/hooks/correspondences";
 
-import ThreadList from "./components/ThreadList";
+import ThreadList, { type ThreadFilter } from "./components/ThreadList";
 import ThreadView from "./components/ThreadView";
 import {
   getCompanyName,
@@ -34,6 +33,7 @@ const JOBS_ROUTE = "/app/jobs";
 const MessagesPage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [search, setSearch] = useState("");
+  const [filter, setFilter] = useState<ThreadFilter>("all");
 
   const { data: user } = useUser();
   const currentUserId: number | undefined = user?.id;
@@ -46,21 +46,19 @@ const MessagesPage = () => {
   );
 
   const threadParam = Number(searchParams.get("thread"));
-  const activeId = Number.isFinite(threadParam) && threadParam > 0
-    ? threadParam
-    : null;
+  const activeId =
+    Number.isFinite(threadParam) && threadParam > 0 ? threadParam : null;
   const activeThread = threads.find((thread) => thread.id === activeId);
-
-  const unreadCount = threads.reduce(
-    (total, thread) => total + (thread.unread_count ?? 0),
-    0,
-  );
 
   const filteredThreads = useMemo(() => {
     const query = search.trim().toLowerCase();
-    if (!query) return threads;
+    const visible =
+      filter === "unread"
+        ? threads.filter((thread) => (thread.unread_count ?? 0) > 0)
+        : threads;
+    if (!query) return visible;
 
-    return threads.filter((thread) =>
+    return visible.filter((thread) =>
       [
         thread.subject,
         getUserName(getCounterpart(thread, currentUserId)),
@@ -71,7 +69,7 @@ const MessagesPage = () => {
         .filter(Boolean)
         .some((value) => value!.toLowerCase().includes(query)),
     );
-  }, [threads, search, currentUserId]);
+  }, [threads, search, filter, currentUserId]);
 
   const selectThread = (id: number | null) => {
     setSearchParams(
@@ -85,30 +83,13 @@ const MessagesPage = () => {
   };
 
   return (
-    <div className="flex flex-col gap-5">
-      <header className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight text-Blue">
-            Messages
-          </h1>
-          <p className="mt-1 text-sm text-muted-foreground">
-            Stay connected with recruiters and manage your job conversations.
-          </p>
-        </div>
+    <div className="space-y-4">
+      <h1 className="text-2xl font-bold tracking-tight">Correspondences</h1>
 
-        <div className="flex items-center gap-2">
-          <Badge variant="secondary">
-            <MessageCircle />
-            {threads.length} Conversations
-          </Badge>
-          {unreadCount > 0 && <Badge>{unreadCount} unread</Badge>}
-        </div>
-      </header>
-
-      <div className="flex h-[min(740px,calc(100dvh-190px))] min-h-[480px] overflow-hidden rounded-2xl border border-border bg-background shadow-sm">
+      <div className="flex h-[min(780px,calc(100dvh-140px))] min-h-[480px] overflow-hidden rounded-2xl border border-border bg-background">
         {/* Inbox */}
         <aside
-          className={`w-full shrink-0 flex-col border-r border-border md:flex md:w-[320px] lg:w-[360px] ${
+          className={`w-full shrink-0 flex-col border-r border-border md:flex md:w-xs lg:w-[380px] ${
             activeId ? "hidden" : "flex"
           }`}
         >
@@ -118,6 +99,8 @@ const MessagesPage = () => {
             currentUserId={currentUserId}
             search={search}
             onSearchChange={setSearch}
+            filter={filter}
+            onFilterChange={setFilter}
             onSelect={selectThread}
             isLoading={isLoading}
             isError={isError}

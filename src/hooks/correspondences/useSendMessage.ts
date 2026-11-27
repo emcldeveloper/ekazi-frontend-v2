@@ -7,7 +7,7 @@ export const useSendMessage = () => {
 
   return useMutation({
     mutationFn: (payload: SendMessagePayload) =>
-      sendThreadMessage(payload.thread_id, payload),
+      sendThreadMessage(payload),
     onSuccess: (_data, payload) => {
       queryClient.invalidateQueries({
         queryKey: ["correspondence-messages", payload.thread_id],

@@ -24,13 +24,34 @@ export const threadMessages = async (threadId: number) => {
   return res.data;
 };
 
-export const sendThreadMessage = async (
-  threadId: number,
-  payload: SendMessagePayload,
-) => {
-  const res = await api.post(
-    `/correspondence/threads/${threadId}/messages`,
-    payload,
-  );
+/** A file must go as multipart; plain text messages stay JSON. */
+const toMessageFormData = ({
+  attachment,
+  meta,
+  ...fields
+}: SendMessagePayload) => {
+  const formData = new FormData();
+
+  Object.entries(fields).forEach(([key, value]) => {
+    if (value !== undefined && value !== null) {
+      formData.append(key, String(value));
+    }
+  });
+
+  if (meta) {
+    Object.entries(meta).forEach(([key, value]) => {
+      formData.append(`meta[${key}]`, String(value));
+    });
+  }
+
+  if (attachment) formData.append("attachment", attachment);
+
+  return formData;
+};
+
+export const sendThreadMessage = async (payload: SendMessagePayload) => {
+  const body = payload.attachment ? toMessageFormData(payload) : payload;
+
+  const res = await api.post(`/correspondence/messages`, body);
   return res.data;
 };
